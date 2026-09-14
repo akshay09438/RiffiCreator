@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import 'tailwindcss' source('../');
 @import './tokens.css';
 
 /* Only the brand's own colours and typefaces exist as utilities, so there is no stray palette. */
