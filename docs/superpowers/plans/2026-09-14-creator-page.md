@@ -1648,16 +1648,18 @@ User job: on a slow 4G phone inside Instagram, the creator sees the page the mom
 
 Written by the independent test author from the PRD and the approved design - copy verbatim.
 
+Changed during the build (15 Sep 2026, founder-approved: "Yes, fix that line"): the test author changed lines 3 and 7 so the file reads `index.html` from the project root. Vite 6 rewrites `new URL('../index.html', import.meta.url)` in jsdom test files, so the original line could not load. Every check is unchanged.
+
 `tests/head.test.ts`:
 
 ```ts
 // @vitest-environment jsdom
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 // Parsed with the DOM's own HTML parser, so an entity-encoded apostrophe still compares equal.
-const raw = readFileSync(fileURLToPath(new URL('../index.html', import.meta.url)), 'utf8');
+const raw = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8');
 const doc = new DOMParser().parseFromString(raw, 'text/html');
 const all = (selector: string): Element[] => Array.from(doc.querySelectorAll(selector));
 
