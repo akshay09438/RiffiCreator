@@ -2,7 +2,7 @@
 
 _How much is done, what is in flight, what is left, and every decision that departs from the PRD. Updated in the same change as the work._
 
-**Last updated:** 15 Sep 2026 - Task 3 is done: every colour, both self-hosted fonts and the text sizes live in one tokens file, and the page's stylesheet is built only from the page's own code. 134 tests pass. Next is Task 4, the motion hooks.
+**Last updated:** 15 Sep 2026 - Task 4 is done: three small motion helpers. One respects a phone's reduce-motion setting, one notices when a section scrolls into view, and one counts the sample vote up. 142 tests pass. Next is Task 5, the shared building blocks: section, chip, button, take card and wordmark.
 
 ## Where things stand
 
@@ -12,7 +12,7 @@ _How much is done, what is in flight, what is left, and every decision that depa
   - 181 behaviour and honesty tests, written by an independent test author who never saw the code.
   - A practice run of the plan's code in a scratch folder outside the project: a clean install of the exact versions, then typecheck, lint, build, the size budgets (JavaScript 67KB of 90KB, the whole page 202KB of 400KB), the output check, the preview images, and the pre-send check (it lists the 12 open items, as it should). The lint rules and the output check were also fed deliberately bad code, and caught every planted problem.
   - A separate reviewer replayed all 231 test checks against that practice code in its own scripts: 230 held. The one that did not was a faulty pattern in the plan's own brand-rules test, which mistook the approved font setting for a hard-coded font; it is fixed in the plan and re-checked. Every test file also typechecks against the code. The tests run for real only once the founder approves creating test files.
-- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list), Task 1 (toolchain, content and the call-to-action link), Task 2 (page shell and the pre-render step) and Task 3 (brand layer: tokens, fonts and the type scale). Next: Task 4 (motion hooks).
+- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list) and Tasks 1-4 (toolchain, content and the call-to-action link; page shell and pre-render step; brand layer; motion hooks). Next: Task 5 (primitives: section, chip, button, take card, wordmark).
 - **Left:** the whole page - the ten build steps below.
 
 ## Build order (PRD section 9)
@@ -25,7 +25,7 @@ _How much is done, what is in flight, what is left, and every decision that depa
 | 4 | `content.ts` in full, every `[FILL]` placeholder commented | Done (Task 1): all copy and settings, the six open inputs marked, and a tick-list that `npm run presend` checks |
 | 5 | Primitives: Section, Chip, CtaButton, TakeCard, then PollBar | Not started |
 | 6 | Blocks 1-8 in page order, each checked at 320px | Not started |
-| 7 | The three motion moments, each verified under reduced motion | Not started |
+| 7 | The three motion moments, each verified under reduced motion | In progress: the motion hooks, including the reduced-motion check, are built and tested (Task 4); the moments themselves arrive with the poll bar and the blocks (Tasks 6-7) and are verified in the Task 9 audit |
 | 8 | `og.png`, favicon set, head tags | Not started |
 | 9 | Audit: Lighthouse mobile, 320px overflow, keyboard-only, greyscale | Not started |
 | 10 | Self-critique against PRD 3.6; cut one thing | Not started |
