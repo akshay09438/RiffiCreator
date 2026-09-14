@@ -75,3 +75,32 @@
     outline-offset: 2px;
   }
 }
+
+@layer components {
+  /* Below-the-fold sections skip rendering work until they near the viewport (PRD 7). */
+  .below-fold {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
+
+  /* Hover lift belongs only to take cards, and only on pointer devices (PRD 3.5). */
+  .take-card {
+    transition: transform 200ms ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .take-card:hover {
+      transform: translateY(-4px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .take-card {
+      transition: none;
+    }
+
+    .take-card:hover {
+      transform: none;
+    }
+  }
+}
