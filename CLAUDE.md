@@ -124,6 +124,7 @@ This page has no logins, no payments, no database and stores nothing about anyon
 - **Secrets** (`.env`, `.env.*`, anything named `*secret*`) - this page should have none. Anything in a `VITE_` variable is baked into the public page for anyone to read, so a key put there is a published key.
 - **The safety net** (`tests/**`, any `*.test.*` file, `vitest.config.*`, `eslint.config.*`, everything under `.github/`) - the automatic checks that enforce the honesty rules and the quality floor, plus CI and the review routing. Weakening one to make a change pass switches off the very rule it exists to keep.
 - **The rulebook itself** (`CLAUDE.md`, `AGENTS.md`, `.zuko/config.json`) - this list lives inside these files. Without guarding them, anyone could quietly take a file off the list and then edit it freely.
+- **What decides what ships** (`package-lock.json`, `.npmrc`, `vite.config.*`, `src/main.tsx`, `scripts/**`, `public/**`) - the exact library versions, the build and pre-render steps, the pre-send and output checks, and the link-preview image Instagram caches. Changing any of these can put something on the page, or switch a check off, without touching another file on this list.
 
 _No accounts, forms, payments, stored personal data or analytics exist here. If any ever appear - an email form, a `vercel.json` with redirects, an analytics file - they join this list the same day._
 
@@ -151,7 +152,13 @@ The machine-readable form below is the single source of truth the hooks and the 
     ".github/**",
     "CLAUDE.md",
     "AGENTS.md",
-    ".zuko/config.json"
+    ".zuko/config.json",
+    "package-lock.json",
+    ".npmrc",
+    "vite.config.*",
+    "src/main.tsx",
+    "scripts/**",
+    "public/**"
   ],
   "buyNotBuilt": [
     {
@@ -298,6 +305,30 @@ The machine-readable form below is the single source of truth the hooks and the 
       },
       ".zuko/config.json": {
         "sensitivity": "auth",
+        "reversibilityClass": "reversible"
+      },
+      "package-lock.json": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      ".npmrc": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      "vite.config.*": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      "src/main.tsx": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      "scripts/**": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      "public/**": {
+        "sensitivity": "user-data",
         "reversibilityClass": "reversible"
       }
     }

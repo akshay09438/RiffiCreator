@@ -24,6 +24,12 @@ package.json @akshay09438
 CLAUDE.md @akshay09438
 AGENTS.md @akshay09438
 .zuko/config.json @akshay09438
+package-lock.json @akshay09438
+.npmrc @akshay09438
+vite.config.* @akshay09438
+src/main.tsx @akshay09438
+scripts/** @akshay09438
+public/** @akshay09438
 
 # --- Test and harness files -> @akshay09438 ---
 tests/** @akshay09438

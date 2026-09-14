@@ -18,7 +18,13 @@
     ".github/**",
     "CLAUDE.md",
     "AGENTS.md",
-    ".zuko/config.json"
+    ".zuko/config.json",
+    "package-lock.json",
+    ".npmrc",
+    "vite.config.*",
+    "src/main.tsx",
+    "scripts/**",
+    "public/**"
   ],
   "buyNotBuilt": [
     {
@@ -165,6 +171,30 @@
       },
       ".zuko/config.json": {
         "sensitivity": "auth",
+        "reversibilityClass": "reversible"
+      },
+      "package-lock.json": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      ".npmrc": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      "vite.config.*": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      "src/main.tsx": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      "scripts/**": {
+        "sensitivity": "internal",
+        "reversibilityClass": "reversible"
+      },
+      "public/**": {
+        "sensitivity": "user-data",
         "reversibilityClass": "reversible"
       }
     }

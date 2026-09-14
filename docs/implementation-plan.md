@@ -2,7 +2,7 @@
 
 _How much is done, what is in flight, what is left, and every decision that departs from the PRD. Updated in the same change as the work._
 
-**Last updated:** 14 Sep 2026 - the step-by-step build plan is written and rehearsed, and waits for the founder's approval. No page code or test file exists yet.
+**Last updated:** 15 Sep 2026 - the founder approved the build plan, and step 0 is done: the stop-and-ask list now also guards the files that decide what ships. The page build starts with Task 1.
 
 ## Where things stand
 
@@ -12,7 +12,7 @@ _How much is done, what is in flight, what is left, and every decision that depa
   - 181 behaviour and honesty tests, written by an independent test author who never saw the code.
   - A practice run of the plan's code in a scratch folder outside the project: a clean install of the exact versions, then typecheck, lint, build, the size budgets (JavaScript 67KB of 90KB, the whole page 202KB of 400KB), the output check, the preview images, and the pre-send check (it lists the 12 open items, as it should). The lint rules and the output check were also fed deliberately bad code, and caught every planted problem.
   - A separate reviewer replayed all 231 test checks against that practice code in its own scripts: 230 held. The one that did not was a faulty pattern in the plan's own brand-rules test, which mistook the approved font setting for a hard-coded font; it is fixed in the plan and re-checked. Every test file also typechecks against the code. The tests run for real only once the founder approves creating test files.
-- **In flight:** the founder's approval.
+- **In flight:** the build, task by task, following the approved plan. Step 0 is done; next is Task 1 (toolchain, content and the call-to-action link).
 - **Left:** the whole page - the ten build steps below.
 
 ## Build order (PRD section 9)
@@ -74,6 +74,8 @@ Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `
 | 14 Sep 2026 | Zuko uses the recommended options: the promise file is on the stop-and-ask list; stage "before launch"; reviewer `@akshay09438`; no Slack alerts (updates in chat); history kept locally, work on side branches. | The founder moved straight to the build without changing them. Any can be revisited. |
 | 14 Sep 2026 | **Build design approved:** the page is pre-rendered to static HTML at build time and hydrated in the browser. | Everything a creator needs must show before scripts load on slow 4G, and PRD Block 1 requires the H1 to render without JS. |
 | 14 Sep 2026 | The FAQ answer "Is this paid right now?" ends "That's the plan, not a contract." | Founder-approved (option A): the answer promised cash payouts without the framing PRD 2.4 requires. The reviewer's other three suggestions wait for build step 10. |
+| 15 Sep 2026 | **Build plan approved** (`docs/superpowers/plans/2026-09-14-creator-page.md`). Its protected files are created one task at a time: only the current task's files are unlocked, and they are locked again after that task's commit. | Founder-approved ("Yes, start the build"). The plan was rehearsed outside the project first, and the three safety reviews' findings are fixed in it. |
+| 15 Sep 2026 | **The stop-and-ask list grows** to guard the files that decide what ships: `package-lock.json`, `.npmrc`, `vite.config.*`, `src/main.tsx`, `scripts/**` and `public/**` (step 0). | Founder-approved ("Yes, protect them too"). Any of them could change the page, or switch a check off, without touching a file already on the list. |
 
 ## Drift log - where the build departs from the PRD
 
