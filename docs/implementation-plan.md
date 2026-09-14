@@ -2,7 +2,7 @@
 
 _How much is done, what is in flight, what is left, and every decision that departs from the PRD. Updated in the same change as the work._
 
-**Last updated:** 15 Sep 2026 - Task 2 is done: the page shell is in place, and the build now writes the finished page as plain HTML that shows before any script runs, with the link-preview card's tags filled in. 123 tests pass. Next is Task 3, the brand layer: colours, fonts and the type scale.
+**Last updated:** 15 Sep 2026 - Task 3 is done: every colour, both self-hosted fonts and the text sizes live in one tokens file, and the page's stylesheet is built only from the page's own code. 134 tests pass. Next is Task 4, the motion hooks.
 
 ## Where things stand
 
@@ -12,7 +12,7 @@ _How much is done, what is in flight, what is left, and every decision that depa
   - 181 behaviour and honesty tests, written by an independent test author who never saw the code.
   - A practice run of the plan's code in a scratch folder outside the project: a clean install of the exact versions, then typecheck, lint, build, the size budgets (JavaScript 67KB of 90KB, the whole page 202KB of 400KB), the output check, the preview images, and the pre-send check (it lists the 12 open items, as it should). The lint rules and the output check were also fed deliberately bad code, and caught every planted problem.
   - A separate reviewer replayed all 231 test checks against that practice code in its own scripts: 230 held. The one that did not was a faulty pattern in the plan's own brand-rules test, which mistook the approved font setting for a hard-coded font; it is fixed in the plan and re-checked. Every test file also typechecks against the code. The tests run for real only once the founder approves creating test files.
-- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list), Task 1 (toolchain, content and the call-to-action link) and Task 2 (page shell and the pre-render step). Next: Task 3 (brand layer: tokens, fonts and the type scale).
+- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list), Task 1 (toolchain, content and the call-to-action link), Task 2 (page shell and the pre-render step) and Task 3 (brand layer: tokens, fonts and the type scale). Next: Task 4 (motion hooks).
 - **Left:** the whole page - the ten build steps below.
 
 ## Build order (PRD section 9)
@@ -20,8 +20,8 @@ _How much is done, what is in flight, what is left, and every decision that depa
 | # | Step | Status |
 |---|---|---|
 | 1 | Scaffold Vite + React + TS + Tailwind v4; dev server runs | In progress: tools, page shell and pre-render step in place (Tasks 1-2); the dev server is checked in the Task 9 audit |
-| 2 | `tokens.css` complete and mapped through Tailwind v4 `@theme`; `global.css` | Not started |
-| 3 | Both variable fonts installed, wired and rendering | Not started |
+| 2 | `tokens.css` complete and mapped through Tailwind v4 `@theme`; `global.css` | Done (Task 3): every brand value in `tokens.css`, mapped through `@theme`; the type scale, base styles and focus ring in `global.css` |
+| 3 | Both variable fonts installed, wired and rendering | In progress: both fonts self-hosted, Latin files only, and preloaded (Task 3); how they render is checked in the Task 9 audit |
 | 4 | `content.ts` in full, every `[FILL]` placeholder commented | Done (Task 1): all copy and settings, the six open inputs marked, and a tick-list that `npm run presend` checks |
 | 5 | Primitives: Section, Chip, CtaButton, TakeCard, then PollBar | Not started |
 | 6 | Blocks 1-8 in page order, each checked at 320px | Not started |
@@ -77,6 +77,7 @@ Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `
 | 15 Sep 2026 | **Build plan approved** (`docs/superpowers/plans/2026-09-14-creator-page.md`). Its protected files are created one task at a time: only the current task's files are unlocked, and they are locked again after that task's commit. | Founder-approved ("Yes, start the build"). The plan was rehearsed outside the project first, and the three safety reviews' findings are fixed in it. |
 | 15 Sep 2026 | **The stop-and-ask list grows** to guard the files that decide what ships: `package-lock.json`, `.npmrc`, `vite.config.*`, `src/main.tsx`, `scripts/**` and `public/**` (step 0). | Founder-approved ("Yes, protect them too"). Any of them could change the page, or switch a check off, without touching a file already on the list. |
 | 15 Sep 2026 | The independent head test reads `index.html` from the project root, not through `new URL('../index.html', import.meta.url)`. | Founder-approved ("Yes, fix that line"). Vite 6 rewrites that URL inside browser-like (jsdom) tests, so the test could not load at all. The test author changed only lines 3 and 7; every check is unchanged. |
+| 15 Sep 2026 | The stylesheet is built only from the page's own code (`src/`), not from every file in the project. | Founder-approved ("Yes, fix it"). Tailwind otherwise read the planning documents and shipped styles that exist only there, including a hard-coded brand blue in the exact form the brand rules forbid. |
 
 ## Drift log - where the build departs from the PRD
 

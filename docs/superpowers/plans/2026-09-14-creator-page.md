@@ -2215,7 +2215,7 @@ Expected: FAIL - `ENOENT: no such file or directory` for `src/styles/tokens.css`
 - [ ] **Step 4: Write `src/styles/global.css`**
 
 ```css
-@import 'tailwindcss';
+@import 'tailwindcss' source('../');
 @import './tokens.css';
 
 /* Only the brand's own colours and typefaces exist as utilities, so there is no stray palette. */
@@ -2334,8 +2334,13 @@ Expected: PASS - `Test Files  6 passed (6)`.
 Run: `npm run build`
 Expected: the output lists `archivo-latin-wdth-normal-<hash>.woff2` and `hanken-grotesk-latin-wght-normal-<hash>.woff2` (and no `vietnamese` or `latin-ext` font files), and ends with `prerender: wrote dist/index.html with 2 font preload(s)`.
 
-Run: `grep -c 'rel="preload"' dist/index.html; grep -o "\.bg-paper{[^}]*}" dist/assets/*.css | head -1`
-Expected: `2`, then a rule setting `background-color:var(--paper)`.
+Run: `grep -c 'rel="preload"' dist/index.html`
+Expected: `2`.
+
+Run: `node -e "const fs=require('fs');const bs=String.fromCharCode(92);for(const f of fs.readdirSync('dist/assets').filter(x=>x.endsWith('.css'))){const c=fs.readFileSync('dist/assets/'+f,'utf8');console.log('arbitrary hex classes:',c.split('['+bs+'#').length-1,'| text-body token present:',c.includes('--text-body:clamp'))}"`
+Expected: `arbitrary hex classes: 0 | text-body token present: true`.
+
+Changed during the build (15 Sep 2026, founder-approved "Yes, fix it"): Tailwind builds utilities only from `src/` (`source('../')` on the import). Without it, Tailwind scanned the whole repository and put classes that exist only in the documents into the stylesheet, including the banned `bg-[#3B6EF3]` that the project profile quotes as a forbidden example. The old check looked for a `.bg-paper` rule, which only appears once a component uses that class.
 
 - [ ] **Step 8: Run typecheck and lint**
 
