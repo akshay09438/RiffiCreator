@@ -2,12 +2,17 @@
 
 _How much is done, what is in flight, what is left, and every decision that departs from the PRD. Updated in the same change as the work._
 
-**Last updated:** 14 Sep 2026 - build design approved (option A); writing the step-by-step build plan; the page build has not started.
+**Last updated:** 14 Sep 2026 - the step-by-step build plan is written and rehearsed, and waits for the founder's approval. No page code or test file exists yet.
 
 ## Where things stand
 
-- **Done:** Zuko harness installed (profile, stop-and-ask list, CI, review routing, handoff note); the PRD saved as `docs/functional-spec.md`; a product review of the PRD; the build design written and approved by the founder (`docs/superpowers/specs/2026-09-14-creator-page-design.md`).
-- **In flight:** the step-by-step build plan.
+- **Done:** Zuko harness installed (profile, stop-and-ask list, CI, review routing, handoff note); the PRD saved as `docs/functional-spec.md`; a product review of the PRD; the build design written and approved by the founder (`docs/superpowers/specs/2026-09-14-creator-page-design.md`); the step-by-step build plan (`docs/superpowers/plans/2026-09-14-creator-page.md`).
+- **How the plan was checked before asking for approval:**
+  - Three independent safety reviews. Their findings are fixed in the plan: a tick-list for the open inputs and a single release command that refuses while any is open, a test that every word on the page comes from the content file, a reduced-motion bug, supply-chain protections, and CI that builds the page.
+  - 181 behaviour and honesty tests, written by an independent test author who never saw the code.
+  - A practice run of the plan's code in a scratch folder outside the project: a clean install of the exact versions, then typecheck, lint, build, the size budgets (JavaScript 67KB of 90KB, the whole page 202KB of 400KB), the output check, the preview images, and the pre-send check (it lists the 12 open items, as it should). The lint rules and the output check were also fed deliberately bad code, and caught every planted problem.
+  - A separate reviewer replayed all 231 test checks against that practice code in its own scripts: 230 held. The one that did not was a faulty pattern in the plan's own brand-rules test, which mistook the approved font setting for a hard-coded font; it is fixed in the plan and re-checked. Every test file also typechecks against the code. The tests run for real only once the founder approves creating test files.
+- **In flight:** the founder's approval.
 - **Left:** the whole page - the ten build steps below.
 
 ## Build order (PRD section 9)
@@ -29,7 +34,7 @@ The definition of done is PRD section 10.
 
 ## Before the link goes to any creator
 
-The page is built with clearly marked placeholders, but it must not be sent until everything below is settled. `npm run presend` (added in the build) fails while any `[FILL]` placeholder remains.
+The page is built with clearly marked placeholders, but it must not be sent until everything below is settled. `npm run presend` (added in the build) fails while any `[FILL]` placeholder remains or any open input is not ticked as confirmed.
 
 **Open inputs (PRD section 8):**
 
@@ -48,6 +53,14 @@ The page is built with clearly marked placeholders, but it must not be sent unti
 10. **"The front page."** Block 3 promises every first post the front page - it must be true for all 50.
 11. **End-to-end proof.** DM the final link to a test account that does not follow Zyra, on a real Android and a real iPhone, through to a sent "I'm in".
 12. **Did it help.** From the first send, log every link sent, every "I'm in" and every question asked. The yes-rate is the signal; a question that keeps coming up is a gap on the page.
+
+**From the safety reviews of the build plan (14 Sep 2026):**
+
+13. **One way online.** The page goes online only through `npm run release`, which builds it, checks what the built page loads and links to, and refuses while any open input above is unconfirmed or the preview card still points at a placeholder address. Never deploy a bare build, and never put an early build online where it can be shared - Instagram keeps the first preview card it sees.
+14. **Raise the stage at first send.** Before the first link goes out, change Zuko's stage from "before launch" to "early", and mark the content file, the link file, the page head and the preview images as not reversible: once a creator has read a promise, changing it is no longer a quiet fix.
+15. **Legal check (India's DPDP Act).** Get a legal review before sending: creators under 18 need verifiable parental consent before their data is used; a privacy notice and a grievance contact may be required; and if the WhatsApp option is switched on, its number becomes public.
+16. **The WhatsApp label.** "Or message us on WhatsApp" is the build's own wording, not PRD copy. The founder signs it off before WhatsApp is switched on.
+17. **Known limits to accept or fix.** The ₹ sign is not in the fonts' Latin files, so it shows in the phone's own font. The styling needs iOS Safari 16.4 or newer; older iPhones get a plainer page.
 
 Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `tokens.css` plus one wordmark SVG.
 
