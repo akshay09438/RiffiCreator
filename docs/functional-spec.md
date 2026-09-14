@@ -1,6 +1,6 @@
 > **Functional spec for the Riffi creator page.** Saved by `/zuko:bootstrap` on 14 Sep 2026 from `rifii-creator-landing-prd.md` (PRD v1.0, owner Zyra). This is a living document: it is updated in the same change as any decision that alters what the page does.
 >
-> **Changed from the original PRD:** the name is spelled **Riffi** throughout (founder-confirmed on 14 Sep 2026 - the original spelled it "Rifii", including in the placeholder Instagram handle, which is still an open `[FILL]` input). Nothing else was changed. Later decisions are logged in `docs/implementation-plan.md`.
+> **Changed from the original PRD, both founder-approved on 14 Sep 2026:** (1) the name is spelled **Riffi** throughout - the original spelled it "Rifii", including in the placeholder Instagram handle, which is still an open `[FILL]` input; (2) the FAQ answer "Is this paid right now?" now ends "That's the plan, not a contract.", so it meets the honesty rule in section 2.4. Nothing else was changed. Later decisions are logged in `docs/implementation-plan.md`.
 
 ---
 
@@ -451,7 +451,7 @@ Background: `--paper`
 |---|---|
 | Do I have to leave Instagram? | No. Keep posting exactly where you post now. A take is a sentence, not a shoot — this sits alongside what you already do. |
 | My following is small. Does that matter? | No. We're picking for takes, not reach. Most of this cohort is under 20k and that's deliberate. |
-| Is this paid right now? | You earn points from your first post and points convert to vouchers. Cash payouts arrive with monetisation, and this cohort is first in line for it. |
+| Is this paid right now? | You earn points from your first post and points convert to vouchers. Cash payouts arrive with monetisation, and this cohort is first in line for it. That's the plan, not a contract. |
 | What can I post about? | Anything you have a real opinion on. Cricket, politics, films, food, campus, money. Opinions, not news reports. |
 | When does Riffi launch? | `[FILL — launch timing]` |
 | Who owns what I post? | `[FILL — confirm against terms]` *Placeholder: You do. You keep the rights to your posts and you can take them anywhere.* |

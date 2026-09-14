@@ -1,7 +1,7 @@
 # Riffi creator page - build design
 
 **Date:** 14 Sep 2026
-**Status:** awaiting founder sign-off
+**Status:** approved by the founder on 14 Sep 2026 (option A)
 **What the page says and looks like:** `docs/functional-spec.md` (the PRD) is the source of truth. This document records only how the build meets it, and the decisions the PRD leaves open.
 
 ## 1. Scope
@@ -71,6 +71,6 @@ The PRD names Vite 6; the current release is Vite 8. Use the PRD's versions wher
 
 A product-manager review found that the page fits its job. Its build-time findings are folded into sections 3 to 6. Its questions that must be settled before the link goes to any creator are tracked in `docs/implementation-plan.md`.
 
-**Pending founder decision:** add "That's the plan, not a contract." to the FAQ answer "Is this paid right now?", which currently promises cash payouts without the framing PRD 2.4 requires.
+**Founder decision (14 Sep 2026, option A):** the FAQ answer "Is this paid right now?" now ends "That's the plan, not a contract.", so it no longer promises cash payouts without the framing PRD 2.4 requires. Applied to `docs/functional-spec.md`.
 
 **Deferred to build step 10 ("cut one thing"):** cut the marquee; hide the seat meter until there is a real number; add "just say I'm in" to the helper line.

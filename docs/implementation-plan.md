@@ -2,12 +2,12 @@
 
 _How much is done, what is in flight, what is left, and every decision that departs from the PRD. Updated in the same change as the work._
 
-**Last updated:** 14 Sep 2026 - Zuko installed; build design written and awaiting sign-off; the page build has not started.
+**Last updated:** 14 Sep 2026 - build design approved (option A); writing the step-by-step build plan; the page build has not started.
 
 ## Where things stand
 
-- **Done:** Zuko harness installed (profile, stop-and-ask list, CI, review routing, handoff note); the PRD saved as `docs/functional-spec.md`; a product review of the PRD; the build design written (`docs/superpowers/specs/2026-09-14-creator-page-design.md`).
-- **In flight:** founder sign-off on the build design.
+- **Done:** Zuko harness installed (profile, stop-and-ask list, CI, review routing, handoff note); the PRD saved as `docs/functional-spec.md`; a product review of the PRD; the build design written and approved by the founder (`docs/superpowers/specs/2026-09-14-creator-page-design.md`).
+- **In flight:** the step-by-step build plan.
 - **Left:** the whole page - the ten build steps below.
 
 ## Build order (PRD section 9)
@@ -59,6 +59,8 @@ Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `
 | 14 Sep 2026 | The creator offer is built **exactly as written**: points that convert to vouchers, priority monetisation described as a plan. | Founder-confirmed. The 12 Sep team deck's wind-down of cash rewards applies to regular users, not creators. |
 | 14 Sep 2026 | The project lives at `C:\Users\Akshay\Projects\Riffi`, **outside OneDrive**. | OneDrive and Windows Defender hold synced folders open on this laptop - it broke Grinder's deploys twice. |
 | 14 Sep 2026 | Zuko uses the recommended options: the promise file is on the stop-and-ask list; stage "before launch"; reviewer `@akshay09438`; no Slack alerts (updates in chat); history kept locally, work on side branches. | The founder moved straight to the build without changing them. Any can be revisited. |
+| 14 Sep 2026 | **Build design approved:** the page is pre-rendered to static HTML at build time and hydrated in the browser. | Everything a creator needs must show before scripts load on slow 4G, and PRD Block 1 requires the H1 to render without JS. |
+| 14 Sep 2026 | The FAQ answer "Is this paid right now?" ends "That's the plan, not a contract." | Founder-approved (option A): the answer promised cash payouts without the framing PRD 2.4 requires. The reviewer's other three suggestions wait for build step 10. |
 
 ## Drift log - where the build departs from the PRD
 
@@ -67,3 +69,5 @@ Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `
 | 14 Sep 2026 | "Rifii" | "Riffi" | Founder-confirmed spelling. |
 | 14 Sep 2026 | No test tooling specified | Vitest, including tests that enforce the honesty guardrails (PRD 2.4) | Zuko requires tests with every change, and the guardrails are exactly what a test should hold. |
 | 14 Sep 2026 | No formatter specified | Prettier, development only | Style is enforced by a tool, not by hand; nothing extra ships to the page. |
+| 14 Sep 2026 | FAQ: "...this cohort is first in line for it." | "...this cohort is first in line for it. That's the plan, not a contract." | Founder-approved honesty fix (PRD 2.4). |
+| 14 Sep 2026 | The sample poll bar animates "on mount" (5.5) | It animates with CSS from first paint | Works without JavaScript, and starts at first paint instead of after hydration on slow 4G. |
