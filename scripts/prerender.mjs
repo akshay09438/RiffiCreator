@@ -23,6 +23,9 @@ if (!template.includes('<!--app-html-->')) {
 
 const fontFile = /^(archivo-latin-wdth-normal|hanken-grotesk-latin-wght-normal)-[\w-]+\.woff2$/;
 const fonts = (await readdir(path.join(dist, 'assets'))).filter((file) => fontFile.test(file));
+if (fonts.length !== 2) {
+  throw new Error(`prerender: expected the two Latin font files in dist/assets, found ${fonts.length}`);
+}
 const preloads = fonts
   .map((file) => `<link rel="preload" href="/assets/${file}" as="font" type="font/woff2" crossorigin>`)
   .join('\n    ');

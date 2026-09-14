@@ -1,0 +1,89 @@
+/*
+ * Every brand decision lives in this file (PRD 5.2, rule 1): colours, typefaces, radii and the one
+ * shadow. The brand-kit swap is an edit here plus one wordmark SVG. No hex value, colour function
+ * or font name may appear anywhere else under src/ - tests/brand-rules.test.ts enforces it. The one
+ * named exception outside src/ is the theme-color meta tag in index.html, which PRD 5.6 specifies.
+ */
+
+/* Self-hosted variable fonts, Latin subset only (PRD 7). Declarations as shipped by Fontsource 5.3.0. */
+@font-face {
+  font-family: 'Archivo Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  src: url('@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/*
+ * Size-matched stand-ins shown while the fonts load, so the swap barely moves the page (CLS < 0.02).
+ * Metrics from @capsizecss/metrics against Arial; against Roboto (Android) they differ by under 0.3%.
+ */
+@font-face {
+  font-family: 'Archivo Fallback';
+  src: local('Arial'), local('Roboto');
+  size-adjust: 98.7%;
+  ascent-override: 88.96%;
+  descent-override: 21.28%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk Fallback';
+  src: local('Arial'), local('Roboto');
+  size-adjust: 100.94%;
+  ascent-override: 99.07%;
+  descent-override: 30.02%;
+  line-gap-override: 0%;
+}
+
+:root {
+  /* Surfaces and text (PRD 3.2) */
+  --paper: #ffffff;
+  --recess: #f4f5f7;
+  --ink: #000000;
+  --ink-soft: #5b6472;
+  --signal: #3b6ef3;
+  --take: #6c4cf1;
+
+  /* Chip family */
+  --chip-blue-bg: #e4ecff;
+  --chip-blue-ink: #1b4bd1;
+  --chip-butter-bg: #fff0c7;
+  --chip-butter-ink: #8a5a00;
+  --chip-coral-bg: #ffe3dc;
+  /* The PRD's #C0392B measures 4.47:1 on --chip-coral-bg; darkened 2% to 4.62:1 to pass WCAG AA. */
+  --chip-coral-ink: #bc382a;
+  --hairline: #e6e8ec;
+
+  /* Text on the inverted close section: white at 70% and 60% over --ink (PRD Block 8). */
+  --on-ink-body: #b3b3b3;
+  --on-ink-meta: #999999;
+
+  /* Typefaces (PRD 3.3) */
+  --typeface-display: 'Archivo Variable', 'Archivo Fallback', sans-serif;
+  --typeface-body: 'Hanken Grotesk Variable', 'Hanken Grotesk Fallback', sans-serif;
+
+  /* Radii differ by object type on purpose (PRD 3.4) */
+  --corner-take: 20px;
+  --corner-pill: 999px;
+
+  /* The one shadow token, used only on the hero take card (PRD 3.2) */
+  --lift-take: 0 24px 48px -20px rgb(0 0 0 / 0.28);
+}

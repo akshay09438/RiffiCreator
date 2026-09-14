@@ -1,0 +1,77 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Only the brand's own colours and typefaces exist as utilities, so there is no stray palette. */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-recess: var(--recess);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-signal: var(--signal);
+  --color-take: var(--take);
+  --color-chip-blue-bg: var(--chip-blue-bg);
+  --color-chip-blue-ink: var(--chip-blue-ink);
+  --color-chip-butter-bg: var(--chip-butter-bg);
+  --color-chip-butter-ink: var(--chip-butter-ink);
+  --color-chip-coral-bg: var(--chip-coral-bg);
+  --color-chip-coral-ink: var(--chip-coral-ink);
+  --color-hairline: var(--hairline);
+  --color-on-ink-body: var(--on-ink-body);
+  --color-on-ink-meta: var(--on-ink-meta);
+
+  --default-font-family: var(--typeface-body);
+  --font-display: var(--typeface-display);
+  --font-body: var(--typeface-body);
+
+  --radius-take: var(--corner-take);
+  --radius-pill: var(--corner-pill);
+  --shadow-take: var(--lift-take);
+}
+
+/* Type scale from 360px to 1280px through clamp(), so in-between widths look intentional (PRD 3.3). */
+@theme {
+  --text-display-xl: clamp(2.5rem, 1.62rem + 3.913vw, 4.75rem);
+  --text-display-xl--line-height: 1;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-l: clamp(1.875rem, 1.435rem + 1.957vw, 3rem);
+  --text-display-l--line-height: 1.02;
+  --text-display-l--letter-spacing: -0.02em;
+  --text-display-m: clamp(1.375rem, 1.228rem + 0.652vw, 1.75rem);
+  --text-display-m--line-height: 1.02;
+  --text-display-m--letter-spacing: -0.02em;
+  --text-body-l: clamp(1.125rem, 1.076rem + 0.217vw, 1.25rem);
+  --text-body-l--line-height: 1.55;
+  --text-body: clamp(1.0625rem, 1.038rem + 0.109vw, 1.125rem);
+  --text-body--line-height: 1.55;
+  --text-meta: clamp(0.8125rem, 0.788rem + 0.109vw, 0.875rem);
+  --text-meta--line-height: 1.4;
+}
+
+@layer base {
+  html {
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--typeface-body);
+    font-size: var(--text-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    touch-action: manipulation;
+  }
+
+  /* PRD 7: a visible 2px --signal focus ring with a 2px offset, never removed. */
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+  }
+}
