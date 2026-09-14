@@ -1,0 +1,20 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Local environment files - this page should have no secrets at all
+.env
+.env.*
+!.env.example
+
+# Deploy tool state
+.vercel/
+
+# Zuko's time-boxed approvals belong to one machine and one moment - never committed
+.zuko/approvals.json
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+*.log
