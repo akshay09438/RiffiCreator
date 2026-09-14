@@ -104,3 +104,83 @@
     }
   }
 }
+
+@layer components {
+  .poll-track {
+    display: flex;
+    height: 44px;
+    overflow: hidden;
+    border-radius: var(--corner-pill);
+    background-color: var(--chip-coral-bg);
+  }
+
+  @media (min-width: 64rem) {
+    .poll-track {
+      height: 52px;
+    }
+  }
+
+  .poll-fill {
+    width: var(--fill);
+    height: 100%;
+    background-color: var(--signal);
+  }
+
+  /* A right-side fill grows from the right edge: the comparison rows' Riffi side (PRD Block 3). */
+  .poll[data-fill='right'] .poll-track {
+    flex-direction: row-reverse;
+  }
+
+  /* The seat meter's empty track is an outline on the recess band, not a coral "no" side. */
+  .poll[data-variant='meter'] .poll-track {
+    background-color: var(--paper);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  /* Motion moment 1 (PRD 3.5): the hero sample fills from zero once the headline has risen. */
+  @keyframes poll-fill-in {
+    from {
+      width: 0;
+    }
+  }
+
+  .poll[data-motion='load'] .poll-fill {
+    animation: poll-fill-in 900ms cubic-bezier(0.22, 1, 0.36, 1) 420ms both;
+  }
+
+  /*
+   * Moments 2 and 3: the comparison rows and the seat meter fill when scrolled into view. With no
+   * JavaScript at all there is no `js` class, so the bars simply render full. If the inline script
+   * ran but the bundle never did (no `app-ready`), a failsafe fills them after 6 seconds.
+   */
+  .js .poll[data-motion='view'] .poll-fill {
+    width: 0;
+    transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1) var(--stagger);
+  }
+
+  .js .poll[data-motion='view'][data-in-view='true'] .poll-fill {
+    width: var(--fill);
+  }
+
+  @keyframes poll-failsafe {
+    to {
+      width: var(--fill);
+    }
+  }
+
+  .js:not(.app-ready) .poll[data-motion='view'] .poll-fill {
+    animation: poll-failsafe 1ms linear 6s forwards;
+  }
+
+  /* One selector per motion rule, each at least as specific as the rule it switches off. */
+  @media (prefers-reduced-motion: reduce) {
+    .poll .poll-fill,
+    .poll[data-motion='load'] .poll-fill,
+    .js .poll[data-motion='view'] .poll-fill,
+    .js:not(.app-ready) .poll[data-motion='view'] .poll-fill {
+      width: var(--fill);
+      animation: none;
+      transition: none;
+    }
+  }
+}
