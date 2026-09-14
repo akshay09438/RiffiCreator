@@ -1,0 +1,10 @@
+dist
+dist-server
+coverage
+public
+package-lock.json
+docs
+CLAUDE.md
+AGENTS.md
+.zuko
+.github
