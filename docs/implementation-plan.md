@@ -2,7 +2,7 @@
 
 _How much is done, what is in flight, what is left, and every decision that departs from the PRD. Updated in the same change as the work._
 
-**Last updated:** 15 Sep 2026 - the founder approved the build plan, and step 0 is done: the stop-and-ask list now also guards the files that decide what ships. The page build starts with Task 1.
+**Last updated:** 15 Sep 2026 - Task 1 is done: the tools are installed, every word and setting of the page lives in the content file, and the call-to-action link is built from it. 101 tests check them: 41 on the content, 39 on the link and 21 on the pre-send check. Next is Task 2, the page shell and the pre-render step.
 
 ## Where things stand
 
@@ -12,17 +12,17 @@ _How much is done, what is in flight, what is left, and every decision that depa
   - 181 behaviour and honesty tests, written by an independent test author who never saw the code.
   - A practice run of the plan's code in a scratch folder outside the project: a clean install of the exact versions, then typecheck, lint, build, the size budgets (JavaScript 67KB of 90KB, the whole page 202KB of 400KB), the output check, the preview images, and the pre-send check (it lists the 12 open items, as it should). The lint rules and the output check were also fed deliberately bad code, and caught every planted problem.
   - A separate reviewer replayed all 231 test checks against that practice code in its own scripts: 230 held. The one that did not was a faulty pattern in the plan's own brand-rules test, which mistook the approved font setting for a hard-coded font; it is fixed in the plan and re-checked. Every test file also typechecks against the code. The tests run for real only once the founder approves creating test files.
-- **In flight:** the build, task by task, following the approved plan. Step 0 is done; next is Task 1 (toolchain, content and the call-to-action link).
+- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list) and Task 1 (toolchain, content and the call-to-action link). Next: Task 2 (page shell and the pre-render step).
 - **Left:** the whole page - the ten build steps below.
 
 ## Build order (PRD section 9)
 
 | # | Step | Status |
 |---|---|---|
-| 1 | Scaffold Vite + React + TS + Tailwind v4; dev server runs | Not started |
+| 1 | Scaffold Vite + React + TS + Tailwind v4; dev server runs | In progress: tools installed and configured (Task 1); the page shell and the dev server come in Task 2 |
 | 2 | `tokens.css` complete and mapped through Tailwind v4 `@theme`; `global.css` | Not started |
 | 3 | Both variable fonts installed, wired and rendering | Not started |
-| 4 | `content.ts` in full, every `[FILL]` placeholder commented | Not started |
+| 4 | `content.ts` in full, every `[FILL]` placeholder commented | Done (Task 1): all copy and settings, the six open inputs marked, and a tick-list that `npm run presend` checks |
 | 5 | Primitives: Section, Chip, CtaButton, TakeCard, then PollBar | Not started |
 | 6 | Blocks 1-8 in page order, each checked at 320px | Not started |
 | 7 | The three motion moments, each verified under reduced motion | Not started |
