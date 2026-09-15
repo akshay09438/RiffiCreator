@@ -12,6 +12,10 @@ coverage/
 # Deploy tool state
 .vercel/
 
+# Audit reports
+lighthouse-*.json
+audit-*.png
+
 # Zuko's time-boxed approvals belong to one machine and one moment - never committed
 .zuko/approvals.json
 

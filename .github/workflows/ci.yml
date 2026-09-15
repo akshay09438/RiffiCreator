@@ -34,6 +34,11 @@ jobs:
         run: npm run lint
       - name: Tests
         run: npm test
+      - name: Build, budget and output check
+        run: |
+          npm run build
+          npm run budget
+          npm run check:dist
 
   secret-scan:
     name: Secret scan (gitleaks)
@@ -77,30 +82,30 @@ jobs:
       - name: Changed files
         run: |
           git fetch origin "${{ github.base_ref }}" --depth=1
-          git diff --name-only "origin/${{ github.base_ref }}...HEAD" > changed-files.txt
-          echo "Changed files:" && cat changed-files.txt
+          git diff --name-only "origin/${{ github.base_ref }}...HEAD" > "$RUNNER_TEMP/changed-files.txt"
+          echo "Changed files:" && cat "$RUNNER_TEMP/changed-files.txt"
 
       - name: Coverage on PR head
         run: |
           npm ci
           npm run coverage
-          cp coverage/coverage-summary.json head-summary.json
+          cp coverage/coverage-summary.json "$RUNNER_TEMP/head-summary.json"
 
       - name: Coverage on base branch
         run: |
           git stash --include-untracked || true
+          rm -rf coverage
           git checkout "origin/${{ github.base_ref }}"
-          npm ci
-          npm run coverage || true
-          cp coverage/coverage-summary.json base-summary.json || echo '{}' > base-summary.json
+          if [ -f package.json ]; then npm ci && (npm run coverage || true); fi
+          cp coverage/coverage-summary.json "$RUNNER_TEMP/base-summary.json" || echo '{}' > "$RUNNER_TEMP/base-summary.json"
           git checkout -
 
       - name: Compare
         run: |
           node .github/scripts/zuko-coverage-check.mjs \
-            --base base-summary.json \
-            --head head-summary.json \
-            --changed changed-files.txt
+            --base "$RUNNER_TEMP/base-summary.json" \
+            --head "$RUNNER_TEMP/head-summary.json" \
+            --changed "$RUNNER_TEMP/changed-files.txt"
 
   goodnight-gate:
     name: Goodnight merge-gate (dangerous changes are approved)
