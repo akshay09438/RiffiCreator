@@ -186,3 +186,149 @@
     }
   }
 }
+
+@layer components {
+  /* The header's hairline appears once the page scrolls, where the browser supports scroll timelines. */
+  @keyframes nav-hairline {
+    to {
+      box-shadow: 0 1px 0 var(--hairline);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    @supports (animation-timeline: scroll()) {
+      .nav {
+        animation: nav-hairline linear both;
+        animation-timeline: scroll();
+        animation-range: 0 48px;
+      }
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      .nav {
+        box-shadow: 0 1px 0 var(--hairline);
+      }
+    }
+  }
+
+  /* The headline is pushed toward the expanded end of the display face's width axis (PRD 3.3).
+     115% keeps "On Instagram" on one line in the desktop text column. */
+  .hero-title {
+    font-stretch: 115%;
+  }
+
+  /* Motion moment 1 (PRD 3.5): the headline lines rise in sequence. Transform only, so the
+     headline is never invisible and LCP is not delayed. */
+  @keyframes hero-rise {
+    from {
+      transform: translateY(0.32em);
+    }
+  }
+
+  .hero-line {
+    animation: hero-rise 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-line + .hero-line {
+    animation-delay: 60ms;
+  }
+
+  /* The vote count appears once the sample poll has filled; JavaScript ticks its number up. */
+  @keyframes vote-count-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .vote-count {
+    animation: vote-count-in 240ms ease-out 1320ms both;
+  }
+
+  /* The marquee: one CSS-animated row, repeated once so the loop has no seam (PRD Block 2).
+     Items carry their own spacing, so exactly half the track is one full set. */
+  .marquee {
+    overflow: hidden;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 60s linear infinite;
+  }
+
+  .marquee-item {
+    width: 18rem;
+    flex: none;
+    padding-inline-end: 1rem;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* The one moment of pure typographic scale on the page (PRD Block 6). */
+  .seats-number {
+    font-size: clamp(96px, 22vw, 200px);
+    font-stretch: 125%;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+  }
+
+  /* FAQ: native disclosures with the marker replaced by a rotating plus. */
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-icon {
+    transition: rotate 200ms ease-out;
+  }
+
+  .faq details[open] .faq-icon {
+    rotate: 45deg;
+  }
+
+  /* The answer's height animates where the browser supports it; elsewhere it simply appears. */
+  @supports (interpolate-size: allow-keywords) {
+    .faq details {
+      interpolate-size: allow-keywords;
+    }
+
+    .faq details::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size 240ms ease-out,
+        content-visibility 240ms allow-discrete;
+    }
+
+    .faq details[open]::details-content {
+      block-size: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-line,
+    .vote-count,
+    .marquee-track {
+      animation: none;
+    }
+
+    @media (min-width: 64rem) {
+      .nav {
+        animation: none;
+        box-shadow: 0 1px 0 var(--hairline);
+      }
+    }
+
+    .faq-icon,
+    .faq details::details-content {
+      transition: none;
+    }
+  }
+}
