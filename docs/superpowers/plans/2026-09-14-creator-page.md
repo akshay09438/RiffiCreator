@@ -2496,6 +2496,120 @@ describe('useCountUp', () => {
     expect(result.current).toBe(2140);
     expect(requestFrame).not.toHaveBeenCalled();
   });
+
+  it("ticks from the moment the anchor's CSS fade-in starts, not from navigation", () => {
+    vi.spyOn(performance, 'now').mockReturnValue(1000);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const element = document.createElement('p');
+    element.getAnimations = (() => [
+      { animationName: 'vote-count-in', startTime: 600 },
+    ]) as unknown as Element['getAnimations'];
+    // Built once, outside renderHook: the same object identity on every render, the way useRef() is.
+    const anchor = { current: element };
+    const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    act(() => frames.shift()?.(1920));
+    expect(result.current).toBe(0);
+    act(() => frames.shift()?.(2220));
+    expect(result.current).toBe(1873);
+    act(() => frames.shift()?.(2520));
+    expect(result.current).toBe(2140);
+    expect(frames).toHaveLength(0);
+  });
+
+  it("never rewinds when the anchor's fade-in started before the page hydrated", () => {
+    vi.spyOn(performance, 'now').mockReturnValue(2000);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const element = document.createElement('p');
+    element.getAnimations = (() => [
+      { animationName: 'vote-count-in', startTime: 600 },
+    ]) as unknown as Element['getAnimations'];
+    const anchor = { current: element };
+    const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    act(() => frames.shift()?.(2000));
+    expect(result.current).toBe(2140);
+  });
+
+  it("waits for a pending CSS animation's real start before ticking", async () => {
+    vi.spyOn(performance, 'now').mockReturnValue(1000);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const animation: { animationName: string; startTime: number | null; ready: Promise<{ startTime: number | null }> } = {
+      animationName: 'vote-count-in',
+      startTime: null,
+      ready: Promise.resolve({ startTime: null as number | null }),
+    };
+    animation.ready = Promise.resolve().then(() => {
+      animation.startTime = 600;
+      return animation;
+    });
+    const element = document.createElement('p');
+    element.getAnimations = (() => [animation]) as unknown as Element['getAnimations'];
+    const anchor = { current: element };
+    const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    expect(frames).toHaveLength(0);
+    await act(async () => {
+      await animation.ready;
+    });
+    expect(frames).toHaveLength(1);
+    act(() => frames.shift()?.(1920));
+    expect(result.current).toBe(0);
+    act(() => frames.shift()?.(2220));
+    expect(result.current).toBe(1873);
+    act(() => frames.shift()?.(2520));
+    expect(result.current).toBe(2140);
+    expect(frames).toHaveLength(0);
+  });
+
+  it('ticks when hydration lands after 1320ms but before the fade-in starts', () => {
+    vi.spyOn(performance, 'now').mockReturnValue(1500);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const element = document.createElement('p');
+    element.getAnimations = (() => [
+      { animationName: 'vote-count-in', startTime: 600 },
+    ]) as unknown as Element['getAnimations'];
+    const anchor = { current: element };
+    const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    expect(frames).toHaveLength(1);
+    act(() => frames.shift()?.(1920));
+    expect(result.current).toBe(0);
+    act(() => frames.shift()?.(2220));
+    expect(result.current).toBe(1873);
+    act(() => frames.shift()?.(2520));
+    expect(result.current).toBe(2140);
+    expect(frames).toHaveLength(0);
+  });
+
+  it('does not tick if the page unmounts before the animation starts', async () => {
+    vi.spyOn(performance, 'now').mockReturnValue(1000);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const animation: { animationName: string; startTime: number | null; ready: Promise<{ startTime: number | null }> } = {
+      animationName: 'vote-count-in',
+      startTime: null,
+      ready: Promise.resolve({ startTime: null as number | null }),
+    };
+    animation.ready = Promise.resolve().then(() => {
+      animation.startTime = 600;
+      return animation;
+    });
+    const element = document.createElement('p');
+    element.getAnimations = (() => [animation]) as unknown as Element['getAnimations'];
+    const anchor = { current: element };
+    const { unmount } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    unmount();
+    await act(async () => {
+      await animation.ready;
+    });
+    expect(frames).toHaveLength(0);
+  });
 });
 ```
 
@@ -2570,30 +2684,65 @@ export function useInView<T extends Element>(threshold = 0.35) {
 - [ ] **Step 5: Write `src/hooks/useCountUp.ts`**
 
 ```ts
-import { useEffect, useState } from 'react';
+import { type RefObject, useEffect, useState } from 'react';
 import { useReducedMotion } from './useReducedMotion';
 
 /**
- * Ticks a number from 0 up to `target`, starting `startMs` after navigation and lasting `durationMs`.
+ * Ticks a number from 0 up to `target` over `durationMs`, starting `startMs` after its anchor's CSS
+ * animation began - the moment the number starts to fade in. If that animation is still waiting for its
+ * first frame, the tick waits for its real start time; if the browser reports no animation at all, the
+ * tick starts `startMs` after navigation instead.
  * The first render is the final value, so the pre-rendered page and no-JS visitors see the real number.
  * It only animates when the page hydrated before the tick was due, so a late hydration on slow 4G
  * never rewinds a number the creator has already read.
  */
-export function useCountUp(target: number, startMs: number, durationMs: number): number {
+export function useCountUp(
+  target: number,
+  startMs: number,
+  durationMs: number,
+  anchor?: RefObject<Element | null>,
+): number {
   const reduced = useReducedMotion();
   const [value, setValue] = useState(target);
 
   useEffect(() => {
-    if (reduced || performance.now() >= startMs) return;
+    if (reduced) return;
     let frame = 0;
-    const tick = (now: number) => {
-      const progress = Math.min(1, Math.max(0, (now - startMs) / durationMs));
-      setValue(Math.round(target * (1 - (1 - progress) ** 3)));
-      if (progress < 1) frame = requestAnimationFrame(tick);
+    let cancelled = false;
+
+    const tickFrom = (origin: number) => {
+      const due = origin + startMs;
+      if (performance.now() >= due) return;
+      const tick = (now: number) => {
+        const progress = Math.min(1, Math.max(0, (now - due) / durationMs));
+        setValue(Math.round(target * (1 - (1 - progress) ** 3)));
+        if (progress < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
     };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [reduced, target, startMs, durationMs]);
+
+    // A CSS animation delay counts from when the element was first styled, not from navigation.
+    // Transitions are listed before animations, so pick the CSS animation itself.
+    const reveal = anchor?.current?.getAnimations?.().find((animation) => 'animationName' in animation);
+    if (!reveal) {
+      tickFrom(0);
+    } else if (typeof reveal.startTime === 'number') {
+      tickFrom(reveal.startTime);
+    } else {
+      // Still pending: its start time is set on the frame it begins, which cannot be past its delay.
+      reveal.ready.then(
+        (started) => {
+          if (!cancelled && typeof started.startTime === 'number') tickFrom(started.startTime);
+        },
+        () => undefined,
+      );
+    }
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+    };
+  }, [reduced, target, startMs, durationMs, anchor]);
 
   return value;
 }
@@ -3929,6 +4078,40 @@ describe('where the words come from (PRD 5.2, rule 2)', () => {
 });
 ```
 
+`tests/motion-timing.test.ts`:
+
+```ts
+// @vitest-environment node
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { COUNT_START_MS } from '../src/components/blocks/Hero';
+
+// The hero's one motion moment lives in two places: CSS runs the fill and the fade, JavaScript ticks the number.
+const css = readFileSync(resolve(process.cwd(), 'src/styles/global.css'), 'utf8');
+
+function animationTimes(selector: string): number[] {
+  const start = css.indexOf(`${selector} {`);
+  expect(start).toBeGreaterThan(-1);
+  const rule = css.slice(start, css.indexOf('}', start));
+  const declaration = rule.match(/animation:\s*([^;]+);/);
+  expect(declaration).not.toBeNull();
+  return [...(declaration?.[1] ?? '').matchAll(/(\d+)ms/g)].map((match) => Number(match[1]));
+}
+
+describe('hero motion timing (PRD 3.5)', () => {
+  it('starts the vote count exactly when the sample poll has filled', () => {
+    const [duration, delay] = animationTimes(".poll[data-motion='load'] .poll-fill");
+    expect(delay + duration).toBe(COUNT_START_MS);
+  });
+
+  it('fades the vote count in at the moment its number starts to tick', () => {
+    const [, delay] = animationTimes('.vote-count');
+    expect(delay).toBe(COUNT_START_MS);
+  });
+});
+```
+
 Replace the whole of `tests/prerender.test.ts` with:
 
 ```ts
@@ -4031,6 +4214,7 @@ export function Nav() {
 `src/components/blocks/Hero.tsx`:
 
 ```tsx
+import { useRef } from 'react';
 import { content } from '../../content';
 import { useCountUp } from '../../hooks/useCountUp';
 import { CtaButton } from '../primitives/CtaButton';
@@ -4038,14 +4222,16 @@ import { PollBar } from '../primitives/PollBar';
 import { Section } from '../primitives/Section';
 import { TakeCard } from '../primitives/TakeCard';
 
-/** The tick starts once the sample poll has filled: a 420ms delay plus the 900ms fill. */
-const COUNT_START_MS = 1320;
+/** The tick starts once the sample poll has filled: a 420ms delay plus the 900ms fill. The vote count's
+ *  CSS fade-in waits the same 1320ms; tests/motion-timing.test.ts keeps the numbers in step. */
+export const COUNT_START_MS = 1320;
 const COUNT_DURATION_MS = 600;
 
 /** Block 1: what this is and the offer, inside five seconds - and the page's one showpiece motion. */
 export function Hero() {
   const { titleLines, subline, sampleTake } = content.hero;
-  const votes = useCountUp(sampleTake.votes, COUNT_START_MS, COUNT_DURATION_MS);
+  const voteCount = useRef<HTMLParagraphElement>(null);
+  const votes = useCountUp(sampleTake.votes, COUNT_START_MS, COUNT_DURATION_MS, voteCount);
 
   return (
     <Section id="hero" tone="paper">
@@ -4078,7 +4264,7 @@ export function Hero() {
                 }}
               />
             </div>
-            <p className="vote-count mt-4 text-meta text-take">
+            <p ref={voteCount} className="vote-count mt-4 text-meta text-take">
               {/* One text node, so the server HTML reads "2,140 votes" with no React text separators. */}
               {`${votes.toLocaleString('en-IN')} ${sampleTake.votesLabel}`}
             </p>
@@ -4567,7 +4753,7 @@ export default function App() {
 - [ ] **Step 7: Run the tests to confirm they pass**
 
 Run: `npm test`
-Expected: PASS - `Test Files  11 passed (11)`.
+Expected: PASS - `Test Files  12 passed (12)`.
 
 - [ ] **Step 8: Run typecheck, lint and the build**
 
@@ -4577,9 +4763,11 @@ Expected: `checks ok`, after the build prints `prerender: wrote dist/index.html 
 - [ ] **Step 9: Commit**
 
 ```bash
-git add src/components/blocks src/App.tsx src/styles/global.css tests/page.test.tsx tests/prerender.test.ts
+git add src/components/blocks src/App.tsx src/styles/global.css tests/page.test.tsx tests/prerender.test.ts tests/copy-source.test.tsx
 git commit -m "feat: the eight blocks and the full page" -m "Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ```
+
+Changed during the build (15 Sep 2026, founder-approved "Yes, fix the timing"): the vote count's tick starts from the moment its CSS fade-in really starts, which the browser reports, instead of a fixed 1320ms after navigation. On 4G the two clocks differ by the page's first-render time, so the tick was usually invisible or skipped. `src/hooks/useCountUp.ts` (Task 4) takes an optional anchor ref, `Hero.tsx` exports `COUNT_START_MS` and anchors on the vote count, `tests/hooks.test.tsx` gained two anchor tests, and the new `tests/motion-timing.test.ts` keeps the CSS fill and fade timings equal to `COUNT_START_MS`. The code blocks in this plan show the files as built, and the Task 7 commit line above now includes `tests/copy-source.test.tsx`, which it had missed.
 
 ---
 
@@ -4761,7 +4949,7 @@ Open `public/og.png` with the Read tool. Expected: white ground; "Riffi" at top 
 - [ ] **Step 6: Run the tests and the build**
 
 Run: `npm test && npm run build && ls dist/og.png dist/apple-touch-icon.png dist/favicon.svg`
-Expected: `Test Files  12 passed (12)`, the build succeeds, and all three files are listed.
+Expected: `Test Files  13 passed (13)`, the build succeeds, and all three files are listed.
 
 - [ ] **Step 7: Commit**
 
