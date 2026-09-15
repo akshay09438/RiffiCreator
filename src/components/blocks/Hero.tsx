@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { content } from '../../content';
 import { useCountUp } from '../../hooks/useCountUp';
 import { CtaButton } from '../primitives/CtaButton';
@@ -5,14 +6,16 @@ import { PollBar } from '../primitives/PollBar';
 import { Section } from '../primitives/Section';
 import { TakeCard } from '../primitives/TakeCard';
 
-/** The tick starts once the sample poll has filled: a 420ms delay plus the 900ms fill. */
-const COUNT_START_MS = 1320;
+/** The tick starts once the sample poll has filled: a 420ms delay plus the 900ms fill. The vote count's
+ *  CSS fade-in waits the same 1320ms; tests/motion-timing.test.ts keeps the numbers in step. */
+export const COUNT_START_MS = 1320;
 const COUNT_DURATION_MS = 600;
 
 /** Block 1: what this is and the offer, inside five seconds - and the page's one showpiece motion. */
 export function Hero() {
   const { titleLines, subline, sampleTake } = content.hero;
-  const votes = useCountUp(sampleTake.votes, COUNT_START_MS, COUNT_DURATION_MS);
+  const voteCount = useRef<HTMLParagraphElement>(null);
+  const votes = useCountUp(sampleTake.votes, COUNT_START_MS, COUNT_DURATION_MS, voteCount);
 
   return (
     <Section id="hero" tone="paper">
@@ -45,7 +48,7 @@ export function Hero() {
                 }}
               />
             </div>
-            <p className="vote-count mt-4 text-meta text-take">
+            <p ref={voteCount} className="vote-count mt-4 text-meta text-take">
               {/* One text node, so the server HTML reads "2,140 votes" with no React text separators. */}
               {`${votes.toLocaleString('en-IN')} ${sampleTake.votesLabel}`}
             </p>

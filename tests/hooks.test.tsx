@@ -117,4 +117,36 @@ describe('useCountUp', () => {
     expect(result.current).toBe(2140);
     expect(requestFrame).not.toHaveBeenCalled();
   });
+
+  it("ticks from the moment the anchor's CSS fade-in starts, not from navigation", () => {
+    vi.spyOn(performance, 'now').mockReturnValue(1000);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const element = document.createElement('p');
+    element.getAnimations = (() => [{ startTime: 600 }]) as unknown as Element['getAnimations'];
+    // Built once, outside renderHook: the same object identity on every render, the way useRef() is.
+    const anchor = { current: element };
+    const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    act(() => frames.shift()?.(1920));
+    expect(result.current).toBe(0);
+    act(() => frames.shift()?.(2220));
+    expect(result.current).toBe(1873);
+    act(() => frames.shift()?.(2520));
+    expect(result.current).toBe(2140);
+    expect(frames).toHaveLength(0);
+  });
+
+  it("never rewinds when the anchor's fade-in started before the page hydrated", () => {
+    vi.spyOn(performance, 'now').mockReturnValue(2000);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const element = document.createElement('p');
+    element.getAnimations = (() => [{ startTime: 600 }]) as unknown as Element['getAnimations'];
+    const anchor = { current: element };
+    const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    act(() => frames.shift()?.(2000));
+    expect(result.current).toBe(2140);
+  });
 });
