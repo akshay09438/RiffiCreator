@@ -3171,9 +3171,11 @@ export function PollBar({
     background-color: var(--signal);
   }
 
-  /* A right-side fill grows from the right edge: the comparison rows' Riffi side (PRD Block 3). */
+  /* A right-side fill grows from the right edge: the comparison rows' Riffi side (PRD Block 3).
+     direction: rtl pins the fill's start edge on the right, so growing it is not a layout shift;
+     flex-direction: row-reverse would move its left edge every frame, which counts as CLS. */
   .poll[data-fill='right'] .poll-track {
-    flex-direction: row-reverse;
+    direction: rtl;
   }
 
   /* The seat meter's empty track is an outline on the recess band, not a coral "no" side. */

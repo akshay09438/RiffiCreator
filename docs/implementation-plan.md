@@ -2,7 +2,7 @@
 
 _How much is done, what is in flight, what is left, and every decision that departs from the PRD. Updated in the same change as the work._
 
-**Last updated:** 15 Sep 2026 - Task 5 is done: the shared building blocks every section uses - the section frame, the label chip, the "Claim a seat" button, the take card and the wordmark. 154 tests pass. Next is Task 6, the poll bar.
+**Last updated:** 15 Sep 2026 - Task 6 is done: the poll bar, the page's one visual device. It shows a split at a glance, fills when the page loads or when it scrolls into view, and stays still for anyone who has turned motion off. 162 tests pass. Next is Task 7, the eight blocks and the full page.
 
 ## Where things stand
 
@@ -12,7 +12,7 @@ _How much is done, what is in flight, what is left, and every decision that depa
   - 181 behaviour and honesty tests, written by an independent test author who never saw the code.
   - A practice run of the plan's code in a scratch folder outside the project: a clean install of the exact versions, then typecheck, lint, build, the size budgets (JavaScript 67KB of 90KB, the whole page 202KB of 400KB), the output check, the preview images, and the pre-send check (it lists the 12 open items, as it should). The lint rules and the output check were also fed deliberately bad code, and caught every planted problem.
   - A separate reviewer replayed all 231 test checks against that practice code in its own scripts: 230 held. The one that did not was a faulty pattern in the plan's own brand-rules test, which mistook the approved font setting for a hard-coded font; it is fixed in the plan and re-checked. Every test file also typechecks against the code. The tests run for real only once the founder approves creating test files.
-- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list) and Tasks 1-5 (toolchain, content and the call-to-action link; page shell and pre-render step; brand layer; motion hooks; primitives). Next: Task 6 (the poll bar).
+- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list) and Tasks 1-6 (toolchain, content and the call-to-action link; page shell and pre-render step; brand layer; motion hooks; primitives; the poll bar). Next: Task 7 (the eight blocks and the full page).
 - **Left:** the whole page - the ten build steps below.
 
 ## Build order (PRD section 9)
@@ -23,7 +23,7 @@ _How much is done, what is in flight, what is left, and every decision that depa
 | 2 | `tokens.css` complete and mapped through Tailwind v4 `@theme`; `global.css` | Done (Task 3): every brand value in `tokens.css`, mapped through `@theme`; the type scale, base styles and focus ring in `global.css` |
 | 3 | Both variable fonts installed, wired and rendering | In progress: both fonts self-hosted, Latin files only, and preloaded (Task 3); how they render is checked in the Task 9 audit |
 | 4 | `content.ts` in full, every `[FILL]` placeholder commented | Done (Task 1): all copy and settings, the six open inputs marked, and a tick-list that `npm run presend` checks |
-| 5 | Primitives: Section, Chip, CtaButton, TakeCard, then PollBar | In progress: Section, Chip, CtaButton, TakeCard and the wordmark are built and tested (Task 5); PollBar is Task 6 |
+| 5 | Primitives: Section, Chip, CtaButton, TakeCard, then PollBar | Done (Tasks 5-6): Section, Chip, CtaButton, TakeCard, the wordmark and PollBar, each with tests |
 | 6 | Blocks 1-8 in page order, each checked at 320px | Not started |
 | 7 | The three motion moments, each verified under reduced motion | In progress: the motion hooks, including the reduced-motion check, are built and tested (Task 4); the moments themselves arrive with the poll bar and the blocks (Tasks 6-7) and are verified in the Task 9 audit |
 | 8 | `og.png`, favicon set, head tags | Not started |
@@ -78,6 +78,7 @@ Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `
 | 15 Sep 2026 | **The stop-and-ask list grows** to guard the files that decide what ships: `package-lock.json`, `.npmrc`, `vite.config.*`, `src/main.tsx`, `scripts/**` and `public/**` (step 0). | Founder-approved ("Yes, protect them too"). Any of them could change the page, or switch a check off, without touching a file already on the list. |
 | 15 Sep 2026 | The independent head test reads `index.html` from the project root, not through `new URL('../index.html', import.meta.url)`. | Founder-approved ("Yes, fix that line"). Vite 6 rewrites that URL inside browser-like (jsdom) tests, so the test could not load at all. The test author changed only lines 3 and 7; every check is unchanged. |
 | 15 Sep 2026 | The stylesheet is built only from the page's own code (`src/`), not from every file in the project. | Founder-approved ("Yes, fix it"). Tailwind otherwise read the planning documents and shipped styles that exist only there, including a hard-coded brand blue in the exact form the brand rules forbid. |
+| 15 Sep 2026 | Poll bars that fill from the right are anchored with `direction: rtl`, not `flex-direction: row-reverse`. | Founder-approved ("Yes, fix it"). With row-reverse the browser counted the filling as layout shift: about 0.04 across the four comparison bars, against PRD 5.5's zero and the 0.02 budget. The fix measured zero. |
 
 ## Drift log - where the build departs from the PRD
 
