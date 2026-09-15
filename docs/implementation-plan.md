@@ -2,7 +2,7 @@
 
 _How much is done, what is in flight, what is left, and every decision that departs from the PRD. Updated in the same change as the work._
 
-**Last updated:** 15 Sep 2026 - Task 7 is done: the full page is assembled. All eight blocks sit in the order a creator's doubts come up, every word comes from the content file, and the finished page is written out as plain HTML before any script runs. 234 tests pass, including the independent author's 60 checks on the rendered page. Next is Task 8, the link-preview card and the icons.
+**Last updated:** 15 Sep 2026 - Task 8 is done: the link-preview card Instagram shows inside the DM (the one-of-50 line and a bare 71/29 poll bar) and the site icons are generated from the brand tokens. 238 tests pass. Next is Task 9: the size budgets, the output check, CI and the audit on real screen sizes.
 
 ## Where things stand
 
@@ -12,7 +12,7 @@ _How much is done, what is in flight, what is left, and every decision that depa
   - 181 behaviour and honesty tests, written by an independent test author who never saw the code.
   - A practice run of the plan's code in a scratch folder outside the project: a clean install of the exact versions, then typecheck, lint, build, the size budgets (JavaScript 67KB of 90KB, the whole page 202KB of 400KB), the output check, the preview images, and the pre-send check (it lists the 12 open items, as it should). The lint rules and the output check were also fed deliberately bad code, and caught every planted problem.
   - A separate reviewer replayed all 231 test checks against that practice code in its own scripts: 230 held. The one that did not was a faulty pattern in the plan's own brand-rules test, which mistook the approved font setting for a hard-coded font; it is fixed in the plan and re-checked. Every test file also typechecks against the code. The tests run for real only once the founder approves creating test files.
-- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list) and Tasks 1-7 (toolchain, content and the call-to-action link; page shell and pre-render step; brand layer; motion hooks; primitives; the poll bar; the eight blocks and the full page). Next: Task 8 (the link-preview card and the icons).
+- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list) and Tasks 1-8 (toolchain, content and the call-to-action link; page shell and pre-render step; brand layer; motion hooks; primitives; the poll bar; the eight blocks and the full page; the link-preview card and the icons). Next: Task 9 (budgets, output checks, CI and the audit).
 - **Left:** the whole page - the ten build steps below.
 
 ## Build order (PRD section 9)
@@ -26,7 +26,7 @@ _How much is done, what is in flight, what is left, and every decision that depa
 | 5 | Primitives: Section, Chip, CtaButton, TakeCard, then PollBar | Done (Tasks 5-6): Section, Chip, CtaButton, TakeCard, the wordmark and PollBar, each with tests |
 | 6 | Blocks 1-8 in page order, each checked at 320px | In progress: all eight blocks built in page order and tested (Task 7); the 320px check is part of the Task 9 audit |
 | 7 | The three motion moments, each verified under reduced motion | In progress: the motion hooks, including the reduced-motion check, are built and tested (Task 4); the moments themselves arrive with the poll bar and the blocks (Tasks 6-7) and are verified in the Task 9 audit |
-| 8 | `og.png`, favicon set, head tags | Not started |
+| 8 | `og.png`, favicon set, head tags | Done (Tasks 2 and 8): head tags in `index.html`; the preview card, favicon and home-screen icon generated from the brand tokens |
 | 9 | Audit: Lighthouse mobile, 320px overflow, keyboard-only, greyscale | Not started |
 | 10 | Self-critique against PRD 3.6; cut one thing | Not started |
 
@@ -80,6 +80,7 @@ Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `
 | 15 Sep 2026 | The stylesheet is built only from the page's own code (`src/`), not from every file in the project. | Founder-approved ("Yes, fix it"). Tailwind otherwise read the planning documents and shipped styles that exist only there, including a hard-coded brand blue in the exact form the brand rules forbid. |
 | 15 Sep 2026 | Poll bars that fill from the right are anchored with `direction: rtl`, not `flex-direction: row-reverse`. | Founder-approved ("Yes, fix it"). With row-reverse the browser counted the filling as layout shift: about 0.04 across the four comparison bars, against PRD 5.5's zero and the 0.02 budget. The fix measured zero. |
 | 15 Sep 2026 | The vote count's count-up starts when its fade-in actually starts, read from the browser, not a fixed time after the page request. | Founder-approved ("Yes, fix the timing"). The two clocks differ by however long the page takes to appear, so on 4G the count-up usually never showed. A test keeps the style file's timings and the code's in step. |
+| 15 Sep 2026 | The preview card's headline uses the page headline's 115% width, sized so each sentence sits on one line, and the image tool always removes its temporary browser files. | Founder-approved ("Yes, fix the headline", "Yes, clean up"). At 125% the card broke "lakhs." onto its own line in a card Instagram caches, and a failed run could leave about 14 MB behind. |
 
 ## Drift log - where the build departs from the PRD
 
@@ -100,3 +101,4 @@ Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `
 | 15 Sep 2026 | React 19.3.0, lucide-react 1.46.0 and other just-released versions | The newest versions published at least 7 days before approval, installed with `--before` and no install scripts | Supply-chain safety: a fresh release has had no time for a bad publish to be caught. |
 | 15 Sep 2026 | Placeholders marked in comments only | Also an `inputsConfirmed` checklist in `settings`, checked by `npm run presend`; the page goes online only through `npm run release` | Deleting a comment is not an answer, and the check runs on every deploy. |
 | 15 Sep 2026 | The width axis "pushed to expanded" on the largest lines | The headline at 115% width; the big 50 at 125% | At 125%, "On Instagram" breaks onto two lines in the desktop column. |
+| 15 Sep 2026 | Preview card: one poll bar at 71/29 | The bar without numbers or labels | A bare graphic makes no claim that could read as real data. |

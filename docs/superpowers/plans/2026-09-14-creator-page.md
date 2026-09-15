@@ -4893,41 +4893,45 @@ function screenshot(name, body, width, height) {
   console.log(`images: wrote public/${name} (${statSync(output).size} bytes)`);
 }
 
-mkdirSync(publicDir, { recursive: true });
-
-const [lineOne, lineTwo] = content.hero.titleLines;
-const agree = content.hero.sampleTake.agree.percent;
-
-// PRD 5.6: white ground, the wordmark, the one-of-50 line, one poll bar at 71/29.
-screenshot(
-  'og.png',
-  `<div style="box-sizing:border-box;width:1200px;height:630px;padding:64px 80px;display:flex;flex-direction:column;justify-content:space-between;background:var(--paper);color:var(--ink)">
-    <div style="font-family:var(--typeface-display);font-weight:800;font-size:44px;line-height:1">${escapeHtml(content.nav.wordmark)}</div>
-    <div style="font-family:var(--typeface-display);font-weight:800;font-stretch:125%;font-size:64px;line-height:1;letter-spacing:-0.03em">
-      <div>${escapeHtml(lineOne)}</div><div>${escapeHtml(lineTwo)}</div>
-    </div>
-    <div style="display:flex;height:52px;overflow:hidden;border-radius:var(--corner-pill);background:var(--chip-coral-bg)">
-      <div style="width:${agree}%;background:var(--signal)"></div>
-    </div>
-  </div>`,
-  1200,
-  630,
-);
-
-screenshot(
-  'apple-touch-icon.png',
-  `<div style="box-sizing:border-box;width:180px;height:180px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--paper);font-family:var(--typeface-display);font-weight:800;font-size:112px;line-height:1">${escapeHtml(content.nav.wordmark.charAt(0))}</div>`,
-  180,
-  180,
-);
-
-const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="${token('--ink')}"/><rect x="6" y="13" width="20" height="6" rx="3" fill="${token('--chip-coral-bg')}"/><rect x="6" y="13" width="14" height="6" rx="3" fill="${token('--signal')}"/><rect x="11" y="13" width="9" height="6" fill="${token('--signal')}"/></svg>\n`;
-writeFileSync(path.join(publicDir, 'favicon.svg'), favicon);
-console.log('images: wrote public/favicon.svg');
 try {
-  rmSync(work, { recursive: true, force: true });
-} catch {
-  // Edge can hold its profile for a moment after exiting; the system clears temp files later.
+  mkdirSync(publicDir, { recursive: true });
+
+  const [lineOne, lineTwo] = content.hero.titleLines;
+  const agree = content.hero.sampleTake.agree.percent;
+
+  // PRD 5.6: white ground, the wordmark, the one-of-50 line, one poll bar at 71/29.
+  screenshot(
+    'og.png',
+    `<div style="box-sizing:border-box;width:1200px;height:630px;padding:64px 80px;display:flex;flex-direction:column;justify-content:space-between;background:var(--paper);color:var(--ink)">
+      <div style="font-family:var(--typeface-display);font-weight:800;font-size:44px;line-height:1">${escapeHtml(content.nav.wordmark)}</div>
+      <div style="font-family:var(--typeface-display);font-weight:800;font-stretch:115%;font-size:56px;line-height:1;letter-spacing:-0.03em">
+        <div style="white-space:nowrap">${escapeHtml(lineOne)}</div><div style="white-space:nowrap">${escapeHtml(lineTwo)}</div>
+      </div>
+      <div style="display:flex;height:52px;overflow:hidden;border-radius:var(--corner-pill);background:var(--chip-coral-bg)">
+        <div style="width:${agree}%;background:var(--signal)"></div>
+      </div>
+    </div>`,
+    1200,
+    630,
+  );
+
+  screenshot(
+    'apple-touch-icon.png',
+    `<div style="box-sizing:border-box;width:180px;height:180px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--paper);font-family:var(--typeface-display);font-weight:800;font-size:112px;line-height:1">${escapeHtml(content.nav.wordmark.charAt(0))}</div>`,
+    180,
+    180,
+  );
+
+  const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="${token('--ink')}"/><rect x="6" y="13" width="20" height="6" rx="3" fill="${token('--chip-coral-bg')}"/><rect x="6" y="13" width="14" height="6" rx="3" fill="${token('--signal')}"/><rect x="11" y="13" width="9" height="6" fill="${token('--signal')}"/></svg>\n`;
+  writeFileSync(path.join(publicDir, 'favicon.svg'), favicon);
+  console.log('images: wrote public/favicon.svg');
+} finally {
+  // Always remove the temporary pages and Edge profiles, even when a render fails.
+  try {
+    rmSync(work, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
+  } catch (error) {
+    console.warn(`images: could not remove the temporary folder ${work}: ${error.message}`);
+  }
 }
 ```
 
@@ -4957,6 +4961,8 @@ Expected: `Test Files  13 passed (13)`, the build succeeds, and all three files 
 git add scripts/make-images.mjs public/og.png public/apple-touch-icon.png public/favicon.svg tests/images.test.ts
 git commit -m "feat: link-preview card, apple touch icon and favicon" -m "Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ```
+
+Changed during the build (15 Sep 2026, founder-approved "Yes, fix the headline" and "Yes, clean up"): the card headline is set at 115% width - the page headline's setting - at a size where each sentence fits on one line, with `white-space: nowrap` on each line so an overlong line overflows visibly instead of re-wrapping. At 125% the card broke "lakhs." onto its own line. The renders now run inside `try/finally`, so the temporary pages and Edge profiles are always removed, with a warning if removal fails. The script block above shows the file as built.
 
 ---
 
