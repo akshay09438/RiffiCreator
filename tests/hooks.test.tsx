@@ -124,7 +124,9 @@ describe('useCountUp', () => {
     vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
     vi.stubGlobal('cancelAnimationFrame', () => {});
     const element = document.createElement('p');
-    element.getAnimations = (() => [{ startTime: 600 }]) as unknown as Element['getAnimations'];
+    element.getAnimations = (() => [
+      { animationName: 'vote-count-in', startTime: 600 },
+    ]) as unknown as Element['getAnimations'];
     // Built once, outside renderHook: the same object identity on every render, the way useRef() is.
     const anchor = { current: element };
     const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
@@ -143,10 +145,90 @@ describe('useCountUp', () => {
     vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
     vi.stubGlobal('cancelAnimationFrame', () => {});
     const element = document.createElement('p');
-    element.getAnimations = (() => [{ startTime: 600 }]) as unknown as Element['getAnimations'];
+    element.getAnimations = (() => [
+      { animationName: 'vote-count-in', startTime: 600 },
+    ]) as unknown as Element['getAnimations'];
     const anchor = { current: element };
     const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
     act(() => frames.shift()?.(2000));
     expect(result.current).toBe(2140);
+  });
+
+  it("waits for a pending CSS animation's real start before ticking", async () => {
+    vi.spyOn(performance, 'now').mockReturnValue(1000);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const animation: { animationName: string; startTime: number | null; ready: Promise<{ startTime: number | null }> } = {
+      animationName: 'vote-count-in',
+      startTime: null,
+      ready: Promise.resolve({ startTime: null as number | null }),
+    };
+    animation.ready = Promise.resolve().then(() => {
+      animation.startTime = 600;
+      return animation;
+    });
+    const element = document.createElement('p');
+    element.getAnimations = (() => [animation]) as unknown as Element['getAnimations'];
+    const anchor = { current: element };
+    const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    expect(frames).toHaveLength(0);
+    await act(async () => {
+      await animation.ready;
+    });
+    expect(frames).toHaveLength(1);
+    act(() => frames.shift()?.(1920));
+    expect(result.current).toBe(0);
+    act(() => frames.shift()?.(2220));
+    expect(result.current).toBe(1873);
+    act(() => frames.shift()?.(2520));
+    expect(result.current).toBe(2140);
+    expect(frames).toHaveLength(0);
+  });
+
+  it('ticks when hydration lands after 1320ms but before the fade-in starts', () => {
+    vi.spyOn(performance, 'now').mockReturnValue(1500);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const element = document.createElement('p');
+    element.getAnimations = (() => [
+      { animationName: 'vote-count-in', startTime: 600 },
+    ]) as unknown as Element['getAnimations'];
+    const anchor = { current: element };
+    const { result } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    expect(frames).toHaveLength(1);
+    act(() => frames.shift()?.(1920));
+    expect(result.current).toBe(0);
+    act(() => frames.shift()?.(2220));
+    expect(result.current).toBe(1873);
+    act(() => frames.shift()?.(2520));
+    expect(result.current).toBe(2140);
+    expect(frames).toHaveLength(0);
+  });
+
+  it('does not tick if the page unmounts before the animation starts', async () => {
+    vi.spyOn(performance, 'now').mockReturnValue(1000);
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => frames.push(callback));
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const animation: { animationName: string; startTime: number | null; ready: Promise<{ startTime: number | null }> } = {
+      animationName: 'vote-count-in',
+      startTime: null,
+      ready: Promise.resolve({ startTime: null as number | null }),
+    };
+    animation.ready = Promise.resolve().then(() => {
+      animation.startTime = 600;
+      return animation;
+    });
+    const element = document.createElement('p');
+    element.getAnimations = (() => [animation]) as unknown as Element['getAnimations'];
+    const anchor = { current: element };
+    const { unmount } = renderHook(() => useCountUp(2140, 1320, 600, anchor));
+    unmount();
+    await act(async () => {
+      await animation.ready;
+    });
+    expect(frames).toHaveLength(0);
   });
 });
