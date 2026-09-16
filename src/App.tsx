@@ -25,8 +25,8 @@ export default function App() {
       <Nav />
       <main id="main">
         <Hero />
-        <WhatRiffiIs />
         <VideoTakes />
+        <WhatRiffiIs />
         <WhyHere />
         <HowYouEarn />
         <LongGame />

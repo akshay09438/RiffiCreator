@@ -8,7 +8,7 @@ import { Section } from '../primitives/Section';
 export function VideoTakes() {
   const block = content.videoTakes;
   return (
-    <Section id="video-takes" tone="sky" belowFold>
+    <Section id="video-takes" tone="recess" belowFold>
       <h2 id="video-takes-heading" className="font-display text-display-l font-bold">
         {block.heading}
       </h2>

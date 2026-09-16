@@ -14,10 +14,12 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, SEAT_COUNT, URGENCY, sen
 
 const normalize = (text: string | null | undefined): string => (text ?? '').replace(/\s+/g, ' ').trim();
 
+// Order since 17 Sep 2026: video leads (Riffi is pitched to reels creators), the typed
+// option (what-riffi-is) is second - reversed from the block's original PRD position.
 const SECTION_IDS = [
   'hero',
-  'what-riffi-is',
   'video-takes',
+  'what-riffi-is',
   'why-here',
   'how-you-earn',
   'long-game',
@@ -278,21 +280,21 @@ describe('#what-riffi-is (PRD Block 2)', () => {
   });
 });
 
-// ---------- new block: or just say it to camera ----------
+// ---------- video takes: now the block that leads (repositioned 17 Sep 2026) ----------
 
-describe('#video-takes (new block, added 17 Sep 2026)', () => {
+describe('#video-takes (added 17 Sep 2026, repositioned the same day to lead ahead of #what-riffi-is)', () => {
   beforeEach(() => {
     render(<App />);
   });
 
-  it('sits exactly once, directly between #what-riffi-is and #why-here', () => {
+  it('sits exactly once, directly between #hero and #what-riffi-is', () => {
     expect(document.querySelectorAll('#video-takes')).toHaveLength(1);
     const main = screen.getByRole('main');
     const ids = Array.from(main.querySelectorAll('section')).map((element) => element.id);
     const at = ids.indexOf('video-takes');
     expect(at).toBeGreaterThan(-1);
-    expect(ids[at - 1]).toBe('what-riffi-is');
-    expect(ids[at + 1]).toBe('why-here');
+    expect(ids[at - 1]).toBe('hero');
+    expect(ids[at + 1]).toBe('what-riffi-is');
   });
 
   it('shows its own heading, lead, badge and footer line', () => {

@@ -10,7 +10,7 @@ const CATEGORY_TONES: readonly ChipTone[] = ['blue', 'butter', 'coral'];
 export function WhatRiffiIs() {
   const block = content.whatRiffiIs;
   return (
-    <Section id="what-riffi-is" tone="recess" belowFold>
+    <Section id="what-riffi-is" tone="paper" belowFold>
       <h2 id="what-riffi-is-heading" className="font-display text-display-l font-bold">
         {block.heading}
       </h2>

@@ -79,13 +79,13 @@ Both typefaces ship as the Fontsource 5.3.0 variable-font Latin subset only (`ar
 
 ## Tests
 
-13 files, 238 tests, all passing (`npm test`). Five are the independent-author suite, written from the PRD without sight of the implementation, and are never edited to make code pass:
+13 files, all passing (`npm test`). The count has grown with each round: 231 at the last full audit (15 Sep 2026), 238 after the sticker restyle (commit `1db5b9b`), 239 after commit `441baba` removed reward points, and 249 after the video-takes block and its own coverage landed (commit `0cf6402`). Five files are the independent-author suite, written from the PRD without sight of the implementation, and are never edited to make code pass:
 
-- `tests/content.test.ts` (independent author) - every honesty rule (PRD 2.4) against `content.ts`'s raw source and parsed values.
+- `tests/content.test.ts` (independent author) - every honesty rule (PRD 2.4) against `content.ts`'s raw source and parsed values; since 17 Sep 2026, also the video-takes block's copy and the "What Riffi is" copy that moved away from cricket, against `docs/functional-spec.md`'s text.
 - `tests/cta.test.ts` (independent author) - `instagramDmHref` and `whatsappHref` accept every valid handle or number shape and reject every invalid one.
 - `tests/presend.test.ts` (independent author) - the placeholder marker and `inputsConfirmed` gate in `scripts/presend.mjs`.
 - `tests/head.test.ts` (independent author) - `index.html`'s document basics and link-preview tags.
-- `tests/page.test.tsx` (independent author) - the rendered page's landmarks, section order and honesty rules against visible text, sharing `tests/honesty-rules.ts`'s patterns with `content.test.ts`.
+- `tests/page.test.tsx` (independent author) - the rendered page's landmarks, section order and honesty rules against visible text, sharing `tests/honesty-rules.ts`'s patterns with `content.test.ts`; since 17 Sep 2026, also that `#video-takes` sits exactly once, directly between `#what-riffi-is` and `#why-here`, and a guard that the rendered page loads no `<video>`, `<iframe>`, `<source>` or `<img>` element anywhere - the block is markup and CSS only.
 
 The other eight, written alongside the code:
 

@@ -82,8 +82,8 @@ export const content = {
     },
   },
   whatRiffiIs: {
-    heading: "Twitter took news. We're taking opinions.",
-    lead: 'Riffi is built for one thing: what you think. Not what happened, not who said it. Your take, and whether the room agrees.',
+    heading: "Or type it, if that's more your thing.",
+    lead: 'Same forty seconds either way. What matters is that the post is your opinion, not the news.',
     notTake: {
       chip: 'not a take',
       text: 'The new season dropped on Friday.',
@@ -120,8 +120,8 @@ export const content = {
     ],
   },
   videoTakes: {
-    heading: 'Or just say it to camera.',
-    lead: 'A take does not have to be typed. Point the phone at yourself, say the thing, post it. The room still votes.',
+    heading: "You already shoot reels. Here it's just you, talking.",
+    lead: 'No hook, no thumbnail, no four hour edit. Point the phone at yourself, say what you actually think, and post it. The room votes on the opinion, not the edit.',
     badge: '40 seconds, one opinion',
     chip: 'sample',
     items: [
@@ -130,7 +130,7 @@ export const content = {
       { text: 'Hostel mess food built more resilience than any gym ever will.', length: '0:29' },
     ],
     // Pictures of the format, never a real post: no clip loads and nothing plays on tap.
-    footer: 'Same forty seconds either way. Type it or say it, the vote is the same.',
+    footer: 'One rule, whatever you shoot: it has to be your opinion, not the news.',
   },
   whyHere: {
     heading: "You're not early on Instagram. You're early here.",

@@ -14,9 +14,12 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, URGENCY, sentencesOf } f
 // Placeholder values (PRD 8) are deliberately not pinned, except the Block 6 seat defaults.
 // On 17 Sep 2026 the founder swapped the cricket sample lines for non-cricket ones (the
 // not-a-take/a-take pair and two marquee takes) and moved Cricket to the end of the category
-// chips, and added a new block, VideoTakes (content.videoTakes), between what-Riffi-is and
-// why-here: video-style sample takes that are pictures of the format only - no real clip or
-// photo - always labelled a sample.
+// chips, and added a new block, VideoTakes (content.videoTakes): video-style sample takes
+// that are pictures of the format only - no real clip or photo - always labelled a sample.
+// Later the same day the founder repositioned it: Riffi is being pitched to reels creators,
+// so VideoTakes now leads (heading "You already shoot reels. Here it's just you, talking.")
+// and WhatRiffiIs is the second, typed option (heading "Or type it, if that's more your
+// thing."), ahead of why-here. The old Twitter-vs-Riffi framing in WhatRiffiIs is gone.
 
 const contentSource = readFileSync(fileURLToPath(new URL('../src/content.ts', import.meta.url)), 'utf8');
 
@@ -185,10 +188,10 @@ describe('copy matches the PRD word for word', () => {
     });
   });
 
-  it('what Riffi is: heading, lead and the contrast pair', () => {
-    expect(content.whatRiffiIs.heading).toBe("Twitter took news. We're taking opinions.");
+  it('what Riffi is: heading, lead and the contrast pair (the typed option, second since 17 Sep 2026)', () => {
+    expect(content.whatRiffiIs.heading).toBe("Or type it, if that's more your thing.");
     expect(content.whatRiffiIs.lead).toBe(
-      'Riffi is built for one thing: what you think. Not what happened, not who said it. Your take, and whether the room agrees.',
+      'Same forty seconds either way. What matters is that the post is your opinion, not the news.',
     );
     expect(content.whatRiffiIs.notTake).toEqual({
       chip: 'not a take',
@@ -230,10 +233,10 @@ describe('copy matches the PRD word for word', () => {
     ]);
   });
 
-  it('video takes: heading, lead, badge, chip, the three items in order, and the footer (new block, 17 Sep 2026)', () => {
-    expect(content.videoTakes.heading).toBe('Or just say it to camera.');
+  it('video takes: heading, lead, badge, chip, the three items in order, and the footer (rewritten to lead the page, 17 Sep 2026)', () => {
+    expect(content.videoTakes.heading).toBe("You already shoot reels. Here it's just you, talking.");
     expect(content.videoTakes.lead).toBe(
-      'A take does not have to be typed. Point the phone at yourself, say the thing, post it. The room still votes.',
+      'No hook, no thumbnail, no four hour edit. Point the phone at yourself, say what you actually think, and post it. The room votes on the opinion, not the edit.',
     );
     expect(content.videoTakes.badge).toBe('40 seconds, one opinion');
     expect(content.videoTakes.chip).toBe('sample');
@@ -243,7 +246,7 @@ describe('copy matches the PRD word for word', () => {
       { text: 'Hostel mess food built more resilience than any gym ever will.', length: '0:29' },
     ]);
     expect(content.videoTakes.footer).toBe(
-      'Same forty seconds either way. Type it or say it, the vote is the same.',
+      'One rule, whatever you shoot: it has to be your opinion, not the news.',
     );
   });
 
