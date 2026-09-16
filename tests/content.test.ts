@@ -479,14 +479,23 @@ describe('TODAY: open inputs 1 to 5 are still marked [FILL] - update deliberatel
   });
 
   // Input 5 (the handle and the domain) was answered on 17 Sep 2026, so its markers are gone.
-  it('leaves no marker for an input that is already confirmed', () => {
-    const confirmed = Object.entries(settings.inputsConfirmed)
-      .filter(([, done]) => done)
-      .map(([key]) => key);
-    expect(confirmed.length).toBeGreaterThan(0);
-    for (const key of confirmed) {
-      const markerAbove = markers.some(({ index }) => new RegExp(`\\b${key}\\b`).test(nextLine(index)));
-      expect(markerAbove).toBe(false);
+  // Keyed by input number rather than by looking for the settings key on the line below the
+  // marker: three of the four markers sit above `body:` or `answer:`, so a name-matching version
+  // of this rule would quietly pass for them however they were set.
+  it('ties every input number to its settings keys: confirmed only once its numbered marker is gone', () => {
+    const KEYS_FOR_INPUT: Record<string, string[]> = {
+      '1': ['weeklyCommitment'],
+      '2': ['launchTiming'],
+      '3': ['contentOwnership'],
+      '4': ['footerLine'],
+      '5': ['instagramHandle', 'siteUrl'],
+    };
+    const markerNumbers = new Set(markers.map(({ input }) => input));
+    for (const [number, keys] of Object.entries(KEYS_FOR_INPUT)) {
+      for (const key of keys) {
+        const confirmed = settings.inputsConfirmed[key as keyof typeof settings.inputsConfirmed];
+        expect(markerNumbers.has(number), `input ${number} (${key})`).toBe(!confirmed);
+      }
     }
   });
 });

@@ -49,8 +49,22 @@ describe('the pre-rendered page (design option A)', () => {
     ];
     for (const text of headings) expect(html).toContain(escaped(text));
     for (const item of content.faq.items) expect(html).toContain(escaped(item.answer));
-    expect(count(`href="${ctaHref}"`)).toBe(3);
+    // Pinned to the value in settings, not to ctaHref itself: comparing the link with the constant
+    // the page built it from would pass no matter where the button actually pointed.
+    expect(ctaHref).toBe(settings.applyFormUrl);
+    expect(count(`href="${settings.applyFormUrl}"`)).toBe(3);
     expect(count(escaped(content.cta.helper))).toBe(3);
+    expect(html).not.toContain('ig.me');
+  });
+
+  it('pre-renders every card still as a sized, lazy image from this site', () => {
+    const stills = content.videoTakes.items.flatMap((item) => ('still' in item ? [item.still] : []));
+    expect(stills.length).toBeGreaterThan(0);
+    for (const still of stills) expect(count(`src="${still}"`)).toBe(1);
+    expect(count('width="360"')).toBe(stills.length);
+    expect(count('height="640"')).toBe(stills.length);
+    expect(count('loading="lazy"')).toBe(stills.length);
+    expect(html).not.toMatch(/<img[^>]+src="(?:https?:)?\/\//i);
   });
 
   it('works the FAQ without JavaScript: six native disclosures, the first one open', () => {

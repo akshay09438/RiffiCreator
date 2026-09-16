@@ -5,7 +5,7 @@ import { CtaButton } from '../src/components/primitives/CtaButton';
 import { Section } from '../src/components/primitives/Section';
 import { TakeCard } from '../src/components/primitives/TakeCard';
 import { Wordmark } from '../src/components/primitives/Wordmark';
-import { content } from '../src/content';
+import { content, settings } from '../src/content';
 import { ctaHref } from '../src/lib/cta';
 
 describe('Section', () => {
@@ -33,11 +33,14 @@ describe('Chip', () => {
 
 describe('CtaButton', () => {
   it.each(['dark', 'light'] as const)(
-    'the %s button opens the DM in a new tab and names the handle',
+    'the %s button opens the application form in a new tab and names the handle that replies',
     (variant) => {
       render(<CtaButton variant={variant} />);
       const link = screen.getByRole('link', { name: content.cta.label });
-      expect(link).toHaveAttribute('href', ctaHref);
+      // Pinned to settings, not to ctaHref: comparing the link with the constant the component
+      // used to build it would pass whatever the button pointed at (17 Sep 2026).
+      expect(ctaHref).toBe(settings.applyFormUrl);
+      expect(link).toHaveAttribute('href', settings.applyFormUrl);
       expect(link).toHaveAttribute('target', '_blank');
       expect(link).toHaveAttribute('rel', 'noopener noreferrer');
       expect(screen.getByText(content.cta.helper)).toBeInTheDocument();
