@@ -335,6 +335,115 @@
     }
   }
 
+  /*
+   * Video takes: pictures of the format in the same sticker style as the cards. No clip is loaded
+   * and nothing plays, so the block adds no weight; the play mark is decorative and the frame is
+   * hidden from assistive technology, with the sample label repeated in the text below it.
+   */
+  .video-badge {
+    display: inline-flex;
+    align-items: center;
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-pill);
+    padding: 5px 14px;
+    background-color: var(--flare);
+    color: var(--paper);
+    font-weight: 800;
+    box-shadow: var(--lift-sticker-sm);
+    rotate: -3deg;
+  }
+
+  .video-deck {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 6px 2px 10px;
+    scrollbar-width: none;
+  }
+
+  .video-card {
+    flex: none;
+    width: 172px;
+    overflow: hidden;
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-take);
+    background-color: var(--paper);
+    box-shadow: var(--lift-sticker);
+  }
+
+  .video-card[data-index='0'] {
+    rotate: -2deg;
+  }
+
+  .video-card[data-index='1'] {
+    rotate: 1.5deg;
+  }
+
+  .video-card[data-index='2'] {
+    rotate: -1deg;
+  }
+
+  .video-frame {
+    position: relative;
+    display: flex;
+    height: 214px;
+    align-items: center;
+    justify-content: center;
+    border-bottom: var(--edge-width) solid var(--edge);
+    background-color: var(--chip-butter-bg);
+  }
+
+  .video-card[data-index='1'] .video-frame {
+    background-color: var(--chip-coral-bg);
+  }
+
+  .video-card[data-index='2'] .video-frame {
+    background-color: var(--lime);
+  }
+
+  .video-play {
+    display: flex;
+    height: 52px;
+    width: 52px;
+    align-items: center;
+    justify-content: center;
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-pill);
+    background-color: var(--paper);
+    box-shadow: var(--lift-sticker-sm);
+  }
+
+  .video-play svg {
+    margin-inline-start: 3px;
+  }
+
+  .video-pill {
+    position: absolute;
+    border: 2px solid var(--edge);
+    border-radius: var(--corner-pill);
+    padding: 2px 9px;
+    background-color: var(--paper);
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  .video-tag {
+    inset-block-start: 8px;
+    inset-inline-start: 8px;
+  }
+
+  .video-length {
+    inset-block-end: 8px;
+    inset-inline-end: 8px;
+  }
+
+  .video-text {
+    padding: 12px 12px 14px;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.18;
+  }
+
   /* The one moment of pure typographic scale on the page (PRD Block 6). */
   .seats-number {
     font-size: clamp(96px, 22vw, 200px);

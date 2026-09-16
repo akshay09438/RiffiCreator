@@ -7,6 +7,7 @@ import { HowYouEarn } from './components/blocks/HowYouEarn';
 import { LongGame } from './components/blocks/LongGame';
 import { Nav } from './components/blocks/Nav';
 import { Seats } from './components/blocks/Seats';
+import { VideoTakes } from './components/blocks/VideoTakes';
 import { WhatRiffiIs } from './components/blocks/WhatRiffiIs';
 import { WhyHere } from './components/blocks/WhyHere';
 import { settings } from './content';
@@ -25,6 +26,7 @@ export default function App() {
       <main id="main">
         <Hero />
         <WhatRiffiIs />
+        <VideoTakes />
         <WhyHere />
         <HowYouEarn />
         <LongGame />

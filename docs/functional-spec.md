@@ -3,6 +3,10 @@
 > **Changed from the original PRD, both founder-approved on 14 Sep 2026:** (1) the name is spelled **Riffi** throughout - the original spelled it "Rifii", including in the placeholder Instagram handle, which is still an open `[FILL]` input; (2) the FAQ answer "Is this paid right now?" now ends "That's the plan, not a contract.", so it meets the honesty rule in section 2.4. Nothing else was changed. Later decisions are logged in `docs/implementation-plan.md`.
 >
 > **Changed again, both founder-decided on 16 Sep 2026:** (3) the hero's second line (Block 1, section 5.6 and the Appendix) now reads "Here you're one of the first, with almost no competition." (the founder's own words), replacing "Here you're one of 50." - carried through `index.html`'s `og:title` and the DM preview card; (4) **section 3's design direction is superseded.** The founder saw the built page, first asked for a flashier, funkier look, then corrected that to: the page itself stays white and colour lives only in the elements - drawn panels behind each coloured section, a 3px edge and a hard offset shadow on every card, chip and the button, outlined poll bars, a faint grid behind the page. Section 3 below is kept exactly as the original PRD wrote it, as the historical record of the direction this page was built to before the founder redirected it - see the note at the top of that section for what replaced it, and `docs/technical-spec.md` ("Design system - the sticker layer") for the as-built detail. Rationale and dates for both changes are in the decisions and drift logs in `docs/implementation-plan.md`.
+>
+> **Changed again, founder-decided 16 Sep 2026, later the same day (commit `441baba`):** (5) **reward points are gone from the offer.** Section 1.2, section 2.4's honesty guardrails, Block 4 ("How you earn"), Block 5 ("The long game") and the FAQ answer to "Is this paid right now?" all said a creator earns points from post one and that points convert to vouchers. None of that is true any more: the page now says plainly that there is no money yet, that joining batch one means backing Riffi early, and that batch one is first in line for real payouts and brand deals once Riffi can pay - still a plan, not a contract, never a promise. Each section below is rewritten to match, with a dated note; the original points-based offer is kept alongside it as the historical record. (6) **No em dash appears anywhere in the page's copy any more**, including `index.html`'s `<title>`, which changed from "Riffi Creator Program — 50 seats" to "Riffi Creator Program: 50 seats". Rationale and the full before/after text for both changes are in the decisions and drift logs in `docs/implementation-plan.md`.
+>
+> **Changed again, founder-decided 17 Sep 2026:** (7) **a ninth block, "Or just say it to camera," was added** between Block 2 ("What Riffi is") and Block 3 ("Why here, not there") - see Block 2a, below. It answers the same objection as Block 2, in video form: a take can be spoken instead of typed. Its three sample cards are pictures of the format only - no clip loads and nothing plays on tap, and no photograph of a real person appears in any of them; the founder's offer of frames pulled from other people's Instagram reels was turned down for this page, because those people never agreed to appear here and using their frames would wrongly suggest they post on Riffi. (8) **Some of Block 2's sample copy moved away from cricket:** the news-versus-take contrast pair, two of the eight marquee takes, and the order of the category chips (Cricket now sits last, not first) - cricket previously anchored the contrast pair, the lead chip and two marquee lines all at once. Rationale and the full before/after text are in the decisions and drift logs in `docs/implementation-plan.md`.
 
 ---
 
@@ -40,10 +44,12 @@ The platform is pre-launch. It has a wider product surface (polls, forecasting, 
 
 Before launch, Riffi is recruiting **50 creators** to seed the platform.
 
-They get:
+They got, in the original PRD *(superseded 16 Sep 2026 - see below and the note at the top of this document)*:
 - Reward points from their first post, across five earnable actions
 - Points redeem into vouchers
 - Priority access to every monetisation feature Riffi launches later — view-based performance payouts, brand deals, anything after that
+
+**Superseded 16 Sep 2026.** The founder removed reward points from the offer entirely, rather than publish point values that weren't final. What batch one actually gets now, described honestly as available today with no money attached: the feed pointed at them, their first post on the front page, and a hand in setting what the platform sounds like. What may come later, still a plan and never a contract: first in line for view-based performance payouts and brand deals, once Riffi can pay. See Block 4 and Block 5 below for the production copy, and `docs/implementation-plan.md` for the full reasoning.
 
 Riffi gets: a platform that has real content and real creators on day one, and creators with a reason to stay.
 
@@ -104,6 +110,8 @@ Write the page so it answers these in sequence. This *is* the section order.
 | 8 | Small edge cases | FAQ |
 | 9 | How do I get in? | Close |
 
+*(Added 17 Sep 2026: a ninth block, "Or just say it to camera" - Block 2a, below - sits between rows 2 and 3 and answers row 2's objection a second way, in video instead of text. It gets no numbered row of its own above because it isn't a new objection, just a second answer to "what would I even post?".)*
+
 **Objection 4 is the most underrated.** A creator who shoots reels spends hours per post. A take on Riffi is a sentence. That is a real, honest, enormous advantage and most drafts will bury it. Give it a dedicated line in a dedicated position.
 
 ### 2.3 Tone
@@ -118,7 +126,7 @@ Fifty creators in one cohort will compare notes with each other. A promise that 
 
 - Payout figures are labelled as **an example of the shape**, never a rate card
 - Priority monetisation is described as **plan**, not contract. One explicit sentence says so.
-- Reward point values are **not shown**, because they aren't final. The page says what earns points, not how many.
+- Reward point values are **not shown**, because they aren't final. The page says what earns points, not how many. *(Superseded 16 Sep 2026: reward points were removed from the offer entirely rather than published unfinished - see section 1.2 and `docs/implementation-plan.md`. The rule this bullet enforced now reads: no money is claimed to exist today, anywhere on the page.)*
 - **No fabricated scarcity.** No countdown timer, no "37/50 taken" unless that number is true and hand-maintained.
 - No fake testimonials, no fake logos, no fake user counts
 - Sample takes shown on the page are labelled as samples
@@ -241,7 +249,7 @@ All of it wrapped in `prefers-reduced-motion: reduce`, where bars render at fina
 
 ## 4. Page specification
 
-Eight blocks. Target total copy under 1,400 words. Mobile scroll length roughly seven screens.
+Nine blocks *(a ninth, "Or just say it to camera," was added 17 Sep 2026 between Block 2 and Block 3 - see Block 2a, below, and the note at the top of this document)*. Target total copy under 1,400 words and mobile scroll length roughly seven screens are the PRD's original estimates for eight blocks and have not been re-measured against the ninth.
 
 Copy below is **production copy** unless marked `[FILL]`. Use it as written. If you improve a line, keep it in the voice of §2.3.
 
@@ -305,24 +313,26 @@ Background: `--recess`
 
 - **The contrast pair.** Two blocks side by side on desktop, stacked on mobile. This is the clearest thing on the page — most creators genuinely don't know what "opinion content, not news" means until they see it.
 
+  *(Rewritten 17 Sep 2026 - see the note at the top of this document. The original pair used a cricket example; it's recorded in the Appendix.)*
+
   | Left | Right |
   |---|---|
   | Chip: `not a take` (coral) | Chip: `a take` (blue) |
-  | "India won by 6 wickets in Chennai." | "Chasing in Chennai got easier and everyone's pretending it didn't." |
+  | "The new season dropped on Friday." | "Every season after the third is just fan service with a budget." |
   | Caption: That's news. It's already everywhere. | Caption: That's yours. Nobody else posted it. |
 
-- **Category chips**, wrapped, cycling the three chip colours:
-  `Cricket` `Politics` `Movies` `Food` `Campus` `Money` `Music` `Startups` `Sports` `Fashion`
+- **Category chips**, wrapped, cycling the three chip colours. Reordered 17 Sep 2026 so Cricket no longer leads - it was both the first chip and both sides of the contrast pair above; it's now the last chip:
+  `Movies` `Politics` `Food` `Campus` `Money` `Music` `Startups` `Fashion` `Sports` `Cricket`
 
-- **Marquee** — a single horizontal scrolling row of take cards, CSS-animated, paused on hover and under reduced-motion. Sample takes:
-  - "Test cricket is the only format that still tells the truth."
+- **Marquee** — a single horizontal scrolling row of take cards, CSS-animated, paused on hover and under reduced-motion. Sample takes *(two replaced 17 Sep 2026, the same day the contrast pair and chip order above also moved away from cricket; both replaced lines were cricket takes and are recorded in the Appendix)*:
+  - "Your favourite startup is a spreadsheet with a good logo."
   - "Bengaluru traffic isn't an infrastructure problem, it's a scheduling one."
   - "Every biopic in the last five years is an ad for its subject."
   - "Filter coffee beats any third-wave pour over and it isn't close."
   - "Hostel mess food built more resilience than any gym ever will."
   - "Reels killed the Indian meme page."
   - "Paneer is overrated and we all know it."
-  - "The best captain of this generation isn't the one you're thinking of."
+  - "Every playlist app ends up playing the same six songs."
 
   Marquee must be `aria-hidden` with the takes also present in a visually-hidden list, and must not trap scroll on touch.
 
@@ -330,6 +340,44 @@ Background: `--recess`
 - [ ] Marquee loops seamlessly with no visible seam or jump
 - [ ] Marquee is static under `prefers-reduced-motion`
 - [ ] Contrast pair readable without horizontal scroll at 320px
+
+---
+
+### Block 2a — Or just say it to camera *(added 17 Sep 2026)*
+
+**Job:** show that a take can be spoken as easily as typed, so a creator who would rather talk to camera than type sees themselves in the product too. Answers the same objection as Block 2 ("what would I even post?"), in video form.
+
+Background: `sky` - a pale blue drawn panel, the same treatment as the lime and ink panels elsewhere on the page (see `docs/technical-spec.md`, "Design system").
+
+- H2 — `display-l`:
+  > Or just say it to camera.
+
+- Lead — `body-l`, 34rem cap:
+  > A take does not have to be typed. Point the phone at yourself, say the thing, post it. The room still votes.
+
+- A small tilted orange badge:
+  > 40 seconds, one opinion
+
+- **Three sample cards**, each tilted at a slightly different angle, in a row that scrolls sideways on mobile. Each card is a **picture of the format**, not a real clip:
+  - A flat coloured frame (a different pastel per card) standing in for video, with a decorative play-button mark in the middle that does nothing on tap
+  - A `sample` pill in one corner of the frame and the clip's length (for example `0:38`) in the opposite corner
+  - The take's text underneath the frame
+
+  Sample takes and lengths shown:
+  1. "Every biopic in the last five years is an ad for its subject." - 0:38
+  2. "Bengaluru traffic is a scheduling problem, not a road problem." - 0:41
+  3. "Hostel mess food built more resilience than any gym ever will." - 0:29
+
+  **No real clip is loaded and nothing plays when a card is tapped.** No photograph of any real person appears in these cards, sample or otherwise. The founder offered frames pulled from other people's Instagram reels for this block; they were turned down because the people in them never agreed to appear on this page, and using their frames would wrongly imply they already post on Riffi. Real frames are only ever added later, and only once Riffi owns the clip or the creator in it has agreed - see `docs/implementation-plan.md` for the decision.
+
+- Footer line, `meta`, `--ink-soft`:
+  > Same forty seconds either way. Type it or say it, the vote is the same.
+
+**Acceptance**
+- [ ] The frame, its play mark and its sample/length pills are hidden from assistive technology; the word "sample" is repeated as real text for a screen reader on every card
+- [ ] No video actually loads and no clip plays on tap, anywhere in this block
+- [ ] No photograph of a real person appears in any card
+- [ ] Cards scroll sideways without trapping vertical page scroll on touch
 
 ---
 

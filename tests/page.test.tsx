@@ -1,4 +1,6 @@
 // @vitest-environment jsdom
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { render, screen, within } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -12,7 +14,17 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, SEAT_COUNT, URGENCY, sen
 
 const normalize = (text: string | null | undefined): string => (text ?? '').replace(/\s+/g, ' ').trim();
 
-const SECTION_IDS = ['hero', 'what-riffi-is', 'why-here', 'how-you-earn', 'long-game', 'seats', 'faq', 'close'];
+const SECTION_IDS = [
+  'hero',
+  'what-riffi-is',
+  'video-takes',
+  'why-here',
+  'how-you-earn',
+  'long-game',
+  'seats',
+  'faq',
+  'close',
+];
 
 function section(id: string): HTMLElement {
   const element = document.getElementById(id);
@@ -98,6 +110,7 @@ describe('page structure and semantics (PRD 7)', () => {
     const expectedName: Record<string, string> = {
       hero: content.hero.titleLines.join(' '),
       'what-riffi-is': content.whatRiffiIs.heading,
+      'video-takes': content.videoTakes.heading,
       'why-here': content.whyHere.heading,
       'how-you-earn': content.howYouEarn.heading,
       'long-game': content.longGame.heading,
@@ -262,6 +275,92 @@ describe('#what-riffi-is (PRD Block 2)', () => {
     expect(within(list).getAllByRole('listitem').map((item) => normalize(item.textContent))).toEqual([
       ...content.whatRiffiIs.marqueeTakes,
     ]);
+  });
+});
+
+// ---------- new block: or just say it to camera ----------
+
+describe('#video-takes (new block, added 17 Sep 2026)', () => {
+  beforeEach(() => {
+    render(<App />);
+  });
+
+  it('sits exactly once, directly between #what-riffi-is and #why-here', () => {
+    expect(document.querySelectorAll('#video-takes')).toHaveLength(1);
+    const main = screen.getByRole('main');
+    const ids = Array.from(main.querySelectorAll('section')).map((element) => element.id);
+    const at = ids.indexOf('video-takes');
+    expect(at).toBeGreaterThan(-1);
+    expect(ids[at - 1]).toBe('what-riffi-is');
+    expect(ids[at + 1]).toBe('why-here');
+  });
+
+  it('shows its own heading, lead, badge and footer line', () => {
+    const block = section('video-takes');
+    expect(within(block).getByRole('heading', { level: 2, name: content.videoTakes.heading })).toBeInTheDocument();
+    expect(within(block).getByText(content.videoTakes.lead)).toBeInTheDocument();
+    expect(within(block).getByText(content.videoTakes.badge)).toBeInTheDocument();
+    expect(within(block).getByText(content.videoTakes.footer)).toBeInTheDocument();
+  });
+
+  it('shows the three items as a real list, each with its take text, its length, and a sample label reachable outside the hidden frame', () => {
+    const block = section('video-takes');
+    const cards = Array.from(only(block, 'ul').children) as HTMLElement[];
+    expect(cards).toHaveLength(content.videoTakes.items.length);
+    content.videoTakes.items.forEach((item, index) => {
+      const card = within(cards[index] as HTMLElement);
+      expect(card.getByText(item.text)).toBeInTheDocument();
+      expect(card.getByText(item.length)).toBeInTheDocument();
+      // The frame's own "sample" pill is decorative (aria-hidden); a reachable one must exist too.
+      const reachableSample = card
+        .getAllByText(content.videoTakes.chip)
+        .filter((element) => !hiddenFromScreenReaders(element));
+      expect(reachableSample.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('keeps every card frame decorative and hidden from screen readers, including the play mark', () => {
+    const block = section('video-takes');
+    const frames = Array.from(block.querySelectorAll<HTMLElement>('.video-frame'));
+    expect(frames.length).toBe(content.videoTakes.items.length);
+    for (const frame of frames) expect(frame.getAttribute('aria-hidden')).toBe('true');
+    const icons = Array.from(block.querySelectorAll('svg'));
+    expect(icons.length).toBeGreaterThan(0);
+    for (const icon of icons) expect(hiddenFromScreenReaders(icon)).toBe(true);
+  });
+
+  it('is a picture of the format only: no <video>, <iframe>, <source> or <img> anywhere on the page', () => {
+    expect(document.querySelectorAll('video, iframe, source, img')).toHaveLength(0);
+    // Same principle, a bit further: none of the page's other file-loading elements either.
+    expect(document.querySelectorAll('embed, object, picture, audio, track')).toHaveLength(0);
+  });
+
+  it('carries no file reference on any element in the block: no src/href/poster/srcset attribute and no url() in an inline style', () => {
+    const block = section('video-takes');
+    const FILE_LIKE =
+      /\.(?:mp4|webm|mov|m4v|ogg|ogv|jpe?g|png|gif|webp|avif|svg|bmp|ico)(?:[?#]|$)|^(?:https?:)?\/\/|^data:|^blob:/i;
+    const MEDIA_ATTRS = ['src', 'href', 'poster', 'srcset', 'data-src', 'data-poster', 'background'];
+    for (const element of [block, ...Array.from(block.querySelectorAll<HTMLElement>('*'))]) {
+      for (const attr of MEDIA_ATTRS) {
+        expect(element.hasAttribute(attr), `<${element.tagName.toLowerCase()}> has a "${attr}" attribute`).toBe(
+          false,
+        );
+      }
+      expect(element.getAttribute('style') ?? '').not.toMatch(/url\(/i);
+      for (const attribute of Array.from(element.attributes)) {
+        expect(
+          FILE_LIKE.test(attribute.value),
+          `<${element.tagName.toLowerCase()} ${attribute.name}="${attribute.value}">`,
+        ).toBe(false);
+      }
+    }
+  });
+
+  it('draws every video-takes rule in the stylesheet from colour tokens only, never a background file', () => {
+    const css = readFileSync(resolve(process.cwd(), 'src/styles/global.css'), 'utf8');
+    const videoRules = [...css.matchAll(/\.video-[a-z-]+(?:\[[^\]]*\])?[^{]*\{[^}]*\}/g)].map((match) => match[0]);
+    expect(videoRules.length).toBeGreaterThan(0);
+    for (const rule of videoRules) expect(rule).not.toMatch(/url\(/i);
   });
 });
 
@@ -561,12 +660,23 @@ describe('honesty on the rendered page (PRD 2.4, design 5)', () => {
     expect(normalize(paid?.textContent)).toContain('plan, not a contract');
   });
 
-  it('labels every sample take a sample: the hero card, every marquee card, and the hidden list', () => {
+  it('labels every sample take a sample: the hero card, every marquee card, the hidden list, and every video-takes card', () => {
     expect(within(only(section('hero'), 'article')).getByText('sample take')).toBeInTheDocument();
     const cards = Array.from(only(section('what-riffi-is'), '[data-marquee]').querySelectorAll<HTMLElement>('article'));
     expect(cards.length).toBeGreaterThan(0);
     for (const card of cards) expect(within(card).getByText('sample take')).toBeInTheDocument();
     expect(screen.getByRole('list', { name: 'Sample takes' })).toBeInTheDocument();
+
+    // Each video-takes card labels itself "sample" for screen readers too, not only inside the
+    // aria-hidden frame (the frame's own pill is decorative).
+    const videoCards = Array.from(only(section('video-takes'), 'ul').children) as HTMLElement[];
+    expect(videoCards).toHaveLength(content.videoTakes.items.length);
+    for (const card of videoCards) {
+      const reachableSample = within(card)
+        .getAllByText(content.videoTakes.chip)
+        .filter((element) => !hiddenFromScreenReaders(element));
+      expect(reachableSample.length).toBeGreaterThan(0);
+    }
   });
 
   it('uses no countdown, deadline or urgency language, and no timer', () => {

@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 const TONES = {
   paper: { section: 'text-ink', panel: '' },
   recess: { section: 'text-ink', panel: 'panel bg-lime p-6 md:p-10 lg:p-12' },
+  sky: { section: 'text-ink', panel: 'panel bg-chip-blue-bg p-6 md:p-10 lg:p-12' },
   ink: { section: 'text-paper', panel: 'panel bg-ink p-6 md:p-10 lg:p-12' },
 } as const;
 

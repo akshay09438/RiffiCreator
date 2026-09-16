@@ -12,6 +12,11 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, URGENCY, sentencesOf } f
 // Block 4 (how you earn) and Block 5 (the long game) now say plainly that there is no money
 // yet and that batch one is first in line when Riffi can pay - a plan, not a contract.
 // Placeholder values (PRD 8) are deliberately not pinned, except the Block 6 seat defaults.
+// On 17 Sep 2026 the founder swapped the cricket sample lines for non-cricket ones (the
+// not-a-take/a-take pair and two marquee takes) and moved Cricket to the end of the category
+// chips, and added a new block, VideoTakes (content.videoTakes), between what-Riffi-is and
+// why-here: video-style sample takes that are pictures of the format only - no real clip or
+// photo - always labelled a sample.
 
 const contentSource = readFileSync(fileURLToPath(new URL('../src/content.ts', import.meta.url)), 'utf8');
 
@@ -85,10 +90,11 @@ describe('honesty guardrails in the content (PRD 2.4, design 5)', () => {
     expect(paid?.answer).toContain('plan, not a contract');
   });
 
-  it('labels every sample take as a sample: the hero chip, the marquee chip and the hidden list label', () => {
+  it('labels every sample take as a sample: the hero chip, the marquee chip, the hidden list label and the video-takes chip', () => {
     expect(content.hero.sampleTake.chip).toBe('sample take');
     expect(content.whatRiffiIs.marqueeChip).toBe('sample take');
     expect(content.whatRiffiIs.marqueeLabel).toBe('Sample takes');
+    expect(content.videoTakes.chip).toBe('sample');
   });
 
   it('uses no countdown, deadline or urgency language', () => {
@@ -186,42 +192,66 @@ describe('copy matches the PRD word for word', () => {
     );
     expect(content.whatRiffiIs.notTake).toEqual({
       chip: 'not a take',
-      text: 'India won by 6 wickets in Chennai.',
+      text: 'The new season dropped on Friday.',
       caption: "That's news. It's already everywhere.",
     });
     expect(content.whatRiffiIs.take).toEqual({
       chip: 'a take',
-      text: "Chasing in Chennai got easier and everyone's pretending it didn't.",
+      text: 'Every season after the third is just fan service with a budget.',
       caption: "That's yours. Nobody else posted it.",
     });
   });
 
   it('what Riffi is: the ten category chips, in order', () => {
     expect(content.whatRiffiIs.categories).toEqual([
-      'Cricket',
-      'Politics',
       'Movies',
+      'Politics',
       'Food',
       'Campus',
       'Money',
       'Music',
       'Startups',
-      'Sports',
       'Fashion',
+      'Sports',
+      'Cricket',
     ]);
   });
 
   it('what Riffi is: the eight marquee takes, in order', () => {
     expect(content.whatRiffiIs.marqueeTakes).toEqual([
-      'Test cricket is the only format that still tells the truth.',
+      'Your favourite startup is a spreadsheet with a good logo.',
       "Bengaluru traffic isn't an infrastructure problem, it's a scheduling one.",
       'Every biopic in the last five years is an ad for its subject.',
       "Filter coffee beats any third-wave pour over and it isn't close.",
       'Hostel mess food built more resilience than any gym ever will.',
       'Reels killed the Indian meme page.',
       'Paneer is overrated and we all know it.',
-      "The best captain of this generation isn't the one you're thinking of.",
+      'Every playlist app ends up playing the same six songs.',
     ]);
+  });
+
+  it('video takes: heading, lead, badge, chip, the three items in order, and the footer (new block, 17 Sep 2026)', () => {
+    expect(content.videoTakes.heading).toBe('Or just say it to camera.');
+    expect(content.videoTakes.lead).toBe(
+      'A take does not have to be typed. Point the phone at yourself, say the thing, post it. The room still votes.',
+    );
+    expect(content.videoTakes.badge).toBe('40 seconds, one opinion');
+    expect(content.videoTakes.chip).toBe('sample');
+    expect(content.videoTakes.items).toEqual([
+      { text: 'Every biopic in the last five years is an ad for its subject.', length: '0:38' },
+      { text: 'Bengaluru traffic is a scheduling problem, not a road problem.', length: '0:41' },
+      { text: 'Hostel mess food built more resilience than any gym ever will.', length: '0:29' },
+    ]);
+    expect(content.videoTakes.footer).toBe(
+      'Same forty seconds either way. Type it or say it, the vote is the same.',
+    );
+  });
+
+  it('video takes: is pictures of the format only - no media reference on the block or on any item', () => {
+    expect(Object.keys(content.videoTakes).sort()).toEqual(['badge', 'chip', 'footer', 'heading', 'items', 'lead']);
+    for (const item of content.videoTakes.items) {
+      expect(Object.keys(item).sort()).toEqual(['length', 'text']);
+    }
   });
 
   it('why here: heading, side labels, the four comparison rows and the closer', () => {
