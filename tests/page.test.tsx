@@ -329,6 +329,13 @@ describe('#video-takes (new block, added 17 Sep 2026)', () => {
     for (const icon of icons) expect(hiddenFromScreenReaders(icon)).toBe(true);
   });
 
+  it('has no interactive element in the deck, so nothing can be tapped to play', () => {
+    const deck = only(section('video-takes'), 'ul');
+    expect(
+      deck.querySelectorAll('a[href], button, [role="button"], input, select, textarea, [tabindex]'),
+    ).toHaveLength(0);
+  });
+
   it('is a picture of the format only: no <video>, <iframe>, <source> or <img> anywhere on the page', () => {
     expect(document.querySelectorAll('video, iframe, source, img')).toHaveLength(0);
     // Same principle, a bit further: none of the page's other file-loading elements either.

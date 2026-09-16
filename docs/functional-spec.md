@@ -414,27 +414,30 @@ Background: `--paper`
 
 ### Block 4 — How you earn
 
-**Job:** show that earning starts immediately, without publishing numbers that aren't final.
+**Job:** be straight about what going first gets you, now that there is no money yet to publish a number for.
+
+*(Rewritten 16 Sep 2026 — see the note at the top of this document. The heading, the row descriptions and the note below replace the original points-based versions; the right-hand `points` pill is gone entirely. The original heading and note are recorded in the Appendix, alongside section 1.2's original offer.)*
 
 Background: `--recess`
 
 - H2 — `display-l`:
-  > You earn from post one.
+  > What you get for going first.
 
-- **Five earn rows.** A plain list with hairline dividers — *not* five cards. Each row: action name (`body-l`, ink) on the left, one-line description (`body`, ink-soft) beneath, and on the right a small pill reading `points`.
+- **Five earn rows.** A plain list with hairline dividers — *not* five cards. Each row: action name (`body-l`, ink) on the left, one-line description (`body`, ink-soft) beneath. There is no longer a pill on the right - it read `points`, and points no longer exist.
 
-  1. **Post a take** — The opinion itself. Every one counts.
-  2. **Write the long version** — When a take needs more than a line, write it out.
-  3. **Add images** — Screenshots, stills, memes, whatever makes the point land.
-  4. **Drop a story** — Short-lived posts, same as you already do.
-  5. **Get the room talking** — Votes, replies and reshares on your take earn on top.
+  1. **Post a take** — One opinion, one line. That's the whole format.
+  2. **Write the long version** — Some takes need a paragraph. Write it out when they do.
+  3. **Add images** — Screenshots, stills, memes. Whatever makes the point land.
+  4. **Drop a story** — Short-lived posts, the same as you already do.
+  5. **Get the room talking** — Votes, replies and reshares. That's how you find out if the room agrees.
 
 - **Honest note** below the list, `meta`, `--ink-soft`:
-  > Points convert to vouchers. Exact values go live with the app — we're still tuning them, and we'd rather publish them once than change them on you.
+  > Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.
 
 **Acceptance**
 - [ ] No numeric point values anywhere in the DOM
 - [ ] Rows are a semantic list, not divs
+- [ ] No present-tense claim of payment ("you earn", "we pay", "is/are paid") anywhere in the block - only a plan for later
 
 ---
 
@@ -442,27 +445,30 @@ Background: `--recess`
 
 **Job:** answer "what does this actually turn into" without overpromising.
 
+*(Rewritten 16 Sep 2026 — see the note at the top of this document. The heading and framing line below replace the original points-based versions, recorded in the Appendix; the payout figure and its "example, not a rate card" framing carry over unchanged in substance, only reworded to drop every em dash.)*
+
 Background: `--paper`
 
 - H2 — `display-l`:
-  > Points now. Priority later.
+  > Early now. First in line later.
 
 - **Three items**, stacked, each with a heading (`display-m`) and two lines of body:
 
   1. **Performance payouts**
-     When we switch on view-based payouts, this cohort is in the first batch. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000–10,000 band. That's an illustration, not a rate card — we'll publish real slabs before it goes live.
+     When we switch on view-based payouts, batch one is in the first group. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000 to ₹10,000 band. That's an illustration, not a rate card. We'll publish the real slabs before any of it goes live.
 
   2. **Brand deals**
-     Brands reach a platform through its top creators. On a platform with 50 creators, that's a much shorter list than the one you're on now.
+     Brands reach a platform through its top creators. On a platform with 50 creators, that list is a lot shorter than the one you're on now.
 
   3. **Whatever comes after**
-     Subscriptions, tipping, whatever we build — this cohort gets it before anyone else. That's the deal for being here first.
+     Subscriptions, tipping, anything else we build. Batch one gets it before anyone else.
 
 - **Honest framing line**, set apart with a hairline above, `body`, `--ink-soft`:
-  > All of this is our plan, not a contract. We'd rather you come in knowing exactly that.
+  > All of this is our plan, not a contract. You're backing us early, and we'd rather you do it knowing exactly that.
 
 **Acceptance**
 - [ ] The ₹ figure is visually and grammatically framed as an example in the same sentence it appears
+- [ ] No em dash anywhere in the block's text
 
 ---
 
@@ -503,12 +509,14 @@ Background: `--paper`
 
 | Q | A |
 |---|---|
-| Do I have to leave Instagram? | No. Keep posting exactly where you post now. A take is a sentence, not a shoot — this sits alongside what you already do. |
+| Do I have to leave Instagram? | No. Keep posting exactly where you post now. A take is a sentence, not a shoot, so it sits alongside what you already do. |
 | My following is small. Does that matter? | No. We're picking for takes, not reach. Most of this cohort is under 20k and that's deliberate. |
-| Is this paid right now? | You earn points from your first post and points convert to vouchers. Cash payouts arrive with monetisation, and this cohort is first in line for it. That's the plan, not a contract. |
+| Is this paid right now? | No, and we won't pretend otherwise. Riffi hasn't launched, so there's no money in it yet. You're putting takes in early, and when we can pay creators, batch one is first in line for payouts and brand deals. That's the plan, not a contract. *(Rewritten 16 Sep 2026 to drop the points-based answer below - see the note at the top of this document.)* |
 | What can I post about? | Anything you have a real opinion on. Cricket, politics, films, food, campus, money. Opinions, not news reports. |
 | When does Riffi launch? | `[FILL — launch timing]` |
 | Who owns what I post? | `[FILL — confirm against terms]` *Placeholder: You do. You keep the rights to your posts and you can take them anywhere.* |
+
+*(The original answer to "Is this paid right now?", live from 14 Sep to 16 Sep 2026: "You earn points from your first post and points convert to vouchers. Cash payouts arrive with monetisation, and this cohort is first in line for it. That's the plan, not a contract." The em dash in "Do I have to leave Instagram?"'s answer was also removed 16 Sep 2026, in the same no-em-dash pass covered at the top of this document.)*
 
 **Accordion requirements:** native `<details>`/`<summary>` styled, or a button-based implementation with `aria-expanded` and `aria-controls`. Animate height on open. 44px minimum tap target on the summary row.
 
@@ -594,6 +602,7 @@ riffi-creator/
    │     ├─ Nav.tsx
    │     ├─ Hero.tsx
    │     ├─ WhatRiffiIs.tsx
+   │     ├─ VideoTakes.tsx      added 17 Sep 2026, between WhatRiffiIs and WhyHere
    │     ├─ WhyHere.tsx
    │     ├─ HowYouEarn.tsx
    │     ├─ LongGame.tsx
@@ -756,7 +765,7 @@ Work in this sequence. Do not jump ahead — the token and content layers must e
 
 ## 10. Definition of done
 
-- [ ] All eight blocks built, real copy, zero Lorem
+- [ ] All eight blocks built, real copy, zero Lorem *(a ninth, "Or just say it to camera," was added 17 Sep 2026 - see §4, Block 2a)*
 - [ ] Zero hex values or font names outside `tokens.css`
 - [ ] Zero user-facing strings outside `content.ts`
 - [ ] No horizontal overflow between 320px and 1920px
@@ -787,10 +796,17 @@ Every user-facing string, for `content.ts`.
 **What Riffi is**
 - H2: `Twitter took news. We're taking opinions.`
 - Lead: `Riffi is built for one thing: what you think. Not what happened, not who said it. Your take, and whether the room agrees.`
-- Not a take: `India won by 6 wickets in Chennai.` / `That's news. It's already everywhere.`
-- A take: `Chasing in Chennai got easier and everyone's pretending it didn't.` / `That's yours. Nobody else posted it.`
-- Chips: `Cricket` `Politics` `Movies` `Food` `Campus` `Money` `Music` `Startups` `Sports` `Fashion`
-- Marquee: the eight takes listed in Block 2
+- Not a take: `The new season dropped on Friday.` (rewritten 17 Sep 2026; was `India won by 6 wickets in Chennai.`) / `That's news. It's already everywhere.`
+- A take: `Every season after the third is just fan service with a budget.` (rewritten 17 Sep 2026; was `Chasing in Chennai got easier and everyone's pretending it didn't.`) / `That's yours. Nobody else posted it.`
+- Chips: `Movies` `Politics` `Food` `Campus` `Money` `Music` `Startups` `Fashion` `Sports` `Cricket` (reordered 17 Sep 2026 so Cricket is last, not first; was `Cricket` `Politics` `Movies` `Food` `Campus` `Money` `Music` `Startups` `Sports` `Fashion`)
+- Marquee: the eight takes listed in Block 2 (two replaced 17 Sep 2026: `Your favourite startup is a spreadsheet with a good logo.` and `Every playlist app ends up playing the same six songs.` replaced two cricket takes, `Test cricket is the only format that still tells the truth.` and `The best captain of this generation isn't the one you're thinking of.`)
+
+**Or just say it to camera** *(added 17 Sep 2026)*
+- H2: `Or just say it to camera.`
+- Lead: `A take does not have to be typed. Point the phone at yourself, say the thing, post it. The room still votes.`
+- Badge: `40 seconds, one opinion`
+- Three sample cards as listed in Block 2a, each labelled `sample`
+- Footer: `Same forty seconds either way. Type it or say it, the vote is the same.`
 
 **Why here, not there**
 - H2: `You're not early on Instagram. You're early here.`
@@ -798,14 +814,14 @@ Every user-facing string, for `content.ts`.
 - Closer: `And a reel costs you four hours. A take costs you forty seconds.`
 
 **How you earn**
-- H2: `You earn from post one.`
-- Five rows as written in Block 4
-- Note: `Points convert to vouchers. Exact values go live with the app — we're still tuning them, and we'd rather publish them once than change them on you.`
+- H2: `What you get for going first.` (rewritten 16 Sep 2026; was `You earn from post one.`)
+- Five rows as written in Block 4 (each row's one-line description was also reworded 16 Sep 2026, and the row's right-hand `points` pill was removed)
+- Note: `Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.` (rewritten 16 Sep 2026; was `Points convert to vouchers. Exact values go live with the app — we're still tuning them, and we'd rather publish them once than change them on you.`)
 
 **The long game**
-- H2: `Points now. Priority later.`
-- Three items as written in Block 5
-- Framing: `All of this is our plan, not a contract. We'd rather you come in knowing exactly that.`
+- H2: `Early now. First in line later.` (rewritten 16 Sep 2026; was `Points now. Priority later.`)
+- Three items as written in Block 5 (the payout figure and its example framing carry over; only the wording changed, to drop every em dash)
+- Framing: `All of this is our plan, not a contract. You're backing us early, and we'd rather you do it knowing exactly that.` (rewritten 16 Sep 2026; was `All of this is our plan, not a contract. We'd rather you come in knowing exactly that.`)
 
 **Seats**
 - `50`
@@ -815,7 +831,7 @@ Every user-facing string, for `content.ts`.
 
 **FAQ**
 - H2: `Before you ask`
-- Six Q&As as tabulated in Block 7
+- Six Q&As as tabulated in Block 7 (the "Is this paid right now?" answer was rewritten 16 Sep 2026 to drop points language; the original is recorded beneath Block 7's table)
 
 **Close**
 - H2: `50 seats. Batch one.`
