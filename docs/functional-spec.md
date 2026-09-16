@@ -1,6 +1,8 @@
 > **Functional spec for the Riffi creator page.** Saved by `/zuko:bootstrap` on 14 Sep 2026 from `rifii-creator-landing-prd.md` (PRD v1.0, owner Zyra). This is a living document: it is updated in the same change as any decision that alters what the page does.
 >
 > **Changed from the original PRD, both founder-approved on 14 Sep 2026:** (1) the name is spelled **Riffi** throughout - the original spelled it "Rifii", including in the placeholder Instagram handle, which is still an open `[FILL]` input; (2) the FAQ answer "Is this paid right now?" now ends "That's the plan, not a contract.", so it meets the honesty rule in section 2.4. Nothing else was changed. Later decisions are logged in `docs/implementation-plan.md`.
+>
+> **Changed again, both founder-decided on 16 Sep 2026:** (3) the hero's second line (Block 1, section 5.6 and the Appendix) now reads "Here you're one of the first, with almost no competition." (the founder's own words), replacing "Here you're one of 50." - carried through `index.html`'s `og:title` and the DM preview card; (4) **section 3's design direction is superseded.** The founder saw the built page, first asked for a flashier, funkier look, then corrected that to: the page itself stays white and colour lives only in the elements - drawn panels behind each coloured section, a 3px edge and a hard offset shadow on every card, chip and the button, outlined poll bars, a faint grid behind the page. Section 3 below is kept exactly as the original PRD wrote it, as the historical record of the direction this page was built to before the founder redirected it - see the note at the top of that section for what replaced it, and `docs/technical-spec.md` ("Design system - the sticker layer") for the as-built detail. Rationale and dates for both changes are in the decisions and drift logs in `docs/implementation-plan.md`.
 
 ---
 
@@ -126,6 +128,8 @@ This is not a compliance note. Honest framing converts better with this audience
 ---
 
 ## 3. Design direction
+
+> **Superseded 16 Sep 2026.** Sections 3.1-3.6 below are the *original* PRD direction and are kept exactly as written, as the historical record - they are no longer what the page looks like. The founder redirected the visual design after seeing the built page (first shown a flashier, funkier mock, then corrected to this instruction): **the page itself stays white; colour lives only in the elements.** In practice: each coloured section (`WhatRiffiIs`, `HowYouEarn`, `Seats`, and `Close` in ink) now renders as a drawn panel - a 3px ink edge, 32px corners and a hard offset shadow - rather than a full-bleed coloured band; every card, chip and the button carry the same drawn edge, with the button's shadow in signal blue instead of ink; poll bars are outlined; a faint grid sits behind the white page; and the hero's second line sits on an orange marker sweep. Two specific 3.2 rules no longer hold: the palette gains four values for this (`--lime`, `--flare`, `--edge`, `--grid-line`), and the "one shadow token, used only on the hero take card" rule is gone - every take card now draws an edge and a shadow. 3.4's vertical rhythm also changed (72/112/128px of section padding, mobile to desktop, is now 56/88/104px, since a panel supplies part of the rhythm itself). Full as-built detail: `docs/technical-spec.md`. Rationale and date: `docs/implementation-plan.md`.
 
 ### 3.1 The organising idea
 
@@ -255,7 +259,9 @@ Copy below is **production copy** unless marked `[FILL]`. Use it as written. If 
 
 - H1 — `display-xl`, two lines forced with a hard break on desktop:
   > On Instagram you're one of lakhs.
-  > Here you're one of 50.
+  > Here you're one of the first, with almost no competition.
+
+  *(Founder's rewrite of the second line, 16 Sep 2026 - see the note at the top of this document. It carries the orange marker-sweep treatment described in the section 3 update above.)*
 
 - Subline — `body-l`, `--ink-soft`, capped at 34rem:
   > Riffi is India's platform for opinions. We're taking 50 creators in before launch and pointing the feed at them.
@@ -594,15 +600,15 @@ interface PollBarProps {
 `public/og.png`, 1200×630, designed to the same system:
 - White ground
 - `Riffi` wordmark
-- The line: *On Instagram you're one of lakhs. Here you're one of 50.*
-- One poll bar at 71/29
+- The line: *On Instagram you're one of lakhs. Here you're one of the first, with almost no competition.* - the second line carries the same orange marker sweep as the on-page headline (section 3 update, 16 Sep 2026)
+- One poll bar at 71/29, outlined with the page's drawn edge (section 3 update, 16 Sep 2026)
 
 Head tags in `index.html`:
 
 ```html
 <title>Riffi Creator Program — 50 seats</title>
 <meta name="description" content="Riffi is India's platform for opinions. We're taking 50 creators in before launch.">
-<meta property="og:title" content="On Instagram you're one of lakhs. Here you're one of 50.">
+<meta property="og:title" content="On Instagram you're one of lakhs. Here you're one of the first, with almost no competition.">
 <meta property="og:description" content="The Riffi Creator Program. 50 seats, batch one.">
 <meta property="og:image" content="https://<domain>/og.png">
 <meta property="og:type" content="website">
@@ -725,7 +731,7 @@ Every user-facing string, for `content.ts`.
 **Nav:** `Riffi` · `Batch 01`
 
 **Hero**
-- H1: `On Instagram you're one of lakhs. Here you're one of 50.`
+- H1: `On Instagram you're one of lakhs. Here you're one of the first, with almost no competition.` (rewritten by the founder 16 Sep 2026; was `Here you're one of 50.`)
 - Sub: `Riffi is India's platform for opinions. We're taking 50 creators in before launch and pointing the feed at them.`
 - CTA: `Claim a seat` / helper: `Opens a DM with @riffi`
 - Sample take: `Being early beats being good.` — chip `sample take`, 71% agree / 29% disagree, `2,140 votes`
