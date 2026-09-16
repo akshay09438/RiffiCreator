@@ -66,7 +66,10 @@ export const content = {
     whatsappLabel: 'Or message us on WhatsApp',
   },
   hero: {
-    titleLines: ["On Instagram you're one of lakhs.", "Here you're one of 50."],
+    titleLines: [
+      "On Instagram you're one of lakhs.",
+      "Here you're one of the first, with almost no competition.",
+    ],
     subline:
       "Riffi is India's platform for opinions. We're taking 50 creators in before launch and pointing the feed at them.",
     sampleTake: {

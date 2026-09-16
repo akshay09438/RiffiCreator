@@ -16,7 +16,7 @@ export function Chip({ tone, children }: ChipProps) {
   return (
     <span
       data-tone={tone}
-      className={`${TONES[tone]} inline-flex items-center rounded-pill px-3 py-1 text-meta font-medium`}
+      className={`${TONES[tone]} sticker inline-flex items-center rounded-pill px-3 py-1 text-meta font-semibold`}
     >
       {children}
     </span>

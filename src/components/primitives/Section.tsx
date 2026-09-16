@@ -1,9 +1,13 @@
 import type { ReactNode } from 'react';
 
+/**
+ * The page stays white; a section's colour arrives as a drawn panel inside it (founder's direction,
+ * 16 Sep 2026). `paper` sections have no panel, so the white page itself carries them.
+ */
 const TONES = {
-  paper: 'bg-paper text-ink',
-  recess: 'bg-recess text-ink',
-  ink: 'bg-ink text-paper',
+  paper: { section: 'text-ink', panel: '' },
+  recess: { section: 'text-ink', panel: 'panel bg-lime p-6 md:p-10 lg:p-12' },
+  ink: { section: 'text-paper', panel: 'panel bg-ink p-6 md:p-10 lg:p-12' },
 } as const;
 
 type SectionProps = {
@@ -20,9 +24,11 @@ export function Section({ id, tone, belowFold = false, children }: SectionProps)
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={`${TONES[tone]} ${belowFold ? 'below-fold' : ''} py-[72px] lg:py-[112px] xl:py-[128px]`}
+      className={`${TONES[tone].section} ${belowFold ? 'below-fold' : ''} py-[56px] lg:py-[88px] xl:py-[104px]`}
     >
-      <div className="mx-auto w-full max-w-[1120px] px-5 md:px-8 lg:px-10">{children}</div>
+      <div className="mx-auto w-full max-w-[1120px] px-5 md:px-8 lg:px-10">
+        <div className={TONES[tone].panel}>{children}</div>
+      </div>
     </section>
   );
 }

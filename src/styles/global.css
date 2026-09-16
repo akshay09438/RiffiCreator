@@ -23,6 +23,10 @@
   --color-hairline: var(--hairline);
   --color-on-ink-body: var(--on-ink-body);
   --color-on-ink-meta: var(--on-ink-meta);
+  --color-lime: var(--lime);
+  --color-flare: var(--flare);
+  --color-edge: var(--edge);
+  --color-grid-line: var(--grid-line);
 
   --default-font-family: var(--typeface-body);
   --font-display: var(--typeface-display);
@@ -30,7 +34,11 @@
 
   --radius-take: var(--corner-take);
   --radius-pill: var(--corner-pill);
+  --radius-panel: var(--corner-panel);
   --shadow-take: var(--lift-take);
+  --shadow-sticker: var(--lift-sticker);
+  --shadow-sticker-sm: var(--lift-sticker-sm);
+  --shadow-cta: var(--lift-cta);
 }
 
 /* Type scale from 360px to 1280px through clamp(), so in-between widths look intentional (PRD 3.3). */
@@ -61,6 +69,11 @@
   body {
     min-height: 100dvh;
     background-color: var(--paper);
+    /* A faint drawing-board grid: two 1px lines, no image file, so it costs the page nothing. */
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 44px 44px;
     color: var(--ink);
     font-family: var(--typeface-body);
     font-size: var(--text-body);
@@ -83,8 +96,36 @@
     contain-intrinsic-size: auto 900px;
   }
 
+  /*
+   * The sticker layer (founder's direction, 16 Sep 2026): a drawn edge and a hard offset shadow.
+   * `panel` is a whole section's coloured block, `sticker` a small object (chips), `cta-sticker` the
+   * button, whose shadow is the signal blue rather than ink.
+   */
+  .panel {
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-panel);
+    box-shadow: var(--lift-sticker);
+  }
+
+  /* Dividers inside a coloured panel need a darker line than the one that works on white. */
+  .panel:not(.bg-ink) {
+    --hairline: var(--hairline-on-panel);
+  }
+
+  .sticker {
+    border: var(--edge-width) solid var(--edge);
+    box-shadow: var(--lift-sticker-sm);
+  }
+
+  .cta-sticker {
+    border: var(--edge-width) solid var(--edge);
+    box-shadow: var(--lift-cta);
+  }
+
   /* Hover lift belongs only to take cards, and only on pointer devices (PRD 3.5). */
   .take-card {
+    border: var(--edge-width) solid var(--edge);
+    box-shadow: var(--lift-sticker);
     transition: transform 200ms ease-out;
   }
 
@@ -110,6 +151,7 @@
     display: flex;
     height: 44px;
     overflow: hidden;
+    border: var(--edge-width) solid var(--edge);
     border-radius: var(--corner-pill);
     background-color: var(--chip-coral-bg);
   }
@@ -230,6 +272,15 @@
 
   .hero-line {
     animation: hero-rise 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* The marker sweep behind the second headline line: it hugs the words on every wrapped line. */
+  .hero-mark {
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding: 0.04em 0.12em;
+    border-radius: 12px;
+    background-color: var(--flare);
   }
 
   .hero-line + .hero-line {

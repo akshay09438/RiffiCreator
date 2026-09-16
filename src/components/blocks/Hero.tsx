@@ -23,7 +23,9 @@ export function Hero() {
         <div className="lg:col-span-7">
           <h1 id="hero-heading" className="hero-title text-display-xl font-extrabold">
             <span className="hero-line block">{titleLines[0]}</span>{' '}
-            <span className="hero-line block">{titleLines[1]}</span>
+            <span className="hero-line block">
+              <span className="hero-mark">{titleLines[1]}</span>
+            </span>
           </h1>
           <p className="mt-6 max-w-[34rem] text-body-l text-ink-soft">{subline}</p>
           <div className="mt-8">

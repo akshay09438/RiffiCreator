@@ -17,7 +17,7 @@ export function CtaButton({ variant }: CtaButtonProps) {
         href={ctaHref}
         target="_blank"
         rel="noopener noreferrer"
-        className={`${styles.button} inline-flex min-h-11 items-center justify-center rounded-pill px-8 py-3 text-body-l font-semibold`}
+        className={`${styles.button} cta-sticker inline-flex min-h-11 items-center justify-center rounded-pill px-8 py-3 text-body-l font-bold`}
       >
         {content.cta.label}
       </a>

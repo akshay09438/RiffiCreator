@@ -145,7 +145,10 @@ describe('copy matches the PRD word for word', () => {
   });
 
   it('hero: the two title lines and the subline', () => {
-    expect(content.hero.titleLines).toEqual(["On Instagram you're one of lakhs.", "Here you're one of 50."]);
+    expect(content.hero.titleLines).toEqual([
+      "On Instagram you're one of lakhs.",
+      "Here you're one of the first, with almost no competition.",
+    ]);
     expect(content.hero.subline).toBe(
       "Riffi is India's platform for opinions. We're taking 50 creators in before launch and pointing the feed at them.",
     );

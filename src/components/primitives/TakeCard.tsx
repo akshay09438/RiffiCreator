@@ -13,9 +13,9 @@ type TakeCardProps = {
 export function TakeCard({ chip, text, featured = false, children }: TakeCardProps) {
   return (
     <article
-      className={`take-card rounded-take border border-hairline bg-paper p-5 md:p-6 ${featured ? 'shadow-take lg:-rotate-2' : ''}`}
+      className={`take-card rounded-take bg-paper p-5 md:p-6 ${featured ? 'lg:-rotate-2' : ''}`}
     >
-      <Chip tone="neutral">{chip}</Chip>
+      <Chip tone="butter">{chip}</Chip>
       <p className="mt-4 font-display text-display-m font-bold text-ink">{text}</p>
       {children}
     </article>

@@ -58,11 +58,16 @@ describe('TakeCard', () => {
     expect(within(card).getByText('Being early beats being good.')).toBeInTheDocument();
   });
 
-  it('uses the one shadow only when featured', () => {
+  it('draws its edge and shadow from take-card on every card, and marks only the featured one with the desktop tilt', () => {
     const { rerender } = render(<TakeCard chip="sample take" text="A take." />);
-    expect(screen.getByRole('article').className).not.toContain('shadow-take');
+    const plainClasses = screen.getByRole('article').className;
+    expect(plainClasses).toContain('take-card');
+    expect(plainClasses).not.toContain('lg:-rotate-2');
+
     rerender(<TakeCard chip="sample take" text="A take." featured />);
-    expect(screen.getByRole('article').className).toContain('shadow-take');
+    const featuredClasses = screen.getByRole('article').className;
+    expect(featuredClasses).toContain('take-card');
+    expect(featuredClasses).toContain('lg:-rotate-2');
   });
 });
 

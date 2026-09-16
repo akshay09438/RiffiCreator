@@ -53,9 +53,9 @@
 @font-face {
   font-family: 'Archivo Fallback Wide';
   src: local('Arial'), local('Roboto');
-  size-adjust: 126%;
-  ascent-override: 69.69%;
-  descent-override: 16.67%;
+  size-adjust: 129%;
+  ascent-override: 68.07%;
+  descent-override: 16.28%;
   line-gap-override: 0%;
 }
 
@@ -91,6 +91,17 @@
   --on-ink-body: #b3b3b3;
   --on-ink-meta: #999999;
 
+  /*
+   * The sticker layer (founder's direction, 16 Sep 2026): the page itself stays white and the colour
+   * lives in the pieces - drawn edges, hard offset shadows, bright panels and chips.
+   */
+  --lime: #d6f84c;
+  --flare: #ff5a1f;
+  --edge: #0b0b0b;
+  --grid-line: #ededed;
+  /* The page's hairline disappears on a coloured panel, so panels use ink at 15% instead. */
+  --hairline-on-panel: #0b0b0b26;
+
   /* Typefaces (PRD 3.3) */
   --typeface-display: 'Archivo Variable', 'Archivo Fallback', sans-serif;
   /* The headline only: same face, with the stand-in matched to its 115% width. */
@@ -100,6 +111,13 @@
   /* Radii differ by object type on purpose (PRD 3.4) */
   --corner-take: 20px;
   --corner-pill: 999px;
+  --corner-panel: 32px;
+
+  /* The drawn edge and the hard shadows that sit under everything on the sticker layer. */
+  --edge-width: 3px;
+  --lift-sticker: 6px 6px 0 var(--edge);
+  --lift-sticker-sm: 4px 4px 0 var(--edge);
+  --lift-cta: 6px 6px 0 var(--signal);
 
   /* The one shadow token, used only on the hero take card (PRD 3.2) */
   --lift-take: 0 24px 48px -20px rgb(0 0 0 / 0.28);
