@@ -140,49 +140,48 @@ export const content = {
     closer: 'And a reel costs you four hours. A take costs you forty seconds.',
   },
   howYouEarn: {
-    heading: 'You earn from post one.',
-    pill: 'points',
+    heading: 'What you get for going first.',
     rows: [
-      { action: 'Post a take', description: 'The opinion itself. Every one counts.' },
+      { action: 'Post a take', description: "One opinion, one line. That's the whole format." },
       {
         action: 'Write the long version',
-        description: 'When a take needs more than a line, write it out.',
+        description: 'Some takes need a paragraph. Write it out when they do.',
       },
       {
         action: 'Add images',
-        description: 'Screenshots, stills, memes, whatever makes the point land.',
+        description: 'Screenshots, stills, memes. Whatever makes the point land.',
       },
-      { action: 'Drop a story', description: 'Short-lived posts, same as you already do.' },
+      { action: 'Drop a story', description: 'Short-lived posts, the same as you already do.' },
       {
         action: 'Get the room talking',
-        description: 'Votes, replies and reshares on your take earn on top.',
+        description: "Votes, replies and reshares. That's how you find out if the room agrees.",
       },
     ],
-    note: "Points convert to vouchers. Exact values go live with the app — we're still tuning them, and we'd rather publish them once than change them on you.",
+    note: "Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
   },
   longGame: {
-    heading: 'Points now. Priority later.',
+    heading: 'Early now. First in line later.',
     items: [
       {
         title: 'Performance payouts',
-        body: "When we switch on view-based payouts, this cohort is in the first batch. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000–10,000 band. That's an illustration, not a rate card — we'll publish real slabs before it goes live.",
+        body: "When we switch on view-based payouts, batch one is in the first group. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000 to ₹10,000 band. That's an illustration, not a rate card. We'll publish the real slabs before any of it goes live.",
       },
       {
         title: 'Brand deals',
-        body: "Brands reach a platform through its top creators. On a platform with 50 creators, that's a much shorter list than the one you're on now.",
+        body: "Brands reach a platform through its top creators. On a platform with 50 creators, that list is a lot shorter than the one you're on now.",
       },
       {
         title: 'Whatever comes after',
-        body: "Subscriptions, tipping, whatever we build — this cohort gets it before anyone else. That's the deal for being here first.",
+        body: 'Subscriptions, tipping, anything else we build. Batch one gets it before anyone else.',
       },
     ],
     framing:
-      "All of this is our plan, not a contract. We'd rather you come in knowing exactly that.",
+      "All of this is our plan, not a contract. You're backing us early, and we'd rather you do it knowing exactly that.",
   },
   seats: {
     heading: "50 seats. Here's what we ask.",
     // [FILL] 1 - the actual weekly commitment asked of creators.
-    body: "Post three takes a week through the pre-launch period. That's the whole ask. No calls, no contracts, no exclusivity — keep posting wherever else you post.",
+    body: "Post three takes a week through the pre-launch period. That's the whole ask. No calls, no contracts, no exclusivity. Keep posting wherever else you post.",
     meterLabel: '50 seats in batch one',
     takenLabel: (taken: number, total: number) => `${taken} of ${total} seats taken`,
   },
@@ -192,7 +191,7 @@ export const content = {
       {
         question: 'Do I have to leave Instagram?',
         answer:
-          'No. Keep posting exactly where you post now. A take is a sentence, not a shoot — this sits alongside what you already do.',
+          'No. Keep posting exactly where you post now. A take is a sentence, not a shoot, so it sits alongside what you already do.',
       },
       {
         question: 'My following is small. Does that matter?',
@@ -202,7 +201,7 @@ export const content = {
       {
         question: 'Is this paid right now?',
         answer:
-          "You earn points from your first post and points convert to vouchers. Cash payouts arrive with monetisation, and this cohort is first in line for it. That's the plan, not a contract.",
+          "No, and we won't pretend otherwise. Riffi hasn't launched, so there's no money in it yet. You're putting takes in early, and when we can pay creators, batch one is first in line for payouts and brand deals. That's the plan, not a contract.",
       },
       {
         question: 'What can I post about?',

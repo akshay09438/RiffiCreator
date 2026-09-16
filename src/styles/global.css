@@ -277,12 +277,19 @@
   }
 
   /* The marker sweep behind the second headline line: it hugs the words on every wrapped line. */
+  /* Painted as a sized background, not a padded background colour: at line-height 1 the inline box
+     is about 1.19em tall, so each wrapped fragment's colour would paint over the descenders of the
+     line above (the y in "you're", the comma in "first,"). A background of a fixed height sits
+     inside the line box instead, which keeps the line breaks and the zero layout shift. */
   .hero-mark {
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
-    padding: 0.04em 0.12em;
-    border-radius: 12px;
-    background-color: var(--flare);
+    padding-block: 0;
+    padding-inline: 0.12em;
+    background-image: linear-gradient(var(--flare), var(--flare));
+    background-repeat: no-repeat;
+    background-size: 100% 1.02em;
+    background-position: 0 0.04em;
   }
 
   .hero-line + .hero-line {

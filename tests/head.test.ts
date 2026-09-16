@@ -37,9 +37,9 @@ describe('index.html: document basics', () => {
 });
 
 describe('index.html: title, description and the link-preview card, exactly as PRD 5.6', () => {
-  it('has the title "Riffi Creator Program — 50 seats"', () => {
+  it('has the title "Riffi Creator Program: 50 seats"', () => {
     expect(all('title')).toHaveLength(1);
-    expect(doc.title).toBe('Riffi Creator Program — 50 seats');
+    expect(doc.title).toBe('Riffi Creator Program: 50 seats');
   });
 
   it.each([

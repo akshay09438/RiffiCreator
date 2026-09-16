@@ -313,15 +313,15 @@ describe('#how-you-earn (PRD Block 4)', () => {
     render(<App />);
   });
 
-  it('lists the five earn rows as a real list, each with its action, description and a "points" pill', () => {
+  it('lists the five earn rows as a real list, each with its action and description, and renders no "points" pill (16 Sep 2026: points removed)', () => {
     const items = Array.from(only(section('how-you-earn'), 'ul').children) as HTMLElement[];
     expect(items.map((item) => item.tagName)).toEqual(['LI', 'LI', 'LI', 'LI', 'LI']);
     content.howYouEarn.rows.forEach((row, index) => {
       const item = within(items[index] as HTMLElement);
       expect(item.getByText(row.action)).toBeInTheDocument();
       expect(item.getByText(row.description)).toBeInTheDocument();
-      expect(item.getByText(content.howYouEarn.pill)).toBeInTheDocument();
     });
+    expect(within(section('how-you-earn')).queryByText('points')).toBeNull();
   });
 
   it('puts the honest note after the list, outside it', () => {

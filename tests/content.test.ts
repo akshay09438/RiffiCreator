@@ -7,10 +7,20 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, URGENCY, sentencesOf } f
 
 // Every expected string below is copied from docs/functional-spec.md (the PRD), section 4 and
 // the appendix, with the founder-approved changes: the name is Riffi, and the answer to
-// "Is this paid right now?" ends with "That's the plan, not a contract."
+// "Is this paid right now?" ends with "That's the plan, not a contract." On 16 Sep 2026 the
+// founder removed reward points entirely: no pill, no point values, no "you earn" promise.
+// Block 4 (how you earn) and Block 5 (the long game) now say plainly that there is no money
+// yet and that batch one is first in line when Riffi can pay - a plan, not a contract.
 // Placeholder values (PRD 8) are deliberately not pinned, except the Block 6 seat defaults.
 
 const contentSource = readFileSync(fileURLToPath(new URL('../src/content.ts', import.meta.url)), 'utf8');
+
+// A present-tense claim that someone is paid today - "you earn", "we pay", "is/are/gets paid" -
+// as opposed to a future plan ("first in line", "when we can pay creators"). A modal verb such as
+// "can" or "will" sitting between the subject and the verb correctly falls outside this pattern:
+// it turns the sentence into a plan, not a promise of payment now (16 Sep 2026: points removed).
+const PRESENT_TENSE_PAYMENT =
+  /\b(?:you|creators?)\s+earns?\b|\b(?:we|riffi)\s+pays?\b|\b(?:is|are|get|gets)\s+paid\b/i;
 
 const VALID_HANDLE = /^(?!\.)(?!.*\.\.)(?!.*\.$)[A-Za-z0-9._]{1,30}$/;
 
@@ -40,6 +50,10 @@ const offending = (pattern: RegExp): Found[] => allCopy.filter(({ text }) => pat
 describe('honesty guardrails in the content (PRD 2.4, design 5)', () => {
   it('never puts a number next to the word "points" or "pts"', () => {
     expect(offending(NUMBER_NEXT_TO_POINTS)).toEqual([]);
+  });
+
+  it('never promises present-tense payment ("you earn", "we pay", "is/are paid") - only a plan for later (16 Sep 2026: points removed)', () => {
+    expect(offending(PRESENT_TENSE_PAYMENT)).toEqual([]);
   });
 
   it('has no digits at all in the earn rows or the earn note, so no point value can hide there', () => {
@@ -227,39 +241,42 @@ describe('copy matches the PRD word for word', () => {
     expect(content.whyHere.closer).toBe('And a reel costs you four hours. A take costs you forty seconds.');
   });
 
-  it('how you earn: heading, the points pill, the five rows and the note', () => {
-    expect(content.howYouEarn.heading).toBe('You earn from post one.');
-    expect(content.howYouEarn.pill).toBe('points');
+  it('how you earn: heading, the five rows and the honest no-money-yet note - no pill (16 Sep 2026: points removed)', () => {
+    expect(content.howYouEarn).not.toHaveProperty('pill');
+    expect(content.howYouEarn.heading).toBe('What you get for going first.');
     expect(content.howYouEarn.rows).toEqual([
-      { action: 'Post a take', description: 'The opinion itself. Every one counts.' },
-      { action: 'Write the long version', description: 'When a take needs more than a line, write it out.' },
-      { action: 'Add images', description: 'Screenshots, stills, memes, whatever makes the point land.' },
-      { action: 'Drop a story', description: 'Short-lived posts, same as you already do.' },
-      { action: 'Get the room talking', description: 'Votes, replies and reshares on your take earn on top.' },
+      { action: 'Post a take', description: "One opinion, one line. That's the whole format." },
+      { action: 'Write the long version', description: 'Some takes need a paragraph. Write it out when they do.' },
+      { action: 'Add images', description: 'Screenshots, stills, memes. Whatever makes the point land.' },
+      { action: 'Drop a story', description: 'Short-lived posts, the same as you already do.' },
+      {
+        action: 'Get the room talking',
+        description: "Votes, replies and reshares. That's how you find out if the room agrees.",
+      },
     ]);
     expect(content.howYouEarn.note).toBe(
-      "Points convert to vouchers. Exact values go live with the app — we're still tuning them, and we'd rather publish them once than change them on you.",
+      "Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
     );
   });
 
   it('the long game: heading, the three items and the framing line', () => {
-    expect(content.longGame.heading).toBe('Points now. Priority later.');
+    expect(content.longGame.heading).toBe('Early now. First in line later.');
     expect(content.longGame.items).toEqual([
       {
         title: 'Performance payouts',
-        body: "When we switch on view-based payouts, this cohort is in the first batch. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000–10,000 band. That's an illustration, not a rate card — we'll publish real slabs before it goes live.",
+        body: "When we switch on view-based payouts, batch one is in the first group. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000 to ₹10,000 band. That's an illustration, not a rate card. We'll publish the real slabs before any of it goes live.",
       },
       {
         title: 'Brand deals',
-        body: "Brands reach a platform through its top creators. On a platform with 50 creators, that's a much shorter list than the one you're on now.",
+        body: "Brands reach a platform through its top creators. On a platform with 50 creators, that list is a lot shorter than the one you're on now.",
       },
       {
         title: 'Whatever comes after',
-        body: "Subscriptions, tipping, whatever we build — this cohort gets it before anyone else. That's the deal for being here first.",
+        body: 'Subscriptions, tipping, anything else we build. Batch one gets it before anyone else.',
       },
     ]);
     expect(content.longGame.framing).toBe(
-      "All of this is our plan, not a contract. We'd rather you come in knowing exactly that.",
+      "All of this is our plan, not a contract. You're backing us early, and we'd rather you do it knowing exactly that.",
     );
   });
 
@@ -288,9 +305,9 @@ describe('copy matches the PRD word for word', () => {
 
   it('FAQ: the four answers that are not open inputs, and real text for the two that are', () => {
     expect(content.faq.items.slice(0, 4).map((item) => item.answer)).toEqual([
-      'No. Keep posting exactly where you post now. A take is a sentence, not a shoot — this sits alongside what you already do.',
+      'No. Keep posting exactly where you post now. A take is a sentence, not a shoot, so it sits alongside what you already do.',
       "No. We're picking for takes, not reach. Most of this cohort is under 20k and that's deliberate.",
-      "You earn points from your first post and points convert to vouchers. Cash payouts arrive with monetisation, and this cohort is first in line for it. That's the plan, not a contract.",
+      "No, and we won't pretend otherwise. Riffi hasn't launched, so there's no money in it yet. You're putting takes in early, and when we can pay creators, batch one is first in line for payouts and brand deals. That's the plan, not a contract.",
       'Anything you have a real opinion on. Cricket, politics, films, food, campus, money. Opinions, not news reports.',
     ]);
     for (const item of content.faq.items) expect(item.answer.trim()).not.toBe('');

@@ -1,7 +1,7 @@
 import { content } from '../../content';
 import { Section } from '../primitives/Section';
 
-/** Block 4: earning starts at post one - what earns points, never how many (PRD 2.4). */
+/** Block 4: what a creator gets for going first, and the straight answer that there is no money yet. */
 export function HowYouEarn() {
   const block = content.howYouEarn;
   return (
@@ -19,9 +19,6 @@ export function HowYouEarn() {
               <p className="text-body-l font-semibold text-ink">{row.action}</p>
               <p className="mt-1 text-body text-ink-soft">{row.description}</p>
             </div>
-            <span className="self-start rounded-pill bg-paper px-3 py-1 text-meta font-medium text-ink-soft">
-              {block.pill}
-            </span>
           </li>
         ))}
       </ul>
