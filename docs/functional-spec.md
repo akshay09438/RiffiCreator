@@ -6,7 +6,9 @@
 >
 > **Changed again, founder-decided 16 Sep 2026, later the same day (commit `441baba`):** (5) **reward points are gone from the offer.** Section 1.2, section 2.4's honesty guardrails, Block 4 ("How you earn"), Block 5 ("The long game") and the FAQ answer to "Is this paid right now?" all said a creator earns points from post one and that points convert to vouchers. None of that is true any more: the page now says plainly that there is no money yet, that joining batch one means backing Riffi early, and that batch one is first in line for real payouts and brand deals once Riffi can pay - still a plan, not a contract, never a promise. Each section below is rewritten to match, with a dated note; the original points-based offer is kept alongside it as the historical record. (6) **No em dash appears anywhere in the page's copy any more**, including `index.html`'s `<title>`, which changed from "Riffi Creator Program — 50 seats" to "Riffi Creator Program: 50 seats". Rationale and the full before/after text for both changes are in the decisions and drift logs in `docs/implementation-plan.md`.
 >
-> **Changed again, founder-decided 17 Sep 2026:** (7) **a ninth block, "Or just say it to camera," was added** between Block 2 ("What Riffi is") and Block 3 ("Why here, not there") - see Block 2a, below. It answers the same objection as Block 2, in video form: a take can be spoken instead of typed. Its three sample cards are pictures of the format only - no clip loads and nothing plays on tap, and no photograph of a real person appears in any of them; the founder's offer of frames pulled from other people's Instagram reels was turned down for this page, because those people never agreed to appear here and using their frames would wrongly suggest they post on Riffi. (8) **Some of Block 2's sample copy moved away from cricket:** the news-versus-take contrast pair, two of the eight marquee takes, and the order of the category chips (Cricket now sits last, not first) - cricket previously anchored the contrast pair, the lead chip and two marquee lines all at once. Rationale and the full before/after text are in the decisions and drift logs in `docs/implementation-plan.md`.
+> **Changed again, founder-decided 17 Sep 2026:** (7) **a ninth block, "Or just say it to camera," was added** between Block 2 ("What Riffi is") and Block 3 ("Why here, not there") - see Block 1a, below (it has since moved; see the next paragraph). It answers the same objection as Block 2, in video form: a take can be spoken instead of typed. Its three sample cards are pictures of the format only - no clip loads and nothing plays on tap, and no photograph of a real person appears in any of them; the founder's offer of frames pulled from other people's Instagram reels was turned down for this page, because those people never agreed to appear here and using their frames would wrongly suggest they post on Riffi. (8) **Some of Block 2's sample copy moved away from cricket:** the news-versus-take contrast pair, two of the eight marquee takes, and the order of the category chips (Cricket now sits last, not first) - cricket previously anchored the contrast pair, the lead chip and two marquee lines all at once. Rationale and the full before/after text are in the decisions and drift logs in `docs/implementation-plan.md`.
+>
+> **Changed again, founder-decided 17 Sep 2026, shortly after the block above was added:** (9) **the video block now leads.** Riffi is pitching creators who already shoot reels, so the page opens on video, not text: the block from point (7) is renamed **Block 1a** and moves to sit directly after the Hero and before Block 2, with a new heading ("You already shoot reels. Here it's just you, talking."), a new lead and footer, and the lime drawn panel that Block 2 used to have. Block 2 ("What Riffi is") becomes the second, typed option - new heading "Or type it, if that's more your thing.", new lead, and it gives up its lime panel for plain white. Its original heading, "Twitter took news. We're taking opinions.", is gone from the page entirely (it is not carried anywhere else). See Block 1a and Block 2, below, and the decisions and drift logs in `docs/implementation-plan.md`.
 
 ---
 
@@ -110,7 +112,7 @@ Write the page so it answers these in sequence. This *is* the section order.
 | 8 | Small edge cases | FAQ |
 | 9 | How do I get in? | Close |
 
-*(Added 17 Sep 2026: a ninth block, "Or just say it to camera" - Block 2a, below - sits between rows 2 and 3 and answers row 2's objection a second way, in video instead of text. It gets no numbered row of its own above because it isn't a new objection, just a second answer to "what would I even post?".)*
+*(Added 17 Sep 2026, then repositioned the same day: a ninth block, "You already shoot reels. Here it's just you, talking." - Block 1a, below - now sits between rows 1 and 2, and answers row 2's objection first, in video; the typed block (Block 2, "Or type it, if that's more your thing.") answers it second. Neither gets a numbered row of its own above, because video-first isn't a new objection - it's the same "what would I even post?" answered twice.)*
 
 **Objection 4 is the most underrated.** A creator who shoots reels spends hours per post. A take on Riffi is a sentence. That is a real, honest, enormous advantage and most drafts will bury it. Give it a dedicated line in a dedicated position.
 
@@ -249,7 +251,7 @@ All of it wrapped in `prefers-reduced-motion: reduce`, where bars render at fina
 
 ## 4. Page specification
 
-Nine blocks *(a ninth, "Or just say it to camera," was added 17 Sep 2026 between Block 2 and Block 3 - see Block 2a, below, and the note at the top of this document)*. Target total copy under 1,400 words and mobile scroll length roughly seven screens are the PRD's original estimates for eight blocks and have not been re-measured against the ninth.
+Nine blocks *(a ninth was added 17 Sep 2026, then repositioned the same day to lead on video - see Block 1a, below, and the note at the top of this document)*. Target total copy under 1,400 words and mobile scroll length roughly seven screens are the PRD's original estimates for eight blocks and have not been re-measured against the ninth.
 
 Copy below is **production copy** unless marked `[FILL]`. Use it as written. If you improve a line, keep it in the voice of §2.3.
 
@@ -299,17 +301,62 @@ Copy below is **production copy** unless marked `[FILL]`. Use it as written. If 
 
 ---
 
-### Block 2 — What Riffi is
+### Block 1a — You already shoot reels. Here it's just you, talking. *(added 17 Sep 2026, moved here the same day)*
 
-**Job:** make "a take" concrete so they know what they'd post.
+**Job:** open on video, not text, because Riffi is pitching creators who already shoot reels - so the format they already use comes first, and the typed option (Block 2) comes second. Answers "what would I even post?" before Block 2 answers it a second way, in text.
 
-Background: `--recess`
+*(This block was first added later than Hero, between Block 2 and Block 3, under the heading "Or just say it to camera." - see the note at the top of this document. The founder repositioned it ahead of Block 2 the same day, gave it a new heading and footer, and moved it from the pale-blue `sky` panel to the lime panel Block 2 used to have. The original heading, lead, footer and position are recorded in the Appendix.)*
+
+Background: `--recess` - the lime drawn panel (see `docs/technical-spec.md`, "Design system"). Block 2, below, gives up this panel and goes plain white in exchange.
 
 - H2 — `display-l`:
-  > Twitter took news. We're taking opinions.
+  > You already shoot reels. Here it's just you, talking.
 
 - Lead — `body-l`, 34rem cap:
-  > Riffi is built for one thing: what you think. Not what happened, not who said it. Your take, and whether the room agrees.
+  > No hook, no thumbnail, no four hour edit. Point the phone at yourself, say what you actually think, and post it. The room votes on the opinion, not the edit.
+
+- A small tilted orange badge:
+  > 40 seconds, one opinion
+
+- **Three sample cards**, each tilted at a slightly different angle, in a row that scrolls sideways on mobile. Each card is a **picture of the format**, not a real clip:
+  - A flat coloured frame (a different pastel per card) standing in for video, with a decorative play-button mark in the middle that does nothing on tap
+  - A `sample` pill in one corner of the frame and the clip's length (for example `0:38`) in the opposite corner
+  - The take's text underneath the frame
+
+  Sample takes and lengths shown:
+  1. "Every biopic in the last five years is an ad for its subject." - 0:38
+  2. "Bengaluru traffic is a scheduling problem, not a road problem." - 0:41
+  3. "Hostel mess food built more resilience than any gym ever will." - 0:29
+
+  **No real clip is loaded and nothing plays when a card is tapped.** No photograph of any real person appears in these cards, sample or otherwise. The founder offered frames pulled from other people's Instagram reels for this block; they were turned down because the people in them never agreed to appear on this page, and using their frames would wrongly imply they already post on Riffi. Real frames are only ever added later, and only once Riffi owns the clip or the creator in it has agreed - see `docs/implementation-plan.md` for the decision.
+
+- Footer line, `meta`, `--ink-soft` - the one rule that keeps this block honest about what belongs on Riffi, regardless of format:
+  > One rule, whatever you shoot: it has to be your opinion, not the news.
+
+**Acceptance**
+- [ ] The frame, its play mark and its sample/length pills are hidden from assistive technology; the word "sample" is repeated as real text for a screen reader on every card
+- [ ] No video actually loads and no clip plays on tap, anywhere in this block
+- [ ] No photograph of a real person appears in any card
+- [ ] Cards scroll sideways without trapping vertical page scroll on touch
+- [ ] Sits directly between Block 1 (Hero) and Block 2 (What Riffi is) in the rendered page
+
+---
+
+### Block 2 — What Riffi is
+
+**Job:** make "a take" concrete so they know what they'd post - now the second answer to that question, after Block 1a's video-first framing.
+
+Background: `--paper` *(changed 17 Sep 2026; was `--recess`, the lime panel - Block 1a has it now, so the hierarchy reads video-first at a glance)*
+
+- H2 — `display-l`:
+  > Or type it, if that's more your thing.
+
+  *(Rewritten 17 Sep 2026; was "Twitter took news. We're taking opinions." - recorded in the Appendix.)*
+
+- Lead — `body-l`, 34rem cap:
+  > Same forty seconds either way. What matters is that the post is your opinion, not the news.
+
+  *(Rewritten 17 Sep 2026; was "Riffi is built for one thing: what you think. Not what happened, not who said it. Your take, and whether the room agrees." - recorded in the Appendix.)*
 
 - **The contrast pair.** Two blocks side by side on desktop, stacked on mobile. This is the clearest thing on the page — most creators genuinely don't know what "opinion content, not news" means until they see it.
 
@@ -340,44 +387,6 @@ Background: `--recess`
 - [ ] Marquee loops seamlessly with no visible seam or jump
 - [ ] Marquee is static under `prefers-reduced-motion`
 - [ ] Contrast pair readable without horizontal scroll at 320px
-
----
-
-### Block 2a — Or just say it to camera *(added 17 Sep 2026)*
-
-**Job:** show that a take can be spoken as easily as typed, so a creator who would rather talk to camera than type sees themselves in the product too. Answers the same objection as Block 2 ("what would I even post?"), in video form.
-
-Background: `sky` - a pale blue drawn panel, the same treatment as the lime and ink panels elsewhere on the page (see `docs/technical-spec.md`, "Design system").
-
-- H2 — `display-l`:
-  > Or just say it to camera.
-
-- Lead — `body-l`, 34rem cap:
-  > A take does not have to be typed. Point the phone at yourself, say the thing, post it. The room still votes.
-
-- A small tilted orange badge:
-  > 40 seconds, one opinion
-
-- **Three sample cards**, each tilted at a slightly different angle, in a row that scrolls sideways on mobile. Each card is a **picture of the format**, not a real clip:
-  - A flat coloured frame (a different pastel per card) standing in for video, with a decorative play-button mark in the middle that does nothing on tap
-  - A `sample` pill in one corner of the frame and the clip's length (for example `0:38`) in the opposite corner
-  - The take's text underneath the frame
-
-  Sample takes and lengths shown:
-  1. "Every biopic in the last five years is an ad for its subject." - 0:38
-  2. "Bengaluru traffic is a scheduling problem, not a road problem." - 0:41
-  3. "Hostel mess food built more resilience than any gym ever will." - 0:29
-
-  **No real clip is loaded and nothing plays when a card is tapped.** No photograph of any real person appears in these cards, sample or otherwise. The founder offered frames pulled from other people's Instagram reels for this block; they were turned down because the people in them never agreed to appear on this page, and using their frames would wrongly imply they already post on Riffi. Real frames are only ever added later, and only once Riffi owns the clip or the creator in it has agreed - see `docs/implementation-plan.md` for the decision.
-
-- Footer line, `meta`, `--ink-soft`:
-  > Same forty seconds either way. Type it or say it, the vote is the same.
-
-**Acceptance**
-- [ ] The frame, its play mark and its sample/length pills are hidden from assistive technology; the word "sample" is repeated as real text for a screen reader on every card
-- [ ] No video actually loads and no clip plays on tap, anywhere in this block
-- [ ] No photograph of a real person appears in any card
-- [ ] Cards scroll sideways without trapping vertical page scroll on touch
 
 ---
 
@@ -601,8 +610,8 @@ riffi-creator/
    │  └─ blocks/
    │     ├─ Nav.tsx
    │     ├─ Hero.tsx
+   │     ├─ VideoTakes.tsx      added 17 Sep 2026; moved here, ahead of WhatRiffiIs, the same day
    │     ├─ WhatRiffiIs.tsx
-   │     ├─ VideoTakes.tsx      added 17 Sep 2026, between WhatRiffiIs and WhyHere
    │     ├─ WhyHere.tsx
    │     ├─ HowYouEarn.tsx
    │     ├─ LongGame.tsx
@@ -765,7 +774,7 @@ Work in this sequence. Do not jump ahead — the token and content layers must e
 
 ## 10. Definition of done
 
-- [ ] All eight blocks built, real copy, zero Lorem *(a ninth, "Or just say it to camera," was added 17 Sep 2026 - see §4, Block 2a)*
+- [ ] All eight blocks built, real copy, zero Lorem *(a ninth was added 17 Sep 2026, then repositioned the same day to lead the page - see §4, Block 1a)*
 - [ ] Zero hex values or font names outside `tokens.css`
 - [ ] Zero user-facing strings outside `content.ts`
 - [ ] No horizontal overflow between 320px and 1920px
@@ -793,20 +802,20 @@ Every user-facing string, for `content.ts`.
 - CTA: `Claim a seat` / helper: `Opens a DM with @riffi`
 - Sample take: `Being early beats being good.` — chip `sample take`, 71% agree / 29% disagree, `2,140 votes`
 
+**You already shoot reels. Here it's just you, talking.** *(added 17 Sep 2026 as "Or just say it to camera," between "What Riffi is" and "Why here, not there"; repositioned and renamed the same day to lead the page, directly after Hero)*
+- H2: `You already shoot reels. Here it's just you, talking.` (was `Or just say it to camera.`)
+- Lead: `No hook, no thumbnail, no four hour edit. Point the phone at yourself, say what you actually think, and post it. The room votes on the opinion, not the edit.` (was `A take does not have to be typed. Point the phone at yourself, say the thing, post it. The room still votes.`)
+- Badge: `40 seconds, one opinion`
+- Three sample cards as listed in Block 1a, each labelled `sample`
+- Footer: `One rule, whatever you shoot: it has to be your opinion, not the news.` (was `Same forty seconds either way. Type it or say it, the vote is the same.`)
+
 **What Riffi is**
-- H2: `Twitter took news. We're taking opinions.`
-- Lead: `Riffi is built for one thing: what you think. Not what happened, not who said it. Your take, and whether the room agrees.`
+- H2: `Or type it, if that's more your thing.` (rewritten 17 Sep 2026; was `Twitter took news. We're taking opinions.`)
+- Lead: `Same forty seconds either way. What matters is that the post is your opinion, not the news.` (rewritten 17 Sep 2026; was `Riffi is built for one thing: what you think. Not what happened, not who said it. Your take, and whether the room agrees.`)
 - Not a take: `The new season dropped on Friday.` (rewritten 17 Sep 2026; was `India won by 6 wickets in Chennai.`) / `That's news. It's already everywhere.`
 - A take: `Every season after the third is just fan service with a budget.` (rewritten 17 Sep 2026; was `Chasing in Chennai got easier and everyone's pretending it didn't.`) / `That's yours. Nobody else posted it.`
 - Chips: `Movies` `Politics` `Food` `Campus` `Money` `Music` `Startups` `Fashion` `Sports` `Cricket` (reordered 17 Sep 2026 so Cricket is last, not first; was `Cricket` `Politics` `Movies` `Food` `Campus` `Money` `Music` `Startups` `Sports` `Fashion`)
 - Marquee: the eight takes listed in Block 2 (two replaced 17 Sep 2026: `Your favourite startup is a spreadsheet with a good logo.` and `Every playlist app ends up playing the same six songs.` replaced two cricket takes, `Test cricket is the only format that still tells the truth.` and `The best captain of this generation isn't the one you're thinking of.`)
-
-**Or just say it to camera** *(added 17 Sep 2026)*
-- H2: `Or just say it to camera.`
-- Lead: `A take does not have to be typed. Point the phone at yourself, say the thing, post it. The room still votes.`
-- Badge: `40 seconds, one opinion`
-- Three sample cards as listed in Block 2a, each labelled `sample`
-- Footer: `Same forty seconds either way. Type it or say it, the vote is the same.`
 
 **Why here, not there**
 - H2: `You're not early on Instagram. You're early here.`

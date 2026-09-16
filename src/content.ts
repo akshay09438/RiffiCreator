@@ -153,7 +153,8 @@ export const content = {
     closer: 'And a reel costs you four hours. A take costs you forty seconds.',
   },
   howYouEarn: {
-    heading: 'What you get for going first.',
+    heading: 'What creators can do here.',
+    lead: 'Five ways to put an opinion out. Pick whichever suits the take.',
     rows: [
       { action: 'Post a take', description: "One opinion, one line. That's the whole format." },
       {
@@ -173,11 +174,14 @@ export const content = {
     note: "Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
   },
   longGame: {
+    // Two halves so the first can carry the marker sweep, the way the hero's second line does.
+    headingMark: 'Early now.',
+    headingRest: 'First in line later.',
     heading: 'Early now. First in line later.',
     items: [
       {
         title: 'Performance payouts',
-        body: "When we switch on view-based payouts, batch one is in the first group. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000 to ₹10,000 band. That's an illustration, not a rate card. We'll publish the real slabs before any of it goes live.",
+        body: "When we can pay for views, batch one is in the first group. We are not putting a number on it today, because we would be making it up. You will see the real numbers before you post for them.",
       },
       {
         title: 'Brand deals',
@@ -185,7 +189,7 @@ export const content = {
       },
       {
         title: 'Whatever comes after',
-        body: 'Subscriptions, tipping, anything else we build. Batch one gets it before anyone else.',
+        body: 'Subscriptions, and anything else we build. Batch one gets it before anyone else.',
       },
     ],
     framing:

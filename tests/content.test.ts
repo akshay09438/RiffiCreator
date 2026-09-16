@@ -20,6 +20,17 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, URGENCY, sentencesOf } f
 // so VideoTakes now leads (heading "You already shoot reels. Here it's just you, talking.")
 // and WhatRiffiIs is the second, typed option (heading "Or type it, if that's more your
 // thing."), ahead of why-here. The old Twitter-vs-Riffi framing in WhatRiffiIs is gone.
+// Later still on 17 Sep 2026 the founder changed two more blocks. Block 4 ("how you earn")
+// is now a feature list, not an earnings pitch: heading "What creators can do here.", a new
+// `lead` field, and the five rows render as cards, not a divided list - the honest no-money
+// note is unchanged. Block 5 ("the long game") no longer names a payout figure at all: the
+// founder will not put a number on future payouts because it would be invented, so the
+// ₹5,000-₹10,000 example and "That's an illustration, not a rate card" are gone, and so is
+// the word "tipping". Its heading is now three fields - headingMark ("Early now."),
+// headingRest ("First in line later.") and heading (the full sentence) - because the page's
+// marker sweep now wraps only the first half; heading stays the accessible name for the
+// whole h2. The money guardrail below is rewritten to match: no currency figure may appear
+// anywhere, and if one is ever reintroduced its sentence must still carry example framing.
 
 const contentSource = readFileSync(fileURLToPath(new URL('../src/content.ts', import.meta.url)), 'utf8');
 
@@ -69,19 +80,19 @@ describe('honesty guardrails in the content (PRD 2.4, design 5)', () => {
     expect(earnCopy.filter(({ text }) => /\d/.test(text))).toEqual([]);
   });
 
-  it('frames every payout figure as an example inside the very sentence it appears in', () => {
+  it('names no rupee or currency figure anywhere in the copy (17 Sep 2026: the founder will not invent a payout number)', () => {
+    expect(offending(MONEY)).toEqual([]);
+  });
+
+  it('would still require example framing on any sentence naming a payout figure, if one is ever reintroduced', () => {
+    // Today this list is empty - the guardrail above is what keeps it that way. This test's job
+    // is to keep guarding the sentence-level framing rule if a figure ever comes back regardless.
     const moneySentences = allCopy.flatMap(({ path, text }) =>
       sentencesOf(text)
         .filter((sentence) => MONEY.test(sentence))
         .map((sentence) => ({ path, sentence })),
     );
-    expect(moneySentences.length).toBeGreaterThan(0);
     expect(moneySentences.filter(({ sentence }) => !EXAMPLE_FRAMING.test(sentence))).toEqual([]);
-  });
-
-  it('says "That\'s an illustration, not a rate card" alongside the payout figure', () => {
-    const payouts = content.longGame.items.find((item) => MONEY.test(item.body));
-    expect(payouts?.body).toContain("That's an illustration, not a rate card");
   });
 
   it('frames the long game as "plan, not a contract"', () => {
@@ -274,9 +285,11 @@ describe('copy matches the PRD word for word', () => {
     expect(content.whyHere.closer).toBe('And a reel costs you four hours. A take costs you forty seconds.');
   });
 
-  it('how you earn: heading, the five rows and the honest no-money-yet note - no pill (16 Sep 2026: points removed)', () => {
+  it('how you earn: heading, lead, the five rows and the honest no-money-yet note - no pill (17 Sep 2026: a feature list, not an earnings pitch)', () => {
     expect(content.howYouEarn).not.toHaveProperty('pill');
-    expect(content.howYouEarn.heading).toBe('What you get for going first.');
+    expect(Object.keys(content.howYouEarn).sort()).toEqual(['heading', 'lead', 'note', 'rows']);
+    expect(content.howYouEarn.heading).toBe('What creators can do here.');
+    expect(content.howYouEarn.lead).toBe('Five ways to put an opinion out. Pick whichever suits the take.');
     expect(content.howYouEarn.rows).toEqual([
       { action: 'Post a take', description: "One opinion, one line. That's the whole format." },
       { action: 'Write the long version', description: 'Some takes need a paragraph. Write it out when they do.' },
@@ -292,12 +305,17 @@ describe('copy matches the PRD word for word', () => {
     );
   });
 
-  it('the long game: heading, the three items and the framing line', () => {
+  it('the long game: heading in three parts (for the marker sweep and the accessible name), the three items and the framing line (17 Sep 2026: no payout number is named)', () => {
+    expect(content.longGame.headingMark).toBe('Early now.');
+    expect(content.longGame.headingRest).toBe('First in line later.');
     expect(content.longGame.heading).toBe('Early now. First in line later.');
+    // The rendered h2 splits headingMark and headingRest into two spans (for the marker sweep);
+    // heading must stay their exact join so a screen reader still hears it as one sentence.
+    expect(content.longGame.heading).toBe(`${content.longGame.headingMark} ${content.longGame.headingRest}`);
     expect(content.longGame.items).toEqual([
       {
         title: 'Performance payouts',
-        body: "When we switch on view-based payouts, batch one is in the first group. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000 to ₹10,000 band. That's an illustration, not a rate card. We'll publish the real slabs before any of it goes live.",
+        body: 'When we can pay for views, batch one is in the first group. We are not putting a number on it today, because we would be making it up. You will see the real numbers before you post for them.',
       },
       {
         title: 'Brand deals',
@@ -305,7 +323,7 @@ describe('copy matches the PRD word for word', () => {
       },
       {
         title: 'Whatever comes after',
-        body: 'Subscriptions, tipping, anything else we build. Batch one gets it before anyone else.',
+        body: 'Subscriptions, and anything else we build. Batch one gets it before anyone else.',
       },
     ]);
     expect(content.longGame.framing).toBe(

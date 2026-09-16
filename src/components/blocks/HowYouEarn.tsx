@@ -9,16 +9,12 @@ export function HowYouEarn() {
       <h2 id="how-you-earn-heading" className="font-display text-display-l font-bold">
         {block.heading}
       </h2>
-      <ul className="mt-10 divide-y divide-hairline border-y border-hairline">
+      <p className="mt-4 max-w-[34rem] text-body-l text-ink">{block.lead}</p>
+      <ul className="mt-8 grid gap-4 md:grid-cols-2 lg:gap-5">
         {block.rows.map((row) => (
-          <li
-            key={row.action}
-            className="flex flex-col gap-3 py-5 md:flex-row md:items-start md:justify-between md:gap-6"
-          >
-            <div className="max-w-[34rem]">
-              <p className="text-body-l font-semibold text-ink">{row.action}</p>
-              <p className="mt-1 text-body text-ink-soft">{row.description}</p>
-            </div>
+          <li key={row.action} className="feature-card">
+            <p className="font-display text-body-l font-bold text-ink">{row.action}</p>
+            <p className="mt-2 text-body text-ink-soft">{row.description}</p>
           </li>
         ))}
       </ul>

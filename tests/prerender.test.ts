@@ -31,21 +31,26 @@ describe('the pre-rendered page (design option A)', () => {
     expect(siteUrl).toMatch(/^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)+$/i);
   });
 
-  it('has every heading, both buttons and every FAQ answer before any script runs', () => {
+  it('has every heading, all three buttons and every FAQ answer before any script runs', () => {
     const headings = [
       ...content.hero.titleLines,
+      content.videoTakes.heading,
       content.whatRiffiIs.heading,
       content.whyHere.heading,
       content.howYouEarn.heading,
-      content.longGame.heading,
+      // headingMark/headingRest: the long-game h2 now renders as two <span>s, so the full
+      // sentence never sits as one unbroken run in raw HTML - checked as one accessible name
+      // in tests/page.test.tsx (#long-game) instead.
+      content.longGame.headingMark,
+      content.longGame.headingRest,
       content.seats.heading,
       content.faq.heading,
       content.close.heading,
     ];
     for (const text of headings) expect(html).toContain(escaped(text));
     for (const item of content.faq.items) expect(html).toContain(escaped(item.answer));
-    expect(count(`href="${ctaHref}"`)).toBe(2);
-    expect(count(escaped(content.cta.helper))).toBe(2);
+    expect(count(`href="${ctaHref}"`)).toBe(3);
+    expect(count(escaped(content.cta.helper))).toBe(3);
   });
 
   it('works the FAQ without JavaScript: six native disclosures, the first one open', () => {

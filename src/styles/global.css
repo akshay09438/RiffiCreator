@@ -355,20 +355,40 @@
 
   .video-deck {
     display: flex;
+    align-items: stretch;
     gap: 14px;
     overflow-x: auto;
     padding: 6px 2px 10px;
     scrollbar-width: none;
   }
 
+  /* On a wide screen the deck stops scrolling and becomes three equal columns. */
+  @media (min-width: 48rem) {
+    .video-deck {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      overflow: visible;
+      padding-inline: 4px;
+    }
+  }
+
   .video-card {
+    display: flex;
     flex: none;
     width: 172px;
+    flex-direction: column;
     overflow: hidden;
     border: var(--edge-width) solid var(--edge);
     border-radius: var(--corner-take);
     background-color: var(--paper);
     box-shadow: var(--lift-sticker);
+  }
+
+  @media (min-width: 48rem) {
+    .video-card {
+      width: auto;
+    }
   }
 
   .video-card[data-index='0'] {
@@ -387,10 +407,24 @@
     position: relative;
     display: flex;
     height: 214px;
+    flex: none;
     align-items: center;
     justify-content: center;
     border-bottom: var(--edge-width) solid var(--edge);
     background-color: var(--chip-butter-bg);
+  }
+
+  /* A taller frame on a wide screen, so the cards keep a phone-shaped face. */
+  @media (min-width: 48rem) {
+    .video-frame {
+      height: 300px;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .video-frame {
+      height: 340px;
+    }
   }
 
   .video-card[data-index='1'] .video-frame {
@@ -438,11 +472,22 @@
   }
 
   .video-text {
+    flex: 1;
     padding: 12px 12px 14px;
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.18;
   }
+
+  /* The features grid: each way of posting as its own small card on the panel. */
+  .feature-card {
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-take);
+    background-color: var(--paper);
+    box-shadow: var(--lift-sticker-sm);
+    padding: 16px 18px 18px;
+  }
+
 
   /* The one moment of pure typographic scale on the page (PRD Block 6). */
   .seats-number {

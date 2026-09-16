@@ -174,11 +174,12 @@ describe('the call to action (PRD 5.4, design 4)', () => {
     render(<App />);
   });
 
-  it('has exactly two "Claim a seat" links: one in #hero, then one in #close', () => {
+  it('has exactly three "Claim a seat" links: one in #hero, one in #seats, then one in #close (added to #seats so the ask and the button share a screen on a laptop)', () => {
     const links = screen.getAllByRole('link', { name: content.cta.label });
-    expect(links).toHaveLength(2);
+    expect(links).toHaveLength(3);
     expect(section('hero').contains(links[0] ?? null)).toBe(true);
-    expect(section('close').contains(links[1] ?? null)).toBe(true);
+    expect(section('seats').contains(links[1] ?? null)).toBe(true);
+    expect(section('close').contains(links[2] ?? null)).toBe(true);
   });
 
   it('makes each one a plain <a> to the Instagram DM, opening in a new tab with noopener noreferrer', () => {
@@ -192,10 +193,10 @@ describe('the call to action (PRD 5.4, design 4)', () => {
   });
 
   it('has no other Instagram DM link anywhere on the page', () => {
-    expect(document.querySelectorAll('a[href*="ig.me"]')).toHaveLength(2);
+    expect(document.querySelectorAll('a[href*="ig.me"]')).toHaveLength(3);
   });
 
-  it.each(['hero', 'close'])('shows the helper line in #%s, naming the same handle its link opens', (id) => {
+  it.each(['hero', 'seats', 'close'])('shows the helper line in #%s, naming the same handle its link opens', (id) => {
     const block = section(id);
     const helper = within(block).getByText(content.cta.helper);
     const link = within(block).getByRole('link', { name: content.cta.label });
@@ -421,6 +422,10 @@ describe('#how-you-earn (PRD Block 4)', () => {
     render(<App />);
   });
 
+  it('shows the lead (17 Sep 2026: a feature list, not an earnings pitch)', () => {
+    expect(within(section('how-you-earn')).getByText(content.howYouEarn.lead)).toBeInTheDocument();
+  });
+
   it('lists the five earn rows as a real list, each with its action and description, and renders no "points" pill (16 Sep 2026: points removed)', () => {
     const items = Array.from(only(section('how-you-earn'), 'ul').children) as HTMLElement[];
     expect(items.map((item) => item.tagName)).toEqual(['LI', 'LI', 'LI', 'LI', 'LI']);
@@ -446,6 +451,11 @@ describe('#how-you-earn (PRD Block 4)', () => {
 describe('#long-game (PRD Block 5)', () => {
   beforeEach(() => {
     render(<App />);
+  });
+
+  it('gives its h2 one accessible name for the whole sentence, even though the marker sweep splits it into two spans (17 Sep 2026: headingMark/headingRest)', () => {
+    const heading = only(section('long-game'), 'h2');
+    expect(heading).toHaveAccessibleName(content.longGame.heading);
   });
 
   it('shows the three items as h3 titles, each followed by its own body, then the framing line', () => {
@@ -610,18 +620,18 @@ describe('the WhatsApp fallback once it is switched on', () => {
     vi.resetModules();
   });
 
-  it('adds "Or message us on WhatsApp" links to wa.me that open safely in a new tab, and keeps both CTAs', async () => {
+  it('adds "Or message us on WhatsApp" links to wa.me that open safely in a new tab, and keeps all three CTAs', async () => {
     await renderAppWith((actual) => ({
       settings: { ...actual.settings, whatsapp: { enabled: true, number: '919800000000', message: "Hi, I'm in" } },
     }));
     const links = screen.getAllByRole('link', { name: 'Or message us on WhatsApp' });
-    expect(links.length).toBeGreaterThan(0);
+    expect(links).toHaveLength(3);
     for (const link of links) {
       expect(link.getAttribute('href')).toBe("https://wa.me/919800000000?text=Hi%2C%20I'm%20in");
       expect(link.getAttribute('target')).toBe('_blank');
       expect((link.getAttribute('rel') ?? '').split(/\s+/).filter(Boolean).sort()).toEqual(['noopener', 'noreferrer']);
     }
-    expect(screen.getAllByRole('link', { name: content.cta.label })).toHaveLength(2);
+    expect(screen.getAllByRole('link', { name: content.cta.label })).toHaveLength(3);
   });
 });
 
@@ -640,7 +650,13 @@ describe('honesty on the rendered page (PRD 2.4, design 5)', () => {
     expect(readableText(section('how-you-earn'))).not.toMatch(/\d/);
   });
 
-  it('frames the ₹ figure as an example inside the very sentence it appears in', () => {
+  it('shows no rupee or currency figure anywhere on the rendered page (17 Sep 2026: no payout number is named)', () => {
+    expect(readableText(document.body)).not.toMatch(MONEY);
+  });
+
+  it('would still require example framing on any rendered sentence naming a payout figure, if one is ever reintroduced', () => {
+    // Today moneyBlocks is empty - the guardrail above is what keeps it that way. This test's job
+    // is to keep guarding sentence-level framing if a figure is ever rendered again regardless.
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     const moneyBlocks: Element[] = [];
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
@@ -648,16 +664,10 @@ describe('honesty on the rendered page (PRD 2.4, design 5)', () => {
       if (!parent || !MONEY.test(node.textContent ?? '')) continue;
       moneyBlocks.push(parent.closest('p, li, dd, td, blockquote, figcaption, h1, h2, h3, h4, h5, h6') ?? parent);
     }
-    expect(moneyBlocks.length).toBeGreaterThan(0);
     for (const block of moneyBlocks) {
       const moneySentences = sentencesOf(normalize(block.textContent)).filter((sentence) => MONEY.test(sentence));
-      expect(moneySentences.length).toBeGreaterThan(0);
       for (const sentence of moneySentences) expect(sentence).toMatch(EXAMPLE_FRAMING);
     }
-  });
-
-  it('says "That\'s an illustration, not a rate card" in the long game', () => {
-    expect(normalize(section('long-game').textContent)).toContain("That's an illustration, not a rate card");
   });
 
   it('frames the long game, and the answer to "Is this paid right now?", as "plan, not a contract"', () => {
@@ -705,14 +715,14 @@ describe('honesty on the rendered page (PRD 2.4, design 5)', () => {
 // ---------- before any JavaScript runs ----------
 
 describe('the pre-rendered HTML, before any JavaScript runs (design 2 and 3)', () => {
-  it('already holds the headline, both CTAs as plain links, the final vote count, the meter label and the first FAQ open', () => {
+  it('already holds the headline, all three CTAs as plain links, the final vote count, the meter label and the first FAQ open', () => {
     const doc = new DOMParser().parseFromString(renderToString(<App />), 'text/html');
     const h1s = doc.querySelectorAll('h1');
     expect(h1s).toHaveLength(1);
     const spanTexts = Array.from(h1s[0]?.querySelectorAll('span') ?? []).map((span) => normalize(span.textContent));
     for (const line of content.hero.titleLines) expect(spanTexts).toContain(line);
     const ctas = Array.from(doc.querySelectorAll('a')).filter((link) => normalize(link.textContent) === content.cta.label);
-    expect(ctas.map((link) => link.getAttribute('href'))).toEqual([ctaHref, ctaHref]);
+    expect(ctas.map((link) => link.getAttribute('href'))).toEqual([ctaHref, ctaHref, ctaHref]);
     expect(byFullText(doc.body, '2,140 votes')).toHaveLength(1);
     expect(normalize(doc.querySelector('[data-seat-meter]')?.textContent)).toBe(content.seats.meterLabel);
     expect(Array.from(doc.querySelectorAll('details')).map((details) => details.hasAttribute('open'))).toEqual([

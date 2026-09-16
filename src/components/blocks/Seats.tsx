@@ -1,4 +1,5 @@
 import { content, type Settings } from '../../content';
+import { CtaButton } from '../primitives/CtaButton';
 import { PollBar } from '../primitives/PollBar';
 import { Section } from '../primitives/Section';
 
@@ -27,6 +28,10 @@ export function Seats({ seats }: SeatsProps) {
         <p className="mt-3 text-meta text-ink-soft">
           {taken === null ? block.meterLabel : block.takenLabel(taken, seats.total)}
         </p>
+      </div>
+      {/* The page is long on a laptop: the ask and the button belong in the same breath. */}
+      <div className="mt-8">
+        <CtaButton variant="dark" />
       </div>
     </Section>
   );
