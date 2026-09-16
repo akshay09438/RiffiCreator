@@ -27,8 +27,8 @@ export function Hero() {
               <span className="hero-mark">{titleLines[1]}</span>
             </span>
           </h1>
-          <p className="mt-6 max-w-[34rem] text-body-l text-ink-soft">{subline}</p>
-          <div className="mt-8">
+          <p className="mt-5 max-w-[34rem] text-body-l text-ink-soft">{subline}</p>
+          <div className="mt-6">
             <CtaButton variant="dark" />
           </div>
         </div>

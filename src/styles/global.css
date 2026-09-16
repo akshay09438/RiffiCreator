@@ -43,7 +43,9 @@
 
 /* Type scale from 360px to 1280px through clamp(), so in-between widths look intentional (PRD 3.3). */
 @theme {
-  --text-display-xl: clamp(2.5rem, 1.62rem + 3.913vw, 4.75rem);
+  /* Stepped down on 16 Sep 2026: the founder's longer second line pushed "Claim a seat" off the
+     first screen at 320x640 and 1440x900 at the old size. */
+  --text-display-xl: clamp(2.25rem, 1.4675rem + 3.478vw, 4.25rem);
   --text-display-xl--line-height: 1;
   --text-display-xl--letter-spacing: -0.03em;
   --text-display-l: clamp(1.875rem, 1.435rem + 1.957vw, 3rem);
