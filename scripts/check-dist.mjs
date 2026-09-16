@@ -18,9 +18,11 @@ for (const [, tag, url] of html.matchAll(
 )) {
   if (!ownFile(url)) problems.push(`<${tag}> loads ${url} - only the page's own files may load`);
 }
+// The application form joined the allowed list on 17 Sep 2026, when the founder made it the
+// conversion. Still an exact host list: anything else on the page is a problem, not a preference.
 for (const [, url] of html.matchAll(/<a\b[^>]*?\shref="([^"]*)"/gi)) {
-  if (!/^https:\/\/(?:ig\.me|wa\.me)\//.test(url)) {
-    problems.push(`a link goes to ${url} - only Instagram and WhatsApp DMs are allowed`);
+  if (!/^https:\/\/(?:ig\.me|wa\.me|forms\.gle|docs\.google\.com\/forms)\//.test(url)) {
+    problems.push(`a link goes to ${url} - only the application form, Instagram and WhatsApp are allowed`);
   }
 }
 // Stylesheets the build inlines into the page count too, and a minified @import carries no url() at all.

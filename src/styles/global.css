@@ -451,6 +451,15 @@
     margin-inline-start: 3px;
   }
 
+  /* A stock still fills the frame behind the caption; its size is fixed, so nothing shifts. */
+  .video-still {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
   /* Burned-in captions, the way a reel carries them: ink block, paper text, low in the frame. */
   .video-caption {
     position: absolute;

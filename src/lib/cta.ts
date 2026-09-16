@@ -25,8 +25,26 @@ export function whatsappHref(number: string, message: string): string {
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
-/** Where both "Claim a seat" buttons go. A bad handle fails the build instead of shipping. */
-export const ctaHref = instagramDmHref(settings.instagramHandle);
+/**
+ * The founder's application form (17 Sep 2026). Only Google's own form hosts are accepted, so a
+ * mistyped or swapped link fails the build rather than sending creators to a stranger's form.
+ */
+const FORM_HOST = /^https:\/\/(?:forms\.gle\/[A-Za-z0-9_-]{4,}|docs\.google\.com\/forms\/[\w./?=&-]+)$/;
+
+export function applyFormHref(url: string): string {
+  if (!FORM_HOST.test(url)) {
+    throw new Error(
+      `Invalid application form link "${url}": it must be an https link to forms.gle or docs.google.com/forms.`,
+    );
+  }
+  return url;
+}
+
+/** Where every "Claim a seat" button goes. A bad link fails the build instead of shipping. */
+export const ctaHref = applyFormHref(settings.applyFormUrl);
+
+/** Riffi's Instagram account, still used for the reply we promise in the helper line. */
+export const instagramHref = instagramDmHref(settings.instagramHandle);
 
 export const whatsappFallbackHref: string | null = settings.whatsapp.enabled
   ? whatsappHref(settings.whatsapp.number, settings.whatsapp.message)

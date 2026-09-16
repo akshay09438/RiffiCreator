@@ -8,6 +8,8 @@
 
 export type Settings = {
   instagramHandle: string;
+  /** Where "Claim a seat" goes: the founder's Google Form (17 Sep 2026). */
+  applyFormUrl: string;
   siteUrl: string;
   whatsapp: { enabled: boolean; number: string; message: string };
   seats: { total: number; taken: number | null; show: boolean };
@@ -18,16 +20,19 @@ export type Settings = {
     | 'contentOwnership'
     | 'footerLine'
     | 'instagramHandle'
+    | 'applyFormUrl'
     | 'siteUrl',
     boolean
   >;
 };
 
 export const settings: Settings = {
-  // [FILL] 5 - Riffi's real Instagram handle, without the @. Confirm Riffi owns this exact account.
-  instagramHandle: 'riffi',
-  // [FILL] 5 - the deploy domain, with https:// and no trailing slash. The preview card uses it.
-  siteUrl: 'https://riffi-creators.example',
+  // Riffi's Instagram account, without the @. Confirmed by the founder on 17 Sep 2026.
+  instagramHandle: 'get.riffi',
+  // The founder's application form, given on 17 Sep 2026. Every "Claim a seat" opens it.
+  applyFormUrl: 'https://forms.gle/chyARXHuKTiwV4Yn6',
+  // The live domain, deployed 17 Sep 2026. The preview card Instagram shows is built from it.
+  siteUrl: 'https://riffi-creator-page.vercel.app',
   whatsapp: {
     enabled: false,
     // Digits only, with the country code and no plus sign. Needed only when `enabled` is true.
@@ -50,8 +55,9 @@ export const settings: Settings = {
     launchTiming: false,
     contentOwnership: false,
     footerLine: false,
-    instagramHandle: false,
-    siteUrl: false,
+    instagramHandle: true,
+    applyFormUrl: true,
+    siteUrl: true,
   },
 };
 
@@ -62,7 +68,7 @@ export const content = {
   },
   cta: {
     label: 'Claim a seat',
-    helper: `Opens a DM with @${settings.instagramHandle}`,
+    helper: `A one minute form. We reply from @${settings.instagramHandle}`,
     whatsappLabel: 'Or message us on WhatsApp',
   },
   hero: {
@@ -125,10 +131,26 @@ export const content = {
     badge: '40 seconds, one opinion',
     chip: 'sample',
     items: [
-      { text: 'Every biopic in the last five years is an ad for its subject.', length: '0:38' },
-      { text: 'Bengaluru traffic is a scheduling problem, not a road problem.', length: '0:41' },
-      { text: 'Hostel mess food built more resilience than any gym ever will.', length: '0:29' },
+      {
+        text: 'Every biopic in the last five years is an ad for its subject.',
+        length: '0:38',
+        still: '/media/sample-one.jpg',
+      },
+      {
+        text: 'Bengaluru traffic is a scheduling problem, not a road problem.',
+        length: '0:41',
+        still: '/media/sample-two.jpg',
+      },
+      {
+        text: 'Hostel mess food built more resilience than any gym ever will.',
+        length: '0:29',
+        still: '/media/sample-three.jpg',
+      },
     ],
+    // Said out loud on the page, because a face on a card otherwise reads as a Riffi creator.
+    stillNote: 'Stock stills and sample takes. Nobody has posted on Riffi yet, which is the point.',
+    // The stills are decoration behind the caption, so they carry no alternative text of their own.
+    stillAlt: '',
     // Pictures of the format, never a real post: no clip loads and nothing plays on tap.
     footer: 'One rule, whatever you shoot: it has to be your opinion, not the news.',
   },

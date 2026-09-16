@@ -192,19 +192,29 @@ describe('the call to action (PRD 5.4, design 4)', () => {
     expect(screen.queryAllByRole('button', { name: content.cta.label })).toEqual([]);
   });
 
-  it('has no other Instagram DM link anywhere on the page', () => {
-    expect(document.querySelectorAll('a[href*="ig.me"]')).toHaveLength(3);
+  // 17 Sep 2026: the conversion is the founder's form. No Instagram DM link is left on the page,
+  // and every link there is goes to the form in settings - nowhere else, ever.
+  it('has no Instagram DM link anywhere on the page, now that the button opens the form', () => {
+    expect(document.querySelectorAll('a[href*="ig.me"]')).toHaveLength(0);
   });
 
-  it.each(['hero', 'seats', 'close'])('shows the helper line in #%s, naming the same handle its link opens', (id) => {
-    const block = section(id);
-    const helper = within(block).getByText(content.cta.helper);
-    const link = within(block).getByRole('link', { name: content.cta.label });
-    const shownHandle = /@([A-Za-z0-9._]+)$/.exec(normalize(helper.textContent))?.[1];
-    const linkedHandle = /^https:\/\/ig\.me\/m\/([^/?#]+)$/.exec(link.getAttribute('href') ?? '')?.[1];
-    expect(shownHandle).toBe(settings.instagramHandle);
-    expect(linkedHandle).toBe(settings.instagramHandle);
+  it('sends every link on the page to the application form in settings', () => {
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]'));
+    expect(links.length).toBe(3);
+    for (const link of links) expect(link.getAttribute('href')).toBe(settings.applyFormUrl);
   });
+
+  it.each(['hero', 'seats', 'close'])(
+    'shows the helper line in #%s, naming the handle that replies and opening the form',
+    (id) => {
+      const block = section(id);
+      const helper = within(block).getByText(content.cta.helper);
+      const link = within(block).getByRole('link', { name: content.cta.label });
+      const shownHandle = /@([A-Za-z0-9._]+)$/.exec(normalize(helper.textContent))?.[1];
+      expect(shownHandle).toBe(settings.instagramHandle);
+      expect(link.getAttribute('href')).toBe(settings.applyFormUrl);
+    },
+  );
 
   it('has no WhatsApp link or label while the fallback is off (the default)', () => {
     expect(settings.whatsapp.enabled).toBe(false);
@@ -344,25 +354,53 @@ describe('#video-takes (added 17 Sep 2026, repositioned the same day to lead ahe
     ).toHaveLength(0);
   });
 
-  it('is a picture of the format only: no <video>, <iframe>, <source> or <img> anywhere on the page', () => {
-    expect(document.querySelectorAll('video, iframe, source, img')).toHaveLength(0);
-    // Same principle, a bit further: none of the page's other file-loading elements either.
-    expect(document.querySelectorAll('embed, object, picture, audio, track')).toHaveLength(0);
+  // 17 Sep 2026: the cards carry stock stills. Images are allowed here and nowhere else, they must
+  // come from this site, and they must be sized so nothing shifts when they load.
+  it('plays nothing: no <video>, <iframe>, <source> or any other player anywhere on the page', () => {
+    expect(document.querySelectorAll('video, iframe, source, embed, object, picture, audio, track')).toHaveLength(0);
   });
 
-  it('carries no file reference on any element in the block: no src/href/poster/srcset attribute and no url() in an inline style', () => {
+  it('allows images only inside #video-takes, only from this site, sized and lazy', () => {
+    const images = Array.from(document.querySelectorAll<HTMLImageElement>('img'));
+    expect(images.length).toBe(content.videoTakes.items.filter((item) => 'still' in item).length);
+    const block = section('video-takes');
+    for (const image of images) {
+      expect(block.contains(image)).toBe(true);
+      expect(image.getAttribute('src') ?? '').toMatch(/^\/media\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/);
+      expect(image.getAttribute('src') ?? '').not.toMatch(/^https?:|^\/\/|^data:|^blob:/);
+      expect(image.getAttribute('alt')).toBe('');
+      expect(image.getAttribute('width')).toBeTruthy();
+      expect(image.getAttribute('height')).toBeTruthy();
+      expect(image.getAttribute('loading')).toBe('lazy');
+    }
+  });
+
+  it('shows the note that the stills are stock and nobody has posted yet', () => {
+    expect(within(section('video-takes')).getByText(content.videoTakes.stillNote)).toBeInTheDocument();
+  });
+
+  // The still on an <img> is the one file this block may name (17 Sep 2026). Everything else in it
+  // must still be free of file references, so a clip or a remote asset cannot slip in beside them.
+  it('carries no file reference on any element in the block except the stills on their <img> tags', () => {
     const block = section('video-takes');
     const FILE_LIKE =
       /\.(?:mp4|webm|mov|m4v|ogg|ogv|jpe?g|png|gif|webp|avif|svg|bmp|ico)(?:[?#]|$)|^(?:https?:)?\/\/|^data:|^blob:/i;
     const MEDIA_ATTRS = ['src', 'href', 'poster', 'srcset', 'data-src', 'data-poster', 'background'];
+    const stills = content.videoTakes.items.map((item) => ('still' in item ? item.still : undefined));
     for (const element of [block, ...Array.from(block.querySelectorAll<HTMLElement>('*'))]) {
+      const isStill = element.tagName === 'IMG';
       for (const attr of MEDIA_ATTRS) {
+        if (isStill && attr === 'src') continue;
         expect(element.hasAttribute(attr), `<${element.tagName.toLowerCase()}> has a "${attr}" attribute`).toBe(
           false,
         );
       }
       expect(element.getAttribute('style') ?? '').not.toMatch(/url\(/i);
       for (const attribute of Array.from(element.attributes)) {
+        if (isStill && attribute.name === 'src') {
+          expect(stills).toContain(attribute.value);
+          continue;
+        }
         expect(
           FILE_LIKE.test(attribute.value),
           `<${element.tagName.toLowerCase()} ${attribute.name}="${attribute.value}">`,

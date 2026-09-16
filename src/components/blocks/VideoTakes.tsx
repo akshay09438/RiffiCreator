@@ -20,6 +20,19 @@ export function VideoTakes() {
         {block.items.map((item, index) => (
           <li key={item.text} className="video-card" data-index={index}>
             <div className="video-frame">
+              {'still' in item && item.still ? (
+                // Decorative: the caption carries the meaning, and the note under the deck says
+                // plainly that these are stock stills rather than Riffi creators.
+                <img
+                  src={item.still}
+                  alt={block.stillAlt}
+                  width={360}
+                  height={640}
+                  loading="lazy"
+                  decoding="async"
+                  className="video-still"
+                />
+              ) : null}
               <span aria-hidden="true" className="video-pill video-tag">
                 {block.chip}
               </span>
@@ -40,7 +53,8 @@ export function VideoTakes() {
           </li>
         ))}
       </ul>
-      <p className="mt-6 max-w-[34rem] text-meta text-ink-soft">{block.footer}</p>
+      <p className="mt-4 max-w-[34rem] text-meta text-ink-soft">{block.stillNote}</p>
+      <p className="mt-2 max-w-[34rem] text-meta text-ink-soft">{block.footer}</p>
     </Section>
   );
 }

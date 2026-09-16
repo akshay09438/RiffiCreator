@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { content, settings } from '../src/content';
@@ -31,6 +31,15 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, URGENCY, sentencesOf } f
 // marker sweep now wraps only the first half; heading stays the accessible name for the
 // whole h2. The money guardrail below is rewritten to match: no currency figure may appear
 // anywhere, and if one is ever reintroduced its sentence must still carry example framing.
+// A later round the same day made three more decisions. The conversion is now the founder's
+// Google Form (settings.applyFormUrl), not an Instagram DM: the button's helper line now reads
+// "A one minute form. We reply from @<handle>" instead of "Opens a DM with @<handle>". The
+// Instagram handle is real (get.riffi) and confirmed, and so - later still - is the deploy
+// domain, once the page went live on Vercel: only the weekly commitment, launch timing, content
+// ownership and footer line are still open [FILL] inputs. And VideoTakes now carries a stock
+// still behind each caption (content.videoTakes.items[n].still, plus a stillNote said out loud
+// under the deck) - a reversal of the earlier "pictures of the format only, no media reference"
+// rule, made because a face on an unlabelled card would otherwise read as a real Riffi creator.
 
 const contentSource = readFileSync(fileURLToPath(new URL('../src/content.ts', import.meta.url)), 'utf8');
 
@@ -164,8 +173,12 @@ describe('the call-to-action copy', () => {
     expect(content.cta.label).toBe('Claim a seat');
   });
 
-  it('builds the helper line from the same handle the link uses', () => {
-    expect(content.cta.helper).toBe(`Opens a DM with @${settings.instagramHandle}`);
+  // 17 Sep 2026: the button opens the form, and the helper line names the account that replies.
+  it('builds the helper line from the handle in settings, and promises the form the button opens', () => {
+    expect(content.cta.helper).toBe(
+      `A one minute form. We reply from @${settings.instagramHandle}`,
+    );
+    expect(content.cta.helper).toContain(`@${settings.instagramHandle}`);
   });
 
   it('labels the WhatsApp fallback "Or message us on WhatsApp"', () => {
@@ -252,20 +265,60 @@ describe('copy matches the PRD word for word', () => {
     expect(content.videoTakes.badge).toBe('40 seconds, one opinion');
     expect(content.videoTakes.chip).toBe('sample');
     expect(content.videoTakes.items).toEqual([
-      { text: 'Every biopic in the last five years is an ad for its subject.', length: '0:38' },
-      { text: 'Bengaluru traffic is a scheduling problem, not a road problem.', length: '0:41' },
-      { text: 'Hostel mess food built more resilience than any gym ever will.', length: '0:29' },
+      {
+        text: 'Every biopic in the last five years is an ad for its subject.',
+        length: '0:38',
+        still: '/media/sample-one.jpg',
+      },
+      {
+        text: 'Bengaluru traffic is a scheduling problem, not a road problem.',
+        length: '0:41',
+        still: '/media/sample-two.jpg',
+      },
+      {
+        text: 'Hostel mess food built more resilience than any gym ever will.',
+        length: '0:29',
+        still: '/media/sample-three.jpg',
+      },
     ]);
     expect(content.videoTakes.footer).toBe(
       'One rule, whatever you shoot: it has to be your opinion, not the news.',
     );
   });
 
-  it('video takes: is pictures of the format only - no media reference on the block or on any item', () => {
-    expect(Object.keys(content.videoTakes).sort()).toEqual(['badge', 'chip', 'footer', 'heading', 'items', 'lead']);
+  // 17 Sep 2026: each card carries a stock still. The rule is no longer "no media at all" but
+  // "only a still, only from this site". A clip, a poster or a remote URL still fails.
+  it('video takes: a still is the only media a card may name, and only from this site', () => {
+    expect(Object.keys(content.videoTakes).sort()).toEqual([
+      'badge',
+      'chip',
+      'footer',
+      'heading',
+      'items',
+      'lead',
+      'stillAlt',
+      'stillNote',
+    ]);
+    const seenStills = new Set<string>();
     for (const item of content.videoTakes.items) {
-      expect(Object.keys(item).sort()).toEqual(['length', 'text']);
+      expect(Object.keys(item).sort()).toEqual(['length', 'still', 'text']);
+      expect(item.still).toMatch(/^\/media\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/);
+      expect(item.still).not.toMatch(/^https?:|^\/\//);
+      // Each card gets its own picture, and the file the path names must actually be on disk -
+      // a path that merely looks right would otherwise ship as a silently broken image (empty
+      // alt means nothing would even announce the failure to a screen reader).
+      expect(seenStills.has(item.still), `${item.still} is reused by more than one card`).toBe(false);
+      seenStills.add(item.still);
+      const onDisk = fileURLToPath(new URL(`../public${item.still}`, import.meta.url));
+      expect(existsSync(onDisk), `no file on disk at public${item.still}`).toBe(true);
     }
+  });
+
+  it('video takes: says out loud that the stills are stock and nobody has posted yet', () => {
+    expect(content.videoTakes.stillNote).toBe(
+      'Stock stills and sample takes. Nobody has posted on Riffi yet, which is the point.',
+    );
+    expect(content.videoTakes.stillAlt).toBe('');
   });
 
   it('why here: heading, side labels, the four comparison rows and the closer', () => {
@@ -382,12 +435,14 @@ describe('TODAY: open inputs 1 to 5 are still marked [FILL] - update deliberatel
   const nextLine = (index: number): string => lines.slice(index + 1).find((line) => line.trim() !== '') ?? '';
   const around = (index: number): string => lines.slice(Math.max(0, index - 3), index + 4).join('\n');
 
-  it('has exactly six marker lines: inputs 1 to 4 once each, and input 5 twice (handle and domain)', () => {
-    expect(markers.map(({ input }) => input).sort()).toEqual(['1', '2', '3', '4', '5', '5']);
+  // 17 Sep 2026: input 5 (the handle and the live domain) and the new form link are answered, so
+  // their markers are gone. Four remain, and the rule below ties each marker to its own input.
+  it('has exactly four marker lines left: inputs 1 to 4, once each', () => {
+    expect(markers.map(({ input }) => input).sort()).toEqual(['1', '2', '3', '4']);
   });
 
-  it('uses "[FILL" nowhere except those six marker lines', () => {
-    expect((contentSource.match(/\[\s*FILL\b/gi) ?? []).length).toBe(6);
+  it('uses "[FILL" nowhere except those four marker lines', () => {
+    expect((contentSource.match(/\[\s*FILL\b/gi) ?? []).length).toBe(4);
   });
 
   it('puts every marker in a comment line, never inside a value', () => {
@@ -423,15 +478,23 @@ describe('TODAY: open inputs 1 to 5 are still marked [FILL] - update deliberatel
     expect(nextLine(marker?.index ?? -1)).toMatch(/\bfooterLine\b/);
   });
 
-  it('marks input 5 directly above both the Instagram handle and the site URL', () => {
-    const keys = markersFor('5').map(({ index }) => /\b(instagramHandle|siteUrl)\b/.exec(nextLine(index))?.[1]);
-    expect(keys.sort()).toEqual(['instagramHandle', 'siteUrl']);
+  // Input 5 (the handle and the domain) was answered on 17 Sep 2026, so its markers are gone.
+  it('leaves no marker for an input that is already confirmed', () => {
+    const confirmed = Object.entries(settings.inputsConfirmed)
+      .filter(([, done]) => done)
+      .map(([key]) => key);
+    expect(confirmed.length).toBeGreaterThan(0);
+    for (const key of confirmed) {
+      const markerAbove = markers.some(({ index }) => new RegExp(`\\b${key}\\b`).test(nextLine(index)));
+      expect(markerAbove).toBe(false);
+    }
   });
 });
 
-describe('TODAY: none of the six open inputs is confirmed yet - flip each to true only once the founder has answered it (PRD 8)', () => {
-  it('has settings.inputsConfirmed with exactly the six open inputs, every one still false', () => {
+describe('the open inputs: four still unanswered, three settled on 17 Sep 2026 (PRD 8)', () => {
+  it('has settings.inputsConfirmed with exactly the seven inputs the page depends on', () => {
     expect(Object.keys(settings.inputsConfirmed).sort()).toEqual([
+      'applyFormUrl',
       'contentOwnership',
       'footerLine',
       'instagramHandle',
@@ -439,13 +502,24 @@ describe('TODAY: none of the six open inputs is confirmed yet - flip each to tru
       'siteUrl',
       'weeklyCommitment',
     ]);
+  });
+
+  it('marks as confirmed only what the founder actually answered: the handle, the form and the live domain', () => {
     expect(settings.inputsConfirmed).toStrictEqual({
       weeklyCommitment: false,
       launchTiming: false,
       contentOwnership: false,
       footerLine: false,
-      instagramHandle: false,
-      siteUrl: false,
+      instagramHandle: true,
+      applyFormUrl: true,
+      siteUrl: true,
     });
+  });
+
+  it('keeps every confirmed value real: no placeholder domain, no placeholder handle, a live form link', () => {
+    expect(settings.siteUrl).toMatch(/^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)+$/);
+    expect(settings.siteUrl).not.toMatch(/\.(?:example|invalid|test|localhost)\b/);
+    expect(settings.instagramHandle).not.toBe('riffi');
+    expect(settings.applyFormUrl).toMatch(/^https:\/\/forms\.gle\/[A-Za-z0-9_-]{4,}$/);
   });
 });

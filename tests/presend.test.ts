@@ -259,17 +259,23 @@ describe('presend and settings.inputsConfirmed: deleting a marker is not an answ
 });
 
 describe('TODAY: presend on the real src/content.ts - update deliberately, one input at a time, as the founder answers each (PRD 8 and 10)', () => {
-  it('fails with 12 problems: six [FILL] marker lines (inputs 1 to 5, input 5 twice) and six unconfirmed inputs', () => {
+  // 17 Sep 2026: the handle, the form link and the live domain are answered, so the real file now
+  // reports four markers and four unconfirmed inputs. The rule under test is unchanged: while any
+  // input is open, the command refuses and names every open one.
+  it('still refuses on the real content file, naming each open marker and each unconfirmed input', () => {
     const run = presend(projectRoot, 'src/content.ts');
-    const source = readFileSync(join(projectRoot, 'src', 'content.ts'), 'utf8').split(/\r?\n/);
-    const markerLines = source.flatMap((text, index) =>
+    const source = readFileSync(join(projectRoot, 'src', 'content.ts'), 'utf8');
+    const lines = source.split(/\r?\n/);
+    const markerLines = lines.flatMap((text, index) =>
       /\[\s*FILL\b/i.test(text) ? [`src/content.ts:${index + 1}: ${text.trim()}`] : [],
     );
-    expect(markerLines.map((line) => /\[FILL\]\s+(\d+)/.exec(line)?.[1]).sort()).toEqual(['1', '2', '3', '4', '5', '5']);
+    expect(markerLines.map((line) => /\[FILL\]\s+(\d+)/.exec(line)?.[1]).sort()).toEqual(['1', '2', '3', '4']);
+    const stillOpen = INPUT_KEYS.filter((key) => new RegExp(`${key}:\\s*false`).test(source));
+    expect(stillOpen.sort()).toEqual(['contentOwnership', 'footerLine', 'launchTiming', 'weeklyCommitment']);
     expect(run.status).toBe(1);
-    expect(run.stderrLines[0]).toBe(header(12));
+    expect(run.stderrLines[0]).toBe(header(markerLines.length + stillOpen.length));
     expect(run.stderrLines.slice(1).sort()).toEqual(
-      [...markerLines, ...INPUT_KEYS.map((key) => inputProblem('src/content.ts', key))].sort(),
+      [...markerLines, ...stillOpen.map((key) => inputProblem('src/content.ts', key))].sort(),
     );
     // Marker lines come in file order, whichever kind of problem is reported first.
     expect(run.stderrLines.filter((line) => /^src\/content\.ts:\d+: /.test(line))).toEqual(markerLines);
