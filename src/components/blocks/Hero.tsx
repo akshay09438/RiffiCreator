@@ -21,7 +21,7 @@ export function Hero() {
     <Section id="hero" tone="paper">
       <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-16">
         <div className="lg:col-span-7">
-          <h1 id="hero-heading" className="hero-title font-display text-display-xl font-extrabold">
+          <h1 id="hero-heading" className="hero-title text-display-xl font-extrabold">
             <span className="hero-line block">{titleLines[0]}</span>{' '}
             <span className="hero-line block">{titleLines[1]}</span>
           </h1>

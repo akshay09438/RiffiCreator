@@ -34,13 +34,28 @@
 /*
  * Size-matched stand-ins shown while the fonts load, so the swap barely moves the page (CLS < 0.02).
  * Metrics from @capsizecss/metrics against Arial; against Roboto (Android) they differ by under 0.3%.
+ *
+ * Arial has no width axis, so one stand-in cannot match Archivo at two widths. The shared face is
+ * matched to Archivo as the page mostly uses it, and the wide face to the headline's 115% (PRD 3.3);
+ * both were tuned against the real font's line breaks at every width from 320px to 1440px. With a
+ * single stand-in the headline re-wrapped when the font arrived and the page jumped: measured
+ * 0.034-0.060 on a throttled 4G first visit, against the 0.02 budget (audit, 15 Sep 2026).
  */
 @font-face {
   font-family: 'Archivo Fallback';
   src: local('Arial'), local('Roboto');
-  size-adjust: 98.7%;
-  ascent-override: 88.96%;
-  descent-override: 21.28%;
+  size-adjust: 106%;
+  ascent-override: 82.83%;
+  descent-override: 19.81%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Archivo Fallback Wide';
+  src: local('Arial'), local('Roboto');
+  size-adjust: 126%;
+  ascent-override: 69.69%;
+  descent-override: 16.67%;
   line-gap-override: 0%;
 }
 
@@ -78,6 +93,8 @@
 
   /* Typefaces (PRD 3.3) */
   --typeface-display: 'Archivo Variable', 'Archivo Fallback', sans-serif;
+  /* The headline only: same face, with the stand-in matched to its 115% width. */
+  --typeface-display-wide: 'Archivo Variable', 'Archivo Fallback Wide', sans-serif;
   --typeface-body: 'Hanken Grotesk Variable', 'Hanken Grotesk Fallback', sans-serif;
 
   /* Radii differ by object type on purpose (PRD 3.4) */

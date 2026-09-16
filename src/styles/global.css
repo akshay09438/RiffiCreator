@@ -212,8 +212,11 @@
   }
 
   /* The headline is pushed toward the expanded end of the display face's width axis (PRD 3.3).
-     115% keeps "On Instagram" on one line in the desktop text column. */
+     115% keeps "On Instagram" on one line in the desktop text column. It carries its own stand-in
+     font (tokens.css), matched to that width, so the headline keeps its line breaks when the real
+     font arrives and the page does not jump. */
   .hero-title {
+    font-family: var(--typeface-display-wide);
     font-stretch: 115%;
   }
 
