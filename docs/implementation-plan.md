@@ -2,33 +2,33 @@
 
 _How much is done, what is in flight, what is left, and every decision that departs from the PRD. Updated in the same change as the work._
 
-**Last updated:** 15 Sep 2026 - Task 8 is done: the link-preview card Instagram shows inside the DM (the one-of-50 line and a bare 71/29 poll bar) and the site icons are generated from the brand tokens. 238 tests pass. Next is Task 9: the size budgets, the output check, CI and the audit on real screen sizes.
+**Last updated:** 16 Sep 2026 - Task 9 (size budgets, the output check, CI and the audit) is done, including its one fix (the headline's stand-in font, commit `8bb9008`); Task 10 (this plan and the technical spec brought up to date with the built page) is done. 238 tests pass. Next is Task 11: the founder chooses one thing to cut, then the final review.
 
 ## Where things stand
 
-- **Done:** Zuko harness installed (profile, stop-and-ask list, CI, review routing, handoff note); the PRD saved as `docs/functional-spec.md`; a product review of the PRD; the build design written and approved by the founder (`docs/superpowers/specs/2026-09-14-creator-page-design.md`); the step-by-step build plan (`docs/superpowers/plans/2026-09-14-creator-page.md`).
+- **Done:** Zuko harness installed (profile, stop-and-ask list, CI, review routing, handoff note); the PRD saved as `docs/functional-spec.md`; a product review of the PRD; the build design written and approved by the founder (`docs/superpowers/specs/2026-09-14-creator-page-design.md`); the step-by-step build plan (`docs/superpowers/plans/2026-09-14-creator-page.md`); and now the page itself - build steps 1-9 below, complete and passing its own size, output and honesty checks.
 - **How the plan was checked before asking for approval:**
   - Three independent safety reviews. Their findings are fixed in the plan: a tick-list for the open inputs and a single release command that refuses while any is open, a test that every word on the page comes from the content file, a reduced-motion bug, supply-chain protections, and CI that builds the page.
   - 181 behaviour and honesty tests, written by an independent test author who never saw the code.
   - A practice run of the plan's code in a scratch folder outside the project: a clean install of the exact versions, then typecheck, lint, build, the size budgets (JavaScript 67KB of 90KB, the whole page 202KB of 400KB), the output check, the preview images, and the pre-send check (it lists the 12 open items, as it should). The lint rules and the output check were also fed deliberately bad code, and caught every planted problem.
   - A separate reviewer replayed all 231 test checks against that practice code in its own scripts: 230 held. The one that did not was a faulty pattern in the plan's own brand-rules test, which mistook the approved font setting for a hard-coded font; it is fixed in the plan and re-checked. Every test file also typechecks against the code. The tests run for real only once the founder approves creating test files.
-- **In flight:** the build, task by task, following the approved plan. Done: step 0 (the wider stop-and-ask list) and Tasks 1-8 (toolchain, content and the call-to-action link; page shell and pre-render step; brand layer; motion hooks; primitives; the poll bar; the eight blocks and the full page; the link-preview card and the icons). Next: Task 9 (budgets, output checks, CI and the audit).
-- **Left:** the whole page - the ten build steps below.
+- **In flight:** nothing between tasks right now. Next is Task 11 - the founder chooses one thing to cut (PRD 3.6, the last build step: the marquee, the seat meter until there is a real number, or the helper-line wording) - then the final review. Those two are the only build work left.
+- **Left:** Task 11 and the final review (see "In flight" and the build order table below). Separately, and regardless of build status, the pre-send checklist further down must still be settled before the link can be sent to any creator.
 
 ## Build order (PRD section 9)
 
 | # | Step | Status |
 |---|---|---|
-| 1 | Scaffold Vite + React + TS + Tailwind v4; dev server runs | In progress: tools, page shell and pre-render step in place (Tasks 1-2); the dev server is checked in the Task 9 audit |
+| 1 | Scaffold Vite + React + TS + Tailwind v4; dev server runs | Done (Task 1): the exact versions pinned in `package.json`; `npm run dev` serves the page. |
 | 2 | `tokens.css` complete and mapped through Tailwind v4 `@theme`; `global.css` | Done (Task 3): every brand value in `tokens.css`, mapped through `@theme`; the type scale, base styles and focus ring in `global.css` |
-| 3 | Both variable fonts installed, wired and rendering | In progress: both fonts self-hosted, Latin files only, and preloaded (Task 3); how they render is checked in the Task 9 audit |
+| 3 | Both variable fonts installed, wired and rendering | Done (Task 3; the Task 9 audit's one fix added a second stand-in font - `docs/technical-spec.md` "Fonts"): both fonts self-hosted, Latin files only, preloaded, and metric-matched while loading, with layout shift now at 0-0.0001 against the 0.02 budget. |
 | 4 | `content.ts` in full, every `[FILL]` placeholder commented | Done (Task 1): all copy and settings, the six open inputs marked, and a tick-list that `npm run presend` checks |
 | 5 | Primitives: Section, Chip, CtaButton, TakeCard, then PollBar | Done (Tasks 5-6): Section, Chip, CtaButton, TakeCard, the wordmark and PollBar, each with tests |
-| 6 | Blocks 1-8 in page order, each checked at 320px | In progress: all eight blocks built in page order and tested (Task 7); the 320px check is part of the Task 9 audit |
-| 7 | The three motion moments, each verified under reduced motion | In progress: the motion hooks, including the reduced-motion check, are built and tested (Task 4); the moments themselves arrive with the poll bar and the blocks (Tasks 6-7) and are verified in the Task 9 audit |
+| 6 | Blocks 1-8 in page order, each checked at 320px | Done (Task 7; checked in the Task 9 audit): all eight blocks built in page order and tested; no horizontal overflow and the hero CTA above the fold confirmed at every width from 320px to 1920px. |
+| 7 | The three motion moments, each verified under reduced motion | Done (Tasks 4, 6-7; verified in the Task 9 audit): the hero load and the two scroll reveals built and tested, and reduced motion confirmed on the running page; see `docs/technical-spec.md` "Motion". |
 | 8 | `og.png`, favicon set, head tags | Done (Tasks 2 and 8): head tags in `index.html`; the preview card, favicon and home-screen icon generated from the brand tokens |
-| 9 | Audit: Lighthouse mobile, 320px overflow, keyboard-only, greyscale | Not started |
-| 10 | Self-critique against PRD 3.6; cut one thing | Not started |
+| 9 | Audit: Lighthouse mobile, 320px overflow, keyboard-only, greyscale | Done (Task 9): Lighthouse mobile, every width from 320px to 1920px, keyboard-only, greyscale, reduced motion and no-JavaScript all checked and passing, with one fix applied (the headline's stand-in font). Numbers in `docs/technical-spec.md` "Budgets and audit". |
+| 10 | Self-critique against PRD 3.6; cut one thing | Not started - this is Task 11, the last build step before the final review. |
 
 The definition of done is PRD section 10.
 
@@ -81,6 +81,7 @@ Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `
 | 15 Sep 2026 | Poll bars that fill from the right are anchored with `direction: rtl`, not `flex-direction: row-reverse`. | Founder-approved ("Yes, fix it"). With row-reverse the browser counted the filling as layout shift: about 0.04 across the four comparison bars, against PRD 5.5's zero and the 0.02 budget. The fix measured zero. |
 | 15 Sep 2026 | The vote count's count-up starts when its fade-in actually starts, read from the browser, not a fixed time after the page request. | Founder-approved ("Yes, fix the timing"). The two clocks differ by however long the page takes to appear, so on 4G the count-up usually never showed. A test keeps the style file's timings and the code's in step. |
 | 15 Sep 2026 | The preview card's headline uses the page headline's 115% width, sized so each sentence sits on one line, and the image tool always removes its temporary browser files. | Founder-approved ("Yes, fix the headline", "Yes, clean up"). At 125% the card broke "lakhs." onto its own line in a card Instagram caches, and a failed run could leave about 14 MB behind. |
+| 16 Sep 2026 | The build continues through to delivery, and the unrelated Grinder project stays out of this work. | Founder-confirmed. Keeps this page's build decisions independent of another project - whose `.claude/launch.json` the in-app Browser pane was found to be reading during the Task 9 audit (see "Known limits" in the technical spec). |
 
 ## Drift log - where the build departs from the PRD
 
@@ -102,3 +103,6 @@ Plus: the brand kit (logo, colours, typefaces) arrives separately. The swap is `
 | 15 Sep 2026 | Placeholders marked in comments only | Also an `inputsConfirmed` checklist in `settings`, checked by `npm run presend`; the page goes online only through `npm run release` | Deleting a comment is not an answer, and the check runs on every deploy. |
 | 15 Sep 2026 | The width axis "pushed to expanded" on the largest lines | The headline at 115% width; the big 50 at 125% | At 125%, "On Instagram" breaks onto two lines in the desktop column. |
 | 15 Sep 2026 | Preview card: one poll bar at 71/29 | The bar without numbers or labels | A bare graphic makes no claim that could read as real data. |
+| 16 Sep 2026 | No output checks | `npm run check:dist`, and a test that every rendered string comes from `content.ts` | The safety review showed the lint rule alone can be bypassed. |
+| 16 Sep 2026 | The coverage comparison as scaffolded | Its files kept in the runner's temp folder; a base branch without `package.json` allowed | As scaffolded, the stash step removed the files before the comparison read them, so it silently checked nothing. |
+| 16 Sep 2026 | One stand-in font for everything set in Archivo | A second stand-in matched to the headline's 115% width (`--typeface-display-wide`) | With one stand-in the headline re-wrapped when the real font arrived: a measured 0.034-0.060 layout jump against the 0.02 budget, now 0. |
