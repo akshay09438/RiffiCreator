@@ -322,11 +322,16 @@ describe('#video-takes (added 17 Sep 2026, repositioned the same day to lead ahe
     });
   });
 
-  it('keeps every card frame decorative and hidden from screen readers, including the play mark', () => {
+  it('hides every decorative overlay in the card frame from screen readers, including the play mark, while the caption stays reachable (17 Sep 2026: aria-hidden moved from the frame onto each decorative child)', () => {
     const block = section('video-takes');
     const frames = Array.from(block.querySelectorAll<HTMLElement>('.video-frame'));
     expect(frames.length).toBe(content.videoTakes.items.length);
-    for (const frame of frames) expect(frame.getAttribute('aria-hidden')).toBe('true');
+    for (const frame of frames) {
+      expect(hiddenFromScreenReaders(only(frame, '.video-tag'))).toBe(true);
+      expect(hiddenFromScreenReaders(only(frame, '.video-play'))).toBe(true);
+      expect(hiddenFromScreenReaders(only(frame, '.video-length'))).toBe(true);
+      expect(hiddenFromScreenReaders(only(frame, '.video-caption'))).toBe(false);
+    }
     const icons = Array.from(block.querySelectorAll('svg'));
     expect(icons.length).toBeGreaterThan(0);
     for (const icon of icons) expect(hiddenFromScreenReaders(icon)).toBe(true);
@@ -403,6 +408,22 @@ describe('#why-here (PRD Block 3)', () => {
       expect(hiddenFromScreenReaders(element)).toBe(false);
     }
   });
+
+  it.each(content.whyHere.rows)(
+    'fills the row "$label" from the left with Riffi leading: data-fill is left, and the Riffi legend comes before the Instagram legend',
+    (row) => {
+      const label = within(section('why-here')).getByText(row.label);
+      const rowElement = label.parentElement as HTMLElement;
+      const poll = only(rowElement, '.poll');
+      // Regression (17 Sep 2026): Instagram used to lead the bar and the fill grew from the right.
+      expect(poll.getAttribute('data-fill')).toBe('left');
+      const [firstLegend, secondLegend] = Array.from(only(poll, '.grid').children) as HTMLElement[];
+      expect(within(firstLegend).getByText(content.whyHere.riffiLabel)).toBeInTheDocument();
+      expect(within(firstLegend).getByText(row.riffi)).toBeInTheDocument();
+      expect(within(secondLegend).getByText(content.whyHere.instagramLabel)).toBeInTheDocument();
+      expect(within(secondLegend).getByText(row.instagram)).toBeInTheDocument();
+    },
+  );
 
   it('sets the closer apart as its own paragraph, not inside a card or a list', () => {
     const closer = within(section('why-here')).getByText(content.whyHere.closer);
@@ -528,6 +549,23 @@ describe('#seats and the seat meter (PRD Block 6, design 5)', () => {
     expect(meterText).toContain(normalize(content.seats.takenLabel(taken, 50)));
     expect(meterText).toContain(String(taken));
   });
+
+  it.each([
+    { taken: null, show: false, expectTrack: false, when: 'the default settings (no count at all)' },
+    { taken: 37, show: false, expectTrack: false, when: 'a real count exists but show is false' },
+    { taken: null, show: true, expectTrack: false, when: 'show is true but taken is null' },
+    { taken: 37, show: true, expectTrack: true, when: 'show is true and taken is a real, positive count' },
+    { taken: 0, show: true, expectTrack: true, when: 'show is true and taken is the real number 0' },
+  ])(
+    // Regression (17 Sep 2026): the meter used to draw its track unconditionally, so with no real
+    // count the creator saw an empty white box - "no activity to be done there" (founder's words).
+    'draws the meter track only once a real count is shown, and never otherwise, when $when',
+    ({ taken, show, expectTrack }) => {
+      render(<Seats seats={{ total: 50, taken, show }} />);
+      const track = meterIn(section('seats')).querySelector('.poll-track');
+      expect(track === null).toBe(!expectTrack);
+    },
+  );
 });
 
 // ---------- block 7: FAQ ----------

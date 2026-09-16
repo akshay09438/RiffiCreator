@@ -6,7 +6,9 @@ export function LongGame() {
   const block = content.longGame;
   return (
     <Section id="long-game" tone="paper" belowFold>
-      <h2 id="long-game-heading" className="font-display text-display-l font-bold">
+      {/* Centred on a wide screen (17 Sep 2026), so the block sits in the page instead of
+          hugging its left edge. The three columns keep their text left-aligned to stay readable. */}
+      <h2 id="long-game-heading" className="font-display text-display-l font-bold lg:text-center">
         <span className="hero-mark">{block.headingMark}</span>{' '}
         <span>{block.headingRest}</span>
       </h2>
@@ -18,7 +20,7 @@ export function LongGame() {
           </div>
         ))}
       </div>
-      <p className="mt-12 max-w-[34rem] border-t border-hairline pt-6 text-body text-ink-soft">
+      <p className="mt-12 max-w-[34rem] border-t border-hairline pt-6 text-body text-ink-soft lg:mx-auto lg:text-center">
         {block.framing}
       </p>
     </Section>

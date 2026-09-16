@@ -19,20 +19,24 @@ export function VideoTakes() {
       <ul className="video-deck mt-6">
         {block.items.map((item, index) => (
           <li key={item.text} className="video-card" data-index={index}>
-            <div className="video-frame" aria-hidden="true">
-              <span className="video-pill video-tag">{block.chip}</span>
-              <span className="video-play">
+            <div className="video-frame">
+              <span aria-hidden="true" className="video-pill video-tag">
+                {block.chip}
+              </span>
+              <span aria-hidden="true" className="video-play">
                 <svg width="18" height="20" viewBox="0 0 18 20" focusable="false" aria-hidden="true">
                   <path d="M0 0 L18 10 L0 20 Z" fill="currentColor" />
                 </svg>
               </span>
-              <span className="video-pill video-length">{item.length}</span>
+              <span aria-hidden="true" className="video-pill video-length">
+                {item.length}
+              </span>
+              {/* The take sits in the frame as burned-in captions, the way a spoken one carries it. */}
+              <p className="video-caption font-display">
+                <span className="sr-only">{block.chip}</span>
+                {item.text}
+              </p>
             </div>
-            <p className="video-text font-display">
-              {/* The frame's own sample label is decorative, so repeat it for screen readers. */}
-              <span className="sr-only">{block.chip}</span>
-              {item.text}
-            </p>
           </li>
         ))}
       </ul>

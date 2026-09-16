@@ -406,11 +406,11 @@
   .video-frame {
     position: relative;
     display: flex;
-    height: 214px;
+    height: 300px;
     flex: none;
+    width: 100%;
     align-items: center;
     justify-content: center;
-    border-bottom: var(--edge-width) solid var(--edge);
     background-color: var(--chip-butter-bg);
   }
 
@@ -451,6 +451,30 @@
     margin-inline-start: 3px;
   }
 
+  /* Burned-in captions, the way a reel carries them: ink block, paper text, low in the frame. */
+  .video-caption {
+    position: absolute;
+    inset-inline: 10px;
+    inset-block-end: 12px;
+    border-radius: 10px;
+    background-color: var(--edge);
+    padding: 8px 10px;
+    color: var(--paper);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    line-height: 1.22;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  @media (min-width: 48rem) {
+    .video-caption {
+      inset-inline: 14px;
+      inset-block-end: 16px;
+      font-size: 1.0625rem;
+    }
+  }
+
   .video-pill {
     position: absolute;
     border: 2px solid var(--edge);
@@ -467,16 +491,8 @@
   }
 
   .video-length {
-    inset-block-end: 8px;
+    inset-block-start: 8px;
     inset-inline-end: 8px;
-  }
-
-  .video-text {
-    flex: 1;
-    padding: 12px 12px 14px;
-    font-weight: 700;
-    font-size: 1rem;
-    line-height: 1.18;
   }
 
   /* The features grid: each way of posting as its own small card on the panel. */

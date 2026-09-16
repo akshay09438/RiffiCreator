@@ -15,13 +15,15 @@ export function WhyHere() {
         {block.rows.map((row, index) => (
           <div key={row.label}>
             <p className="mb-3 text-body-l font-semibold text-ink">{row.label}</p>
+            {/* Riffi leads the bar (17 Sep 2026): the blue fill starts at the left edge and the
+                hollow Instagram side follows it. */}
             <PollBar
               variant="comparison"
               animateOnView
-              fill="right"
+              fill="left"
               index={index}
-              left={{ label: block.instagramLabel, value: row.instagram, weight: split.instagram }}
-              right={{ label: block.riffiLabel, value: row.riffi, weight: split.riffi }}
+              left={{ label: block.riffiLabel, value: row.riffi, weight: split.riffi }}
+              right={{ label: block.instagramLabel, value: row.instagram, weight: split.instagram }}
             />
           </div>
         ))}
