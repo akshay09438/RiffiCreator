@@ -23,9 +23,17 @@ for (const [, url] of html.matchAll(/<a\b[^>]*?\shref="([^"]*)"/gi)) {
     problems.push(`a link goes to ${url} - only Instagram and WhatsApp DMs are allowed`);
   }
 }
-for (const [, url] of css.matchAll(/url\(\s*['"]?([^'")\s]+)['"]?\s*\)/g)) {
+// Stylesheets the build inlines into the page count too, and a minified @import carries no url() at all.
+const inlineStyles = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map(([, block]) => block).join('\n');
+const styles = `${css}\n${inlineStyles}`;
+for (const [, url] of styles.matchAll(/url\(\s*['"]?([^'")\s]+)['"]?\s*\)/g)) {
   if (!ownFile(url) && !url.startsWith('data:')) {
     problems.push(`CSS loads ${url} - only the page's own files may load`);
+  }
+}
+for (const [, url] of styles.matchAll(/@import\s*(?:url\(\s*)?['"]?([^'")\s;]+)/gi)) {
+  if (!ownFile(url) && !url.startsWith('data:')) {
+    problems.push(`CSS imports ${url} - only the page's own files may load`);
   }
 }
 const ogImage = html.match(/<meta\s+property="og:image"\s+content="([^"]*)"/);
