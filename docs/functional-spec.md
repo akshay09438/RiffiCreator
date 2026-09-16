@@ -6,9 +6,15 @@
 >
 > **Changed again, founder-decided 16 Sep 2026, later the same day (commit `441baba`):** (5) **reward points are gone from the offer.** Section 1.2, section 2.4's honesty guardrails, Block 4 ("How you earn"), Block 5 ("The long game") and the FAQ answer to "Is this paid right now?" all said a creator earns points from post one and that points convert to vouchers. None of that is true any more: the page now says plainly that there is no money yet, that joining batch one means backing Riffi early, and that batch one is first in line for real payouts and brand deals once Riffi can pay - still a plan, not a contract, never a promise. Each section below is rewritten to match, with a dated note; the original points-based offer is kept alongside it as the historical record. (6) **No em dash appears anywhere in the page's copy any more**, including `index.html`'s `<title>`, which changed from "Riffi Creator Program — 50 seats" to "Riffi Creator Program: 50 seats". Rationale and the full before/after text for both changes are in the decisions and drift logs in `docs/implementation-plan.md`.
 >
-> **Changed again, founder-decided 17 Sep 2026:** (7) **a ninth block, "Or just say it to camera," was added** between Block 2 ("What Riffi is") and Block 3 ("Why here, not there") - see Block 1a, below (it has since moved; see the next paragraph). It answers the same objection as Block 2, in video form: a take can be spoken instead of typed. Its three sample cards are pictures of the format only - no clip loads and nothing plays on tap, and no photograph of a real person appears in any of them; the founder's offer of frames pulled from other people's Instagram reels was turned down for this page, because those people never agreed to appear here and using their frames would wrongly suggest they post on Riffi. (8) **Some of Block 2's sample copy moved away from cricket:** the news-versus-take contrast pair, two of the eight marquee takes, and the order of the category chips (Cricket now sits last, not first) - cricket previously anchored the contrast pair, the lead chip and two marquee lines all at once. Rationale and the full before/after text are in the decisions and drift logs in `docs/implementation-plan.md`.
+> **Changed again, founder-decided 17 Sep 2026:** (7) **a ninth block, "Or just say it to camera," was added** between Block 2 ("What Riffi is") and Block 3 ("Why here, not there") - see Block 1a, below (it has since moved; see the next paragraph). It answers the same objection as Block 2, in video form: a take can be spoken instead of typed. Its three sample cards are pictures of the format only - no clip loads and nothing plays on tap, and no photograph of a real person appears in any of them; the founder's offer of frames pulled from other people's Instagram reels was turned down for this page, because those people never agreed to appear here and using their frames would wrongly suggest they post on Riffi. *(Superseded later the same day - see point (13) below: three licensed stock stills were added behind the cards' captions.)* (8) **Some of Block 2's sample copy moved away from cricket:** the news-versus-take contrast pair, two of the eight marquee takes, and the order of the category chips (Cricket now sits last, not first) - cricket previously anchored the contrast pair, the lead chip and two marquee lines all at once. Rationale and the full before/after text are in the decisions and drift logs in `docs/implementation-plan.md`.
 >
 > **Changed again, founder-decided 17 Sep 2026, shortly after the block above was added:** (9) **the video block now leads.** Riffi is pitching creators who already shoot reels, so the page opens on video, not text: the block from point (7) is renamed **Block 1a** and moves to sit directly after the Hero and before Block 2, with a new heading ("You already shoot reels. Here it's just you, talking."), a new lead and footer, and the lime drawn panel that Block 2 used to have. Block 2 ("What Riffi is") becomes the second, typed option - new heading "Or type it, if that's more your thing.", new lead, and it gives up its lime panel for plain white. Its original heading, "Twitter took news. We're taking opinions.", is gone from the page entirely (it is not carried anywhere else). See Block 1a and Block 2, below, and the decisions and drift logs in `docs/implementation-plan.md`.
+>
+> **Changed again, founder-decided 17 Sep 2026, after a review of the running page:** (10) **Block 4 is now a feature list, not an earnings pitch.** New heading "What creators can do here." and a new lead line, "Five ways to put an opinion out. Pick whichever suits the take."; the same five rows now render as bordered cards, two columns wide on a laptop, instead of a divided list. (11) **Block 5 drops its payout figure entirely.** The founder will not put a number on future payouts because today it would be invented: the ₹5,000-10,000 illustration, its "not a rate card" framing, and the word "tipping" are all gone. "Performance payouts" now says plainly that batch one is first in line once Riffi can pay for views, and that the real numbers arrive before anyone posts for them. Its heading is split into two fields so the marker-sweep treatment (§3 update, 16 Sep 2026) can wrap only "Early now.", while the full sentence "Early now. First in line later." stays the heading's accessible name for a screen reader. See Blocks 4 and 5, below, and the decisions and drift logs in `docs/implementation-plan.md`.
+>
+> **Changed again, founder-decided 17 Sep 2026, from a review on a laptop screen:** (12) **Five layout and honesty fixes.** The comparison bars in Block 3 now lead with Riffi - the blue fill starts at the left edge and the smaller, hollow Instagram side follows - reversed from the original Instagram-first order. The seat meter in Block 6 now draws its track only once a real count exists; with the default settings (`seats.taken` still `null`) no track appears at all, because an empty track is a picture of zero. Block 6 also gains a two-column layout on a laptop (the big 50 beside the ask) and a third "Claim a seat" button, so the primary button now appears three times on the page - hero, seats and close - not two. Block 5's heading and closing line, and Block 7's heading and question list, centre themselves on a laptop instead of hugging the content column's left edge. And Block 1a's sample cards now carry their take as a burned-in caption low in the frame, the way a real reel does, alongside the play mark, the sample pill and the length. (13) **Three licensed stock stills sit behind those captions** (`/media/sample-one.jpg`, `-two`, `-three`), one per card, lazy-loaded and sized so nothing shifts - reversing point (7) above, the block is no longer photo-free. A line under the deck says so plainly: "Stock stills and sample takes. Nobody has posted on Riffi yet, which is the point." A fourth image the founder offered, a named photographer's own promo card carrying his quote, was turned down for this page: on a creator-recruitment page it would read as his personal endorsement of the program, which a stock licence does not grant. See Blocks 1a, 3 and 6, below, and the decisions and drift logs in `docs/implementation-plan.md`.
+>
+> **Changed again, founder-decided 17 Sep 2026, later the same day:** (14) **The conversion is a Google Form, not an Instagram DM.** Every "Claim a seat" button - hero, seats and close - now opens the founder's form; `settings.applyFormUrl` holds the link, and the build refuses outright unless that URL is a genuine `forms.gle` or `docs.google.com/forms` address. The helper line beneath every button now reads "A one minute form. We reply from @get.riffi" in place of "Opens a DM with @riffi". See Blocks 1, 6 and 8, and §5.4, below. (15) **Three of the five open inputs (§8) are now answered:** the Instagram handle is real (`get.riffi`), the application form is real, and the page is deployed and live at `https://riffi-creator-page.vercel.app` - `settings.siteUrl` is that address, and the DM-preview card Instagram shows is built from it. The weekly commitment, launch timing, content ownership and footer line remain open. (16) The repository is now hosted on GitHub at `github.com/akshay09438/RiffiCreator` (branches `main` and `feat/creator-page`). Rationale and full before/after text for all of the above: `docs/implementation-plan.md`.
 
 ---
 
@@ -126,7 +132,7 @@ The page should sound like someone with an opinion, because that is the product.
 
 Fifty creators in one cohort will compare notes with each other. A promise that slips costs more than a softer line would have earned. Build these in:
 
-- Payout figures are labelled as **an example of the shape**, never a rate card
+- Payout figures are labelled as **an example of the shape**, never a rate card. *(Tightened further 17 Sep 2026: the founder decided even a labelled illustration was still a number he'd be making up, so the one payout example on the page (Block 5, "Performance payouts") was removed rather than kept and labelled. No currency figure of any kind appears on the page today; this bullet's framing rule stays enforced in case one is ever reintroduced - see Block 5 and `docs/implementation-plan.md`.)*
 - Priority monetisation is described as **plan**, not contract. One explicit sentence says so.
 - Reward point values are **not shown**, because they aren't final. The page says what earns points, not how many. *(Superseded 16 Sep 2026: reward points were removed from the offer entirely rather than published unfinished - see section 1.2 and `docs/implementation-plan.md`. The rule this bullet enforced now reads: no money is claimed to exist today, anywhere on the page.)*
 - **No fabricated scarcity.** No countdown timer, no "37/50 taken" unless that number is true and hand-maintained.
@@ -282,6 +288,8 @@ Copy below is **production copy** unless marked `[FILL]`. Use it as written. If 
   Helper text directly beneath, `meta`, `--ink-soft`:
   > Opens a DM with @riffi
 
+  *(Superseded 17 Sep 2026 - see the note at the top of this document. The button now opens the founder's application form, not a DM, and the helper line reads "A one minute form. We reply from @get.riffi". See §5.4, below, for the as-built link.)*
+
 - Below that, the **sample poll** — a take card containing:
   - Label chip: `sample take`
   - Take text, `display-m`: *"Being early beats being good."*
@@ -318,26 +326,32 @@ Background: `--recess` - the lime drawn panel (see `docs/technical-spec.md`, "De
 - A small tilted orange badge:
   > 40 seconds, one opinion
 
-- **Three sample cards**, each tilted at a slightly different angle, in a row that scrolls sideways on mobile. Each card is a **picture of the format**, not a real clip:
-  - A flat coloured frame (a different pastel per card) standing in for video, with a decorative play-button mark in the middle that does nothing on tap
+- **Three sample cards**, equal height, tilted at a slightly different angle each, in a row that scrolls sideways on mobile and becomes three equal columns on a laptop (`lg`, added 17 Sep 2026). Each card is a **picture of the format**, not a real clip:
+  - A coloured frame (a different pastel per card) standing in for video, with a decorative play-button mark in the middle that does nothing on tap
+  - *(Added 17 Sep 2026)* A licensed **stock still** filling the frame behind everything else, lazy-loaded, sized so nothing shifts, and carrying no alt text of its own - the caption below is the only content a screen reader needs
   - A `sample` pill in one corner of the frame and the clip's length (for example `0:38`) in the opposite corner
-  - The take's text underneath the frame
+  - *(Changed 17 Sep 2026)* The take's text as a **burned-in caption inside the frame**, low and centred on an ink block with paper text, the way a real reel carries it - not underneath the frame as plain text any more
 
-  Sample takes and lengths shown:
-  1. "Every biopic in the last five years is an ad for its subject." - 0:38
-  2. "Bengaluru traffic is a scheduling problem, not a road problem." - 0:41
-  3. "Hostel mess food built more resilience than any gym ever will." - 0:29
+  Sample takes and lengths shown, each now paired with its own still:
+  1. "Every biopic in the last five years is an ad for its subject." - 0:38 - `/media/sample-one.jpg`
+  2. "Bengaluru traffic is a scheduling problem, not a road problem." - 0:41 - `/media/sample-two.jpg`
+  3. "Hostel mess food built more resilience than any gym ever will." - 0:29 - `/media/sample-three.jpg`
 
-  **No real clip is loaded and nothing plays when a card is tapped.** No photograph of any real person appears in these cards, sample or otherwise. The founder offered frames pulled from other people's Instagram reels for this block; they were turned down because the people in them never agreed to appear on this page, and using their frames would wrongly imply they already post on Riffi. Real frames are only ever added later, and only once Riffi owns the clip or the creator in it has agreed - see `docs/implementation-plan.md` for the decision.
+  **No real clip is loaded and nothing plays when a card is tapped.** *(Superseded in part, 17 Sep 2026 - see below.)* ~~No photograph of any real person appears in these cards, sample or otherwise.~~ The founder offered frames pulled from other people's Instagram reels for this block; they were turned down because the people in them never agreed to appear on this page, and using their frames would wrongly imply they already post on Riffi. Real frames are only ever added later, and only once Riffi owns the clip or the creator in it has agreed - see `docs/implementation-plan.md` for the decision.
+
+  **17 Sep 2026, later the same day:** the founder asked for the cards to look less blank, so each frame now carries a **licensed stock still** behind its caption - a stand-in for the video image, exactly as the coloured frame always stood in for the video itself. A line under the deck says so out loud, so nobody reads a face on the card as a real Riffi creator:
+  > Stock stills and sample takes. Nobody has posted on Riffi yet, which is the point.
+
+  A fourth image the founder offered for this deck - a named photographer's own promotional card, carrying his quote - was turned down: on a page recruiting creators, using it would read as his personal endorsement of the program, which is not what a stock licence grants. See the decisions log in `docs/implementation-plan.md`.
 
 - Footer line, `meta`, `--ink-soft` - the one rule that keeps this block honest about what belongs on Riffi, regardless of format:
   > One rule, whatever you shoot: it has to be your opinion, not the news.
 
 **Acceptance**
-- [ ] The frame, its play mark and its sample/length pills are hidden from assistive technology; the word "sample" is repeated as real text for a screen reader on every card
+- [ ] The frame's decorative parts - the still image, the play mark, the sample pill and the length - are hidden from assistive technology; the caption itself, and the word "sample" repeated inside it, stay reachable by a screen reader on every card
 - [ ] No video actually loads and no clip plays on tap, anywhere in this block
-- [ ] No photograph of a real person appears in any card
-- [ ] Cards scroll sideways without trapping vertical page scroll on touch
+- [ ] Every still is a licensed stock image, served only from this site, lazy-loaded and sized so it causes no layout shift; the line naming them as stock stills is present and visible
+- [ ] Cards scroll sideways on mobile without trapping vertical page scroll on touch, and lay out as three equal columns on a laptop
 - [ ] Sits directly between Block 1 (Hero) and Block 2 (What Riffi is) in the rendered page
 
 ---
@@ -399,7 +413,7 @@ Background: `--paper`
 - H2 — `display-l`:
   > You're not early on Instagram. You're early here.
 
-- **Four comparison rows, each rendered as a poll bar.** Row anatomy: a label above, then a bar split between an Instagram side (coral, small) and a Riffi side (signal blue, large), with the two values as text.
+- **Four comparison rows, each rendered as a poll bar.** Row anatomy: a label above, then a bar split between a Riffi side (signal blue, large) and an Instagram side (coral, small), with the two values as text. *(Reversed 17 Sep 2026: Riffi originally sat on the right with the fill growing from the right - see the drift log, 15 Sep 2026. The founder asked for Riffi to lead instead, so the blue fill now starts at the left edge and the smaller, hollow Instagram side follows it.)*
 
   | Label | Instagram | Riffi |
   |---|---|---|
@@ -423,16 +437,21 @@ Background: `--paper`
 
 ### Block 4 — How you earn
 
-**Job:** be straight about what going first gets you, now that there is no money yet to publish a number for.
+**Job:** show what a creator can actually do on Riffi, now that there is no money yet to pitch instead.
 
-*(Rewritten 16 Sep 2026 — see the note at the top of this document. The heading, the row descriptions and the note below replace the original points-based versions; the right-hand `points` pill is gone entirely. The original heading and note are recorded in the Appendix, alongside section 1.2's original offer.)*
+*(Rewritten 16 Sep 2026 — see the note at the top of this document. The heading, the row descriptions and the note below replace the original points-based versions; the right-hand `points` pill is gone entirely. Rewritten again 17 Sep 2026, after a founder review of the running page: it reads as a feature list now, not an earnings pitch - new heading, a new lead line, and the rows render as bordered cards rather than a divided list. The original heading and note are recorded in the Appendix, alongside section 1.2's original offer.)*
 
 Background: `--recess`
 
 - H2 — `display-l`:
-  > What you get for going first.
+  > What creators can do here.
 
-- **Five earn rows.** A plain list with hairline dividers — *not* five cards. Each row: action name (`body-l`, ink) on the left, one-line description (`body`, ink-soft) beneath. There is no longer a pill on the right - it read `points`, and points no longer exist.
+  *(Rewritten 17 Sep 2026; was "What you get for going first" - recorded in the Appendix.)*
+
+- Lead — `body-l`, ink, 34rem cap *(added 17 Sep 2026)*:
+  > Five ways to put an opinion out. Pick whichever suits the take.
+
+- **Five feature cards**, in a `<ul>` of bordered `<li>` cards - two columns on a laptop, one on mobile. *(Changed 17 Sep 2026; was a plain list with hairline dividers, explicitly "not five cards" - the founder's review reversed that.)* Each card: action name (`body-l`, bold, ink) then a one-line description (`body`, ink-soft) beneath. There is no pill on the card - it used to read `points`, and points no longer exist.
 
   1. **Post a take** — One opinion, one line. That's the whole format.
   2. **Write the long version** — Some takes need a paragraph. Write it out when they do.
@@ -440,44 +459,50 @@ Background: `--recess`
   4. **Drop a story** — Short-lived posts, the same as you already do.
   5. **Get the room talking** — Votes, replies and reshares. That's how you find out if the room agrees.
 
-- **Honest note** below the list, `meta`, `--ink-soft`:
+- **Honest note** below the cards, `meta`, `--ink-soft` (unchanged since 16 Sep 2026):
   > Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.
 
 **Acceptance**
 - [ ] No numeric point values anywhere in the DOM
-- [ ] Rows are a semantic list, not divs
+- [ ] Cards are a semantic list (`<ul>`/`<li>`), not bare `<div>`s
 - [ ] No present-tense claim of payment ("you earn", "we pay", "is/are paid") anywhere in the block - only a plan for later
 
 ---
 
 ### Block 5 — The long game
 
-**Job:** answer "what does this actually turn into" without overpromising.
+**Job:** answer "what does this actually turn into" without overpromising - and, since 17 Sep 2026, without inventing a number to do it.
 
-*(Rewritten 16 Sep 2026 — see the note at the top of this document. The heading and framing line below replace the original points-based versions, recorded in the Appendix; the payout figure and its "example, not a rate card" framing carry over unchanged in substance, only reworded to drop every em dash.)*
+*(Rewritten 16 Sep 2026 — see the note at the top of this document. The heading and framing line replaced the original points-based versions, recorded in the Appendix. Rewritten again 17 Sep 2026: the payout figure and its "example, not a rate card" framing, kept unchanged in substance through the 16 Sep pass, are now removed entirely, along with the word "tipping" - see below.)*
 
 Background: `--paper`
 
-- H2 — `display-l`:
-  > Early now. First in line later.
+- H2 — `display-l`, centred on a laptop *(centred 17 Sep 2026, alongside Block 7's; previously left-aligned like every other heading)*. Split into two spans so the marker-sweep treatment (§3 update, 16 Sep 2026) wraps only the first sentence, while the two together remain one accessible heading for a screen reader:
+  > **Early now.** First in line later.
 
-- **Three items**, stacked, each with a heading (`display-m`) and two lines of body:
+- **Three items**, stacked on mobile, three columns on `md` and up *(added 17 Sep 2026; previously always stacked)*, each with a heading (`display-m`) and two lines of body:
 
   1. **Performance payouts**
-     When we switch on view-based payouts, batch one is in the first group. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000 to ₹10,000 band. That's an illustration, not a rate card. We'll publish the real slabs before any of it goes live.
+     When we can pay for views, batch one is in the first group. We are not putting a number on it today, because we would be making it up. You will see the real numbers before you post for them.
+
+     *(Rewritten 17 Sep 2026; was: "When we switch on view-based payouts, batch one is in the first group. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000 to ₹10,000 band. That's an illustration, not a rate card. We'll publish the real slabs before any of it goes live." The founder decided a made-up illustration was itself a small dishonesty the honesty guardrails (§2.4) should catch - so the guardrail was extended: no currency figure of any kind may appear on the page at all, not even a labelled example.)*
 
   2. **Brand deals**
      Brands reach a platform through its top creators. On a platform with 50 creators, that list is a lot shorter than the one you're on now.
 
   3. **Whatever comes after**
-     Subscriptions, tipping, anything else we build. Batch one gets it before anyone else.
+     Subscriptions, and anything else we build. Batch one gets it before anyone else.
 
-- **Honest framing line**, set apart with a hairline above, `body`, `--ink-soft`:
+     *(Reworded 17 Sep 2026; was "Subscriptions, tipping, anything else we build." The word "tipping" is gone.)*
+
+- **Honest framing line**, set apart with a hairline above, `body`, `--ink-soft`, centred on a laptop *(centred 17 Sep 2026)*:
   > All of this is our plan, not a contract. You're backing us early, and we'd rather you do it knowing exactly that.
 
 **Acceptance**
-- [ ] The ₹ figure is visually and grammatically framed as an example in the same sentence it appears
+- [ ] No rupee sign, "Rs.", "INR" or any other currency figure appears anywhere in the block - or anywhere else on the page *(rewritten 17 Sep 2026; previously required only that a ₹ figure, if present, be framed as an example)*
+- [ ] If a payout figure is ever reintroduced, its sentence still carries explicit example framing ("example", "shape", "illustration", "illustrative", "for instance") - the rule the removed ₹ figure used to satisfy stays enforced against that day
 - [ ] No em dash anywhere in the block's text
+- [ ] The heading's two spans read as one sentence, "Early now. First in line later.", to a screen reader
 
 ---
 
@@ -485,9 +510,11 @@ Background: `--paper`
 
 **Job:** state the commitment and the scarcity in the same breath, so scarcity reads as a standard rather than a trick.
 
+*(Laid out in two columns on a laptop, 17 Sep 2026 - see below - and gains a third "Claim a seat" button, so the ask and the button share a screen without scrolling.)*
+
 Background: `--recess`
 
-- A very large `50` — Archivo 800, expanded width, `clamp(96px, 22vw, 200px)`, sitting flush left against the gutter. The one moment of pure typographic scale on the page.
+- A very large `50` — Archivo 800, expanded width, `clamp(96px, 22vw, 200px)`. On mobile it sits flush left against the gutter above the heading; on a laptop (`lg`, changed 17 Sep 2026) it moves into a 12-column grid beside the heading and body, roughly a 5/7 split, vertically centred against them. The one moment of pure typographic scale on the page.
 
 - H2 beside or beneath it, `display-l`:
   > 50 seats. Here's what we ask.
@@ -499,11 +526,14 @@ Background: `--recess`
   ```ts
   seats: { total: 50, taken: null, show: false }
   ```
-  When `taken` is `null` or `show` is `false`, render the bar empty with the label `50 seats in batch one` and no number. **Never render an invented figure.** If Zyra sets a real number, it displays.
+  When `taken` is `null` or `show` is `false`, **no track renders at all** - not even empty. *(Changed 17 Sep 2026: the original design rendered an empty outlined bar in this case, labelled `50 seats in batch one`; the founder judged an empty track to be "a picture of zero" and asked for it to disappear entirely rather than show empty. The label itself still renders on its own, without a bar above it.)* **Never render an invented figure.** If Zyra sets a real number and turns `show` on, the track appears and displays it.
+
+- **A third "Claim a seat" button**, directly beneath the meter *(added 17 Sep 2026)*. The page is long on a laptop; the founder asked for the ask and the button to land in the same breath rather than making a laptop reader scroll back up or down to the nearest button.
 
 **Acceptance**
-- [ ] With default config, no seat count appears anywhere
-- [ ] The `50` does not overflow at 320px
+- [ ] With default config, no seat count and no seat-meter track appears anywhere - only the label
+- [ ] The `50` does not overflow at 320px, and sits beside (not above) the heading from `lg` up
+- [ ] A "Claim a seat" link exists inside this block, in addition to the ones in Hero and Close
 
 ---
 
@@ -513,7 +543,7 @@ Background: `--recess`
 
 Background: `--paper`
 
-- H2 — `display-l`:
+- H2 — `display-l`, centred on a laptop *(centred 17 Sep 2026: a narrow question list hugging the left edge of the full 1120px column read as a mistake at that width; unchanged below `lg`)*:
   > Before you ask
 
 | Q | A |
@@ -535,7 +565,7 @@ Background: `--paper`
 
 **Job:** the decision.
 
-Background: `--ink` (black), white text. The only inverted section on the page — the page ends where the primary button has been all along.
+Background: `--ink` (black), white text. The only inverted section on the page — the page ends where the primary button has been all along. *(This is now the page's third "Claim a seat" button, not its second - Block 6 gained one on 17 Sep 2026.)*
 
 - H2 — `display-l`, white:
   > 50 seats. Batch one.
@@ -548,6 +578,8 @@ Background: `--ink` (black), white text. The only inverted section on the page �
 
   Helper beneath, `meta`, white at 60%:
   > Opens a DM with @riffi
+
+  *(Superseded 17 Sep 2026 - see the note at the top of this document and §5.4, below. Every helper line, including this one, now reads "A one minute form. We reply from @get.riffi".)*
 
 - Footer row, `meta`: `Riffi` wordmark left, `[FILL — any legal/contact line]` right.
 
@@ -624,6 +656,8 @@ riffi-creator/
 
 ### 5.4 The CTA — no form, no backend
 
+> **Superseded 17 Sep 2026.** The sub-heading and first line below are the *original* PRD direction, kept as the historical record: the founder has since made the conversion a Google Form, not a DM. This is not the `<form>` element the PRD meant to rule out — the built page still has none, and `scripts/check-dist.mjs` still fails the build if one appears — it is a plain link, exactly like the DM link it replaces, just pointed at a different address. See the as-built description below the original text. Rationale and date: `docs/implementation-plan.md`.
+
 The only conversion action is opening a DM. Implement in `src/lib/cta.ts`:
 
 ```ts
@@ -637,6 +671,8 @@ Requirements:
 - Handle configurable in `content.ts` as `instagramHandle`
 - Optional WhatsApp fallback behind a config flag: `https://wa.me/<number>?text=<encoded>`
 - **No `<form>`, no email capture, no third-party embed.** If a future version needs a form, it gets added then.
+
+**As built, 17 Sep 2026:** every "Claim a seat" button now opens the founder's Google Form, held in `settings.applyFormUrl`. `src/lib/cta.ts` gained `applyFormHref(url)`, which accepts only an `https://forms.gle/...` or `https://docs.google.com/forms/...` address and throws otherwise - so a mistyped or swapped link fails the build instead of quietly sending fifty creators to a stranger's form. `ctaHref` (still the name every button reads) is now `applyFormHref(settings.applyFormUrl)`. The old builder, `instagramDmHref`, is unchanged and still exported as `instagramHref`, built from the same `instagramHandle` setting - it is validated and tested but, as of this change, not linked from any button; it exists because the button's helper line still promises a reply from that account. The optional WhatsApp fallback (`whatsappHref`, behind `settings.whatsapp.enabled`) is untouched. `target="_blank"` and `rel="noopener noreferrer"` still apply to every link. `scripts/check-dist.mjs`'s allowed-link check grew to match: a built page may link only to `ig.me`, `wa.me`, `forms.gle` or `docs.google.com/forms` - still an exact host list, not a pattern.
 
 ### 5.5 `PollBar` — the one component to get right
 
@@ -683,6 +719,8 @@ Head tags in `index.html`:
 ```
 
 Leave the page indexable. Add `noindex` only if Zyra asks.
+
+**As built, 17 Sep 2026:** `settings.siteUrl` is no longer a placeholder - the page is deployed and live at `https://riffi-creator-page.vercel.app`, so `og:image` and every other `<domain>` reference resolve to that real address, and the card Instagram shows in the DM thread is built from it. Since Instagram caches the first preview it renders for a link, this card should be treated as already "sent" from this point on - see `docs/implementation-plan.md`.
 
 ---
 
@@ -741,15 +779,17 @@ How to hit it:
 
 ## 8. Open inputs — `[FILL]`
 
-Five items need Zyra's answer. Put every one in `content.ts` with a clear placeholder and a `// [FILL]` comment so they're greppable. Build the page complete with placeholders rather than blocking.
+Five items originally needed Zyra's answer. Put every one in `content.ts` with a clear placeholder and a `// [FILL]` comment so they're greppable. Build the page complete with placeholders rather than blocking.
 
-| # | Where | What's needed | Placeholder in place |
-|---|---|---|---|
-| 1 | Block 6 | The actual weekly commitment asked of creators | "Post three takes a week through the pre-launch period" |
-| 2 | Block 7 | Launch timing answer | "We're in build. This cohort gets in before public launch." |
-| 3 | Block 7 | Content ownership answer, confirmed against terms | "You do. You keep the rights to your posts." |
-| 4 | Block 8 | Footer legal / contact line | Wordmark only |
-| 5 | Global | Instagram handle for the DM link, and the deploy domain | `riffi` |
+| # | Where | What's needed | Placeholder in place | Status |
+|---|---|---|---|---|
+| 1 | Block 6 | The actual weekly commitment asked of creators | "Post three takes a week through the pre-launch period" | Still open |
+| 2 | Block 7 | Launch timing answer | "We're in build. This cohort gets in before public launch." | Still open |
+| 3 | Block 7 | Content ownership answer, confirmed against terms | "You do. You keep the rights to your posts." | Still open |
+| 4 | Block 8 | Footer legal / contact line | Wordmark only | Still open |
+| 5 | Global | Instagram handle for the DM link, and the deploy domain | `riffi` | **Confirmed 17 Sep 2026** - handle is `get.riffi`, domain is `https://riffi-creator-page.vercel.app` (live) |
+
+**Added 17 Sep 2026, answered the same day it appeared:** a sixth setting, `applyFormUrl` (the founder's Google Form), was never itself a `[FILL]` placeholder - the founder supplied and confirmed the real link (`https://forms.gle/chyARXHuKTiwV4Yn6`) the same day the conversion changed from a DM to a form (§5.4). `npm run presend` now lists four open items (1-4 above, each still both a `[FILL]` comment and an unconfirmed `inputsConfirmed` flag) rather than the original five.
 
 Plus: the **brand kit** (logo, colours, typefaces) arrives separately. Build to §3 now. The swap is `tokens.css` plus one wordmark SVG.
 
@@ -799,14 +839,15 @@ Every user-facing string, for `content.ts`.
 **Hero**
 - H1: `On Instagram you're one of lakhs. Here you're one of the first, with almost no competition.` (rewritten by the founder 16 Sep 2026; was `Here you're one of 50.`)
 - Sub: `Riffi is India's platform for opinions. We're taking 50 creators in before launch and pointing the feed at them.`
-- CTA: `Claim a seat` / helper: `Opens a DM with @riffi`
+- CTA: `Claim a seat` / helper: `A one minute form. We reply from @get.riffi` (rewritten 17 Sep 2026, the conversion changed from a DM to a form; was `Opens a DM with @riffi`)
 - Sample take: `Being early beats being good.` — chip `sample take`, 71% agree / 29% disagree, `2,140 votes`
 
 **You already shoot reels. Here it's just you, talking.** *(added 17 Sep 2026 as "Or just say it to camera," between "What Riffi is" and "Why here, not there"; repositioned and renamed the same day to lead the page, directly after Hero)*
 - H2: `You already shoot reels. Here it's just you, talking.` (was `Or just say it to camera.`)
 - Lead: `No hook, no thumbnail, no four hour edit. Point the phone at yourself, say what you actually think, and post it. The room votes on the opinion, not the edit.` (was `A take does not have to be typed. Point the phone at yourself, say the thing, post it. The room still votes.`)
 - Badge: `40 seconds, one opinion`
-- Three sample cards as listed in Block 1a, each labelled `sample`
+- Three sample cards as listed in Block 1a, each labelled `sample`, each since 17 Sep 2026 carrying a burned-in caption over a licensed stock still (`/media/sample-one.jpg`, `-two`, `-three`)
+- Still note (added 17 Sep 2026): `Stock stills and sample takes. Nobody has posted on Riffi yet, which is the point.`
 - Footer: `One rule, whatever you shoot: it has to be your opinion, not the news.` (was `Same forty seconds either way. Type it or say it, the vote is the same.`)
 
 **What Riffi is**
@@ -819,30 +860,32 @@ Every user-facing string, for `content.ts`.
 
 **Why here, not there**
 - H2: `You're not early on Instagram. You're early here.`
-- Rows as tabulated in Block 3
+- Rows as tabulated in Block 3, rendered Riffi-first since 17 Sep 2026 (blue fill leading from the left; was Instagram-first, fill from the right)
 - Closer: `And a reel costs you four hours. A take costs you forty seconds.`
 
-**How you earn**
-- H2: `What you get for going first.` (rewritten 16 Sep 2026; was `You earn from post one.`)
-- Five rows as written in Block 4 (each row's one-line description was also reworded 16 Sep 2026, and the row's right-hand `points` pill was removed)
-- Note: `Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.` (rewritten 16 Sep 2026; was `Points convert to vouchers. Exact values go live with the app — we're still tuning them, and we'd rather publish them once than change them on you.`)
+**What creators can do here.** *(heading and framing rewritten 17 Sep 2026, on top of the 16 Sep 2026 no-points rewrite; was "What you get for going first.")*
+- H2: `What creators can do here.` (16 Sep 2026: `What you get for going first.`; originally `You earn from post one.`)
+- Lead (added 17 Sep 2026): `Five ways to put an opinion out. Pick whichever suits the take.`
+- Five rows as written in Block 4, rendered as bordered cards since 17 Sep 2026 (each row's one-line description was reworded 16 Sep 2026, and the row's right-hand `points` pill was removed the same day)
+- Note: `Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.` (rewritten 16 Sep 2026; was `Points convert to vouchers. Exact values go live with the app — we're still tuning them, and we'd rather publish them once than change them on you.`; unchanged since)
 
 **The long game**
-- H2: `Early now. First in line later.` (rewritten 16 Sep 2026; was `Points now. Priority later.`)
-- Three items as written in Block 5 (the payout figure and its example framing carry over; only the wording changed, to drop every em dash)
+- H2: two fields since 17 Sep 2026 - `headingMark`: `Early now.`, `headingRest`: `First in line later.`, concatenated as the accessible `heading`: `Early now. First in line later.` (rewritten 16 Sep 2026; was `Points now. Priority later.`)
+- Three items as written in Block 5. **Rewritten again 17 Sep 2026:** "Performance payouts" no longer names a ₹ figure at all (was: "...a post crossing a lakh views lands somewhere in the ₹5,000 to ₹10,000 band. That's an illustration, not a rate card. We'll publish the real slabs before any of it goes live."); "Whatever comes after" drops the word "tipping" (was "Subscriptions, tipping, anything else we build.")
 - Framing: `All of this is our plan, not a contract. You're backing us early, and we'd rather you do it knowing exactly that.` (rewritten 16 Sep 2026; was `All of this is our plan, not a contract. We'd rather you come in knowing exactly that.`)
 
 **Seats**
 - `50`
 - H2: `50 seats. Here's what we ask.`
 - Body: `[FILL]`
-- Meter label: `50 seats in batch one`
+- Meter label: `50 seats in batch one` (since 17 Sep 2026, the only thing that renders when there is no real count - no empty track alongside it)
+- A third `Claim a seat` / helper button, added 17 Sep 2026
 
 **FAQ**
-- H2: `Before you ask`
+- H2: `Before you ask` (centred on a laptop since 17 Sep 2026)
 - Six Q&As as tabulated in Block 7 (the "Is this paid right now?" answer was rewritten 16 Sep 2026 to drop points language; the original is recorded beneath Block 7's table)
 
 **Close**
 - H2: `50 seats. Batch one.`
 - Body: `If you've got opinions and you're tired of shouting them into a feed that doesn't know you, take one.`
-- CTA: `Claim a seat` / helper: `Opens a DM with @riffi`
+- CTA: `Claim a seat` / helper: `A one minute form. We reply from @get.riffi` (rewritten 17 Sep 2026; was `Opens a DM with @riffi`)
