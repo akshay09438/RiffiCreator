@@ -42,7 +42,7 @@ export const settings: Settings = {
     message: "I'm in",
   },
   seats: {
-    total: 50,
+    total: 500,
     // A real, hand-counted number. Leave null to show no number at all.
     taken: null,
     // Turn on only when `taken` is real and kept up to date by hand.
@@ -79,7 +79,7 @@ export const content = {
       "Here you're one of the first, with almost no competition.",
     ],
     subline:
-      "Riffi is India's platform for opinions. We're taking 50 creators in before launch and pointing the feed at them.",
+      "Riffi is India's platform for opinions. We're taking 500 creators in before launch and pointing the feed at them.",
     sampleTake: {
       chip: 'sample take',
       text: 'Being early beats being good.',
@@ -161,7 +161,7 @@ export const content = {
     instagramLabel: 'Instagram',
     riffiLabel: 'Riffi',
     rows: [
-      { label: "Creators you're up against", instagram: 'Lakhs', riffi: '49' },
+      { label: "Creators you're up against", instagram: 'Lakhs', riffi: '499' },
       {
         label: 'Who decides your reach',
         instagram: 'A feed tuned for watch time',
@@ -209,7 +209,7 @@ export const content = {
       },
       {
         title: 'Brand deals',
-        body: "Brands reach a platform through its top creators. On a platform with 50 creators, that list is a lot shorter than the one you're on now.",
+        body: "Brands reach a platform through its top creators. On a platform with 500 creators, that list is a lot shorter than the one you're on now.",
       },
       {
         title: 'Whatever comes after',
@@ -220,10 +220,10 @@ export const content = {
       "All of this is our plan, not a contract. You're backing us early, and we'd rather you do it knowing exactly that.",
   },
   seats: {
-    heading: "50 seats. Here's what we ask.",
+    heading: "500 seats. Here's what we ask.",
     // [FILL] 1 - the actual weekly commitment asked of creators.
     body: "Post three takes a week through the pre-launch period. That's the whole ask. No calls, no contracts, no exclusivity. Keep posting wherever else you post.",
-    meterLabel: '50 seats in batch one',
+    meterLabel: '500 seats in batch one',
     takenLabel: (taken: number, total: number) => `${taken} of ${total} seats taken`,
   },
   faq: {
@@ -262,7 +262,7 @@ export const content = {
     ],
   },
   close: {
-    heading: '50 seats. Batch one.',
+    heading: '500 seats. Batch one.',
     body: "If you've got opinions and you're tired of shouting them into a feed that doesn't know you, take one.",
     // [FILL] 4 - the footer legal / contact line. Leave empty to show the wordmark only.
     footerLine: '',

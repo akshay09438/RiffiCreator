@@ -557,8 +557,8 @@ describe('#seats and the seat meter (PRD Block 6, design 5)', () => {
     expect(meterIn(block)).toBeInTheDocument();
   });
 
-  it('with the default settings, shows only "50 seats in batch one" in the meter and no seat count anywhere', () => {
-    expect(settings.seats).toEqual({ total: 50, taken: null, show: false });
+  it('with the default settings, shows only "500 seats in batch one" in the meter and no seat count anywhere', () => {
+    expect(settings.seats).toEqual({ total: 500, taken: null, show: false });
     render(<App />);
     const meter = meterIn(section('seats'));
     expect(normalize(meter.textContent)).toBe(content.seats.meterLabel);

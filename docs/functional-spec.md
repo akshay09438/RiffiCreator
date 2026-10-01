@@ -16,6 +16,8 @@
 >
 > **Changed again, founder-decided 17 Sep 2026, later the same day:** (14) **The conversion is a Google Form, not an Instagram DM.** Every "Claim a seat" button - hero, seats and close - now opens the founder's form; `settings.applyFormUrl` holds the link, and the build refuses outright unless that URL is a genuine `forms.gle` or `docs.google.com/forms` address. The helper line beneath every button now reads "A one minute form. We reply from @get.riffi" in place of "Opens a DM with @riffi". See Blocks 1, 6 and 8, and §5.4, below. (15) **Three of the five open inputs (§8) are now answered:** the Instagram handle is real (`get.riffi`), the application form is real, and the page is deployed and live at `https://riffi-creator-page.vercel.app` - `settings.siteUrl` is that address, and the DM-preview card Instagram shows is built from it. The weekly commitment, launch timing, content ownership and footer line remain open. (16) The repository is now hosted on GitHub at `github.com/akshay09438/RiffiCreator` (branches `main` and `feat/creator-page`). Rationale and full before/after text for all of the above: `docs/implementation-plan.md`.
 
+> **Changed again, founder-decided 1 Oct 2026:** (17) **The program grows from 50 creators to 500.** The founder reports the first 50 creators are in, so the page now recruits 500: the hero sub-line, Block 3's "Creators you're up against" row (49 to 499) and its brand-deals line, Block 6's heading, big number and meter label, Block 8's heading, and `index.html`'s title, description and preview-card description all say 500. "Batch one" wording is unchanged. The application form also changed the same day, to the founder's new "New creator onboarding - Riffi" form. Rationale: `docs/implementation-plan.md`.
+
 ---
 
 # Riffi — Creator Program Landing Page
@@ -280,7 +282,7 @@ Copy below is **production copy** unless marked `[FILL]`. Use it as written. If 
   *(Founder's rewrite of the second line, 16 Sep 2026 - see the note at the top of this document. It carries the orange marker-sweep treatment described in the section 3 update above.)*
 
 - Subline — `body-l`, `--ink-soft`, capped at 34rem:
-  > Riffi is India's platform for opinions. We're taking 50 creators in before launch and pointing the feed at them.
+  > Riffi is India's platform for opinions. We're taking 500 creators in before launch and pointing the feed at them.
 
 - Primary CTA — black pill, full-width on mobile, auto on desktop:
   > Claim a seat
@@ -417,7 +419,7 @@ Background: `--paper`
 
   | Label | Instagram | Riffi |
   |---|---|---|
-  | Creators you're up against | Lakhs | 49 |
+  | Creators you're up against | Lakhs | 499 |
   | Who decides your reach | A feed tuned for watch time | A feed we're still writing |
   | What your first post gets | Buried | The front page |
   | What you own at the end | Followers on rented land | A position on a platform still being built |
@@ -488,7 +490,7 @@ Background: `--paper`
      *(Rewritten 17 Sep 2026; was: "When we switch on view-based payouts, batch one is in the first group. To give you the shape of it: a post crossing a lakh views lands somewhere in the ₹5,000 to ₹10,000 band. That's an illustration, not a rate card. We'll publish the real slabs before any of it goes live." The founder decided a made-up illustration was itself a small dishonesty the honesty guardrails (§2.4) should catch - so the guardrail was extended: no currency figure of any kind may appear on the page at all, not even a labelled example.)*
 
   2. **Brand deals**
-     Brands reach a platform through its top creators. On a platform with 50 creators, that list is a lot shorter than the one you're on now.
+     Brands reach a platform through its top creators. On a platform with 500 creators, that list is a lot shorter than the one you're on now.
 
   3. **Whatever comes after**
      Subscriptions, and anything else we build. Batch one gets it before anyone else.
@@ -506,7 +508,7 @@ Background: `--paper`
 
 ---
 
-### Block 6 — 50 seats
+### Block 6 — 500 seats
 
 **Job:** state the commitment and the scarcity in the same breath, so scarcity reads as a standard rather than a trick.
 
@@ -517,7 +519,7 @@ Background: `--recess`
 - A very large `50` — Archivo 800, expanded width, `clamp(96px, 22vw, 200px)`. On mobile it sits flush left against the gutter above the heading; on a laptop (`lg`, changed 17 Sep 2026) it moves into a 12-column grid beside the heading and body, roughly a 5/7 split, vertically centred against them. The one moment of pure typographic scale on the page.
 
 - H2 beside or beneath it, `display-l`:
-  > 50 seats. Here's what we ask.
+  > 500 seats. Here's what we ask.
 
 - Body, 34rem cap:
   > `[FILL — commitment]` *Placeholder: Post three takes a week through the pre-launch period. That's the whole ask. No calls, no contracts, no exclusivity — keep posting wherever else you post.*
@@ -568,7 +570,7 @@ Background: `--paper`
 Background: `--ink` (black), white text. The only inverted section on the page — the page ends where the primary button has been all along. *(This is now the page's third "Claim a seat" button, not its second - Block 6 gained one on 17 Sep 2026.)*
 
 - H2 — `display-l`, white:
-  > 50 seats. Batch one.
+  > 500 seats. Batch one.
 
 - Body, white at 70% opacity, 34rem cap:
   > If you've got opinions and you're tired of shouting them into a feed that doesn't know you, take one.
@@ -838,7 +840,7 @@ Every user-facing string, for `content.ts`.
 
 **Hero**
 - H1: `On Instagram you're one of lakhs. Here you're one of the first, with almost no competition.` (rewritten by the founder 16 Sep 2026; was `Here you're one of 50.`)
-- Sub: `Riffi is India's platform for opinions. We're taking 50 creators in before launch and pointing the feed at them.`
+- Sub: `Riffi is India's platform for opinions. We're taking 500 creators in before launch and pointing the feed at them.`
 - CTA: `Claim a seat` / helper: `A one minute form. We reply from @get.riffi` (rewritten 17 Sep 2026, the conversion changed from a DM to a form; was `Opens a DM with @riffi`)
 - Sample take: `Being early beats being good.` — chip `sample take`, 71% agree / 29% disagree, `2,140 votes`
 
@@ -876,9 +878,9 @@ Every user-facing string, for `content.ts`.
 
 **Seats**
 - `50`
-- H2: `50 seats. Here's what we ask.`
+- H2: `500 seats. Here's what we ask.`
 - Body: `[FILL]`
-- Meter label: `50 seats in batch one` (since 17 Sep 2026, the only thing that renders when there is no real count - no empty track alongside it)
+- Meter label: `500 seats in batch one` (since 17 Sep 2026, the only thing that renders when there is no real count - no empty track alongside it)
 - A third `Claim a seat` / helper button, added 17 Sep 2026
 
 **FAQ**
@@ -886,6 +888,6 @@ Every user-facing string, for `content.ts`.
 - Six Q&As as tabulated in Block 7 (the "Is this paid right now?" answer was rewritten 16 Sep 2026 to drop points language; the original is recorded beneath Block 7's table)
 
 **Close**
-- H2: `50 seats. Batch one.`
+- H2: `500 seats. Batch one.`
 - Body: `If you've got opinions and you're tired of shouting them into a feed that doesn't know you, take one.`
 - CTA: `Claim a seat` / helper: `A one minute form. We reply from @get.riffi` (rewritten 17 Sep 2026; was `Opens a DM with @riffi`)

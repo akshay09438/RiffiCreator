@@ -154,8 +154,8 @@ describe('settings', () => {
     expect(typeof settings.whatsapp.message).toBe('string');
   });
 
-  it('ships with no invented seat count: total 50, taken null, show false (PRD Block 6)', () => {
-    expect(settings.seats).toEqual({ total: 50, taken: null, show: false });
+  it('ships with no invented seat count: total 500, taken null, show false (PRD Block 6)', () => {
+    expect(settings.seats).toEqual({ total: 500, taken: null, show: false });
   });
 
   it('uses one split for every comparison row, with the Instagram side smaller than the Riffi side', () => {
@@ -197,7 +197,7 @@ describe('copy matches the PRD word for word', () => {
       "Here you're one of the first, with almost no competition.",
     ]);
     expect(content.hero.subline).toBe(
-      "Riffi is India's platform for opinions. We're taking 50 creators in before launch and pointing the feed at them.",
+      "Riffi is India's platform for opinions. We're taking 500 creators in before launch and pointing the feed at them.",
     );
   });
 
@@ -326,7 +326,7 @@ describe('copy matches the PRD word for word', () => {
     expect(content.whyHere.instagramLabel).toBe('Instagram');
     expect(content.whyHere.riffiLabel).toBe('Riffi');
     expect(content.whyHere.rows).toEqual([
-      { label: "Creators you're up against", instagram: 'Lakhs', riffi: '49' },
+      { label: "Creators you're up against", instagram: 'Lakhs', riffi: '499' },
       { label: 'Who decides your reach', instagram: 'A feed tuned for watch time', riffi: "A feed we're still writing" },
       { label: 'What your first post gets', instagram: 'Buried', riffi: 'The front page' },
       {
@@ -372,7 +372,7 @@ describe('copy matches the PRD word for word', () => {
       },
       {
         title: 'Brand deals',
-        body: "Brands reach a platform through its top creators. On a platform with 50 creators, that list is a lot shorter than the one you're on now.",
+        body: "Brands reach a platform through its top creators. On a platform with 500 creators, that list is a lot shorter than the one you're on now.",
       },
       {
         title: 'Whatever comes after',
@@ -385,8 +385,8 @@ describe('copy matches the PRD word for word', () => {
   });
 
   it('50 seats: heading and meter label, with the commitment body present as real text', () => {
-    expect(content.seats.heading).toBe("50 seats. Here's what we ask.");
-    expect(content.seats.meterLabel).toBe('50 seats in batch one');
+    expect(content.seats.heading).toBe("500 seats. Here's what we ask.");
+    expect(content.seats.meterLabel).toBe('500 seats in batch one');
     expect(content.seats.body.trim()).not.toBe('');
   });
 
@@ -418,7 +418,7 @@ describe('copy matches the PRD word for word', () => {
   });
 
   it('close: heading and body, with the footer line as text (empty until PRD input 4 is answered)', () => {
-    expect(content.close.heading).toBe('50 seats. Batch one.');
+    expect(content.close.heading).toBe('500 seats. Batch one.');
     expect(content.close.body).toBe(
       "If you've got opinions and you're tired of shouting them into a feed that doesn't know you, take one.",
     );

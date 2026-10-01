@@ -37,18 +37,18 @@ describe('index.html: document basics', () => {
 });
 
 describe('index.html: title, description and the link-preview card, exactly as PRD 5.6', () => {
-  it('has the title "Riffi Creator Program: 50 seats"', () => {
+  it('has the title "Riffi Creator Program: 500 seats"', () => {
     expect(all('title')).toHaveLength(1);
-    expect(doc.title).toBe('Riffi Creator Program: 50 seats');
+    expect(doc.title).toBe('Riffi Creator Program: 500 seats');
   });
 
   it.each([
-    ['meta[name="description"]', "Riffi is India's platform for opinions. We're taking 50 creators in before launch."],
+    ['meta[name="description"]', "Riffi is India's platform for opinions. We're taking 500 creators in before launch."],
     [
       'meta[property="og:title"]',
       "On Instagram you're one of lakhs. Here you're one of the first, with almost no competition.",
     ],
-    ['meta[property="og:description"]', 'The Riffi Creator Program. 50 seats, batch one.'],
+    ['meta[property="og:description"]', 'The Riffi Creator Program. 500 seats, batch one.'],
     ['meta[property="og:type"]', 'website'],
     ['meta[property="og:image"]', '__SITE_URL__/og.png'],
     ['meta[name="twitter:card"]', 'summary_large_image'],

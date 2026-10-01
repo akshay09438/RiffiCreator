@@ -522,6 +522,14 @@
     letter-spacing: -0.03em;
   }
 
+  /* 1 Oct 2026: three digits (500) no longer fit the laptop layout's narrower column at 200px,
+     and ran over the heading beside it. */
+  @media (min-width: 64rem) {
+    .seats-number {
+      font-size: clamp(96px, 12vw, 168px);
+    }
+  }
+
   /* FAQ: native disclosures with the marker replaced by a rotating plus. */
   .faq summary::-webkit-details-marker {
     display: none;
