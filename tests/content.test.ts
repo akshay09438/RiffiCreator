@@ -321,7 +321,7 @@ describe('copy matches the PRD word for word', () => {
     expect(content.videoTakes.stillAlt).toBe('');
   });
 
-  it('why here: heading, side labels, the four comparison rows and the closer', () => {
+  it('why here: heading, side labels, the five comparison rows and the closer (1 Oct 2026: a fifth, how you get paid)', () => {
     expect(content.whyHere.heading).toBe("You're not early on Instagram. You're early here.");
     expect(content.whyHere.instagramLabel).toBe('Instagram');
     expect(content.whyHere.riffiLabel).toBe('Riffi');
@@ -329,6 +329,7 @@ describe('copy matches the PRD word for word', () => {
       { label: "Creators you're up against", instagram: 'Lakhs', riffi: '499' },
       { label: 'Who decides your reach', instagram: 'A feed tuned for watch time', riffi: "A feed we're still writing" },
       { label: 'What your first post gets', instagram: 'Buried', riffi: 'The front page' },
+      { label: "How you'll earn", instagram: 'Brand deals, if one finds you', riffi: "Engagement, once we're big enough" },
       {
         label: 'What you own at the end',
         instagram: 'Followers on rented land',
@@ -354,29 +355,29 @@ describe('copy matches the PRD word for word', () => {
       },
     ]);
     expect(content.howYouEarn.note).toBe(
-      "Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
+      "Straight answer on money: not on day one. Once Riffi has enough people reading, we start paying creators for the engagement their takes get. That means you don't need a brand deal to earn. Until then, what you get is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
     );
   });
 
   it('the long game: heading in three parts (for the marker sweep and the accessible name), the three items and the framing line (17 Sep 2026: no payout number is named)', () => {
     expect(content.longGame.headingMark).toBe('Early now.');
-    expect(content.longGame.headingRest).toBe('First in line later.');
-    expect(content.longGame.heading).toBe('Early now. First in line later.');
+    expect(content.longGame.headingRest).toBe('Paid for engagement later.');
+    expect(content.longGame.heading).toBe('Early now. Paid for engagement later.');
     // The rendered h2 splits headingMark and headingRest into two spans (for the marker sweep);
     // heading must stay their exact join so a screen reader still hears it as one sentence.
     expect(content.longGame.heading).toBe(`${content.longGame.headingMark} ${content.longGame.headingRest}`);
     expect(content.longGame.items).toEqual([
       {
-        title: 'Performance payouts',
-        body: 'When we can pay for views, batch one is in the first group. We are not putting a number on it today, because we would be making it up. You will see the real numbers before you post for them.',
+        title: 'Paid for engagement',
+        body: "On Instagram, your views earn the platform money, not you. On Riffi, once we have enough users, we'll pay creators for the engagement their takes get: the votes, replies and reshares. We won't put a number on it today, because we'd be making it up. You'll see how it works before it starts.",
       },
       {
-        title: 'Brand deals',
-        body: "Brands reach a platform through its top creators. On a platform with 500 creators, that list is a lot shorter than the one you're on now.",
+        title: 'No brand deal needed',
+        body: "Most creators only earn once a brand picks them. Here, your takes can earn on their own. Brand deals are a bonus, not the only way in.",
       },
       {
-        title: 'Whatever comes after',
-        body: 'Subscriptions, and anything else we build. Batch one gets it before anyone else.',
+        title: 'Batch one goes first',
+        body: "When payments start, the creators who were here before launch are in the first group.",
       },
     ]);
     expect(content.longGame.framing).toBe(
@@ -411,7 +412,7 @@ describe('copy matches the PRD word for word', () => {
     expect(content.faq.items.slice(0, 4).map((item) => item.answer)).toEqual([
       'No. Keep posting exactly where you post now. A take is a sentence, not a shoot, so it sits alongside what you already do.',
       "No. We're picking for takes, not reach. Most of this cohort is under 20k and that's deliberate.",
-      "No, and we won't pretend otherwise. Riffi hasn't launched, so there's no money in it yet. You're putting takes in early, and when we can pay creators, batch one is first in line for payouts and brand deals. That's the plan, not a contract.",
+      "Not yet, and we won't pretend otherwise. Riffi hasn't launched. Once we have enough users, we start paying creators for the engagement their takes get, so you don't have to wait on brand deals to earn. Batch one is first in line. That's the plan, not a contract.",
       'Anything you have a real opinion on. Cricket, politics, films, food, campus, money. Opinions, not news reports.',
     ]);
     for (const item of content.faq.items) expect(item.answer.trim()).not.toBe('');

@@ -169,6 +169,11 @@ export const content = {
       },
       { label: 'What your first post gets', instagram: 'Buried', riffi: 'The front page' },
       {
+        label: "How you'll earn",
+        instagram: 'Brand deals, if one finds you',
+        riffi: "Engagement, once we're big enough",
+      },
+      {
         label: 'What you own at the end',
         instagram: 'Followers on rented land',
         riffi: 'A position on a platform still being built',
@@ -195,25 +200,25 @@ export const content = {
         description: "Votes, replies and reshares. That's how you find out if the room agrees.",
       },
     ],
-    note: "Straight answer on money: there isn't any yet. Riffi hasn't launched, so anything we paid you today would be made up. What you get now is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
+    note: "Straight answer on money: not on day one. Once Riffi has enough people reading, we start paying creators for the engagement their takes get. That means you don't need a brand deal to earn. Until then, what you get is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
   },
   longGame: {
     // Two halves so the first can carry the marker sweep, the way the hero's second line does.
     headingMark: 'Early now.',
-    headingRest: 'First in line later.',
-    heading: 'Early now. First in line later.',
+    headingRest: 'Paid for engagement later.',
+    heading: 'Early now. Paid for engagement later.',
     items: [
       {
-        title: 'Performance payouts',
-        body: "When we can pay for views, batch one is in the first group. We are not putting a number on it today, because we would be making it up. You will see the real numbers before you post for them.",
+        title: 'Paid for engagement',
+        body: "On Instagram, your views earn the platform money, not you. On Riffi, once we have enough users, we'll pay creators for the engagement their takes get: the votes, replies and reshares. We won't put a number on it today, because we'd be making it up. You'll see how it works before it starts.",
       },
       {
-        title: 'Brand deals',
-        body: "Brands reach a platform through its top creators. On a platform with 500 creators, that list is a lot shorter than the one you're on now.",
+        title: 'No brand deal needed',
+        body: "Most creators only earn once a brand picks them. Here, your takes can earn on their own. Brand deals are a bonus, not the only way in.",
       },
       {
-        title: 'Whatever comes after',
-        body: 'Subscriptions, and anything else we build. Batch one gets it before anyone else.',
+        title: 'Batch one goes first',
+        body: "When payments start, the creators who were here before launch are in the first group.",
       },
     ],
     framing:
@@ -242,7 +247,7 @@ export const content = {
       {
         question: 'Is this paid right now?',
         answer:
-          "No, and we won't pretend otherwise. Riffi hasn't launched, so there's no money in it yet. You're putting takes in early, and when we can pay creators, batch one is first in line for payouts and brand deals. That's the plan, not a contract.",
+          "Not yet, and we won't pretend otherwise. Riffi hasn't launched. Once we have enough users, we start paying creators for the engagement their takes get, so you don't have to wait on brand deals to earn. Batch one is first in line. That's the plan, not a contract.",
       },
       {
         question: 'What can I post about?',

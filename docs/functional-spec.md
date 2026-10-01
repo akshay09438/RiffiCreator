@@ -18,6 +18,8 @@
 
 > **Changed again, founder-decided 1 Oct 2026:** (17) **The program grows from 50 creators to 500.** The founder reports the first 50 creators are in, so the page now recruits 500: the hero sub-line, Block 3's "Creators you're up against" row (49 to 499) and its brand-deals line, Block 6's heading, big number and meter label, Block 8's heading, and `index.html`'s title, description and preview-card description all say 500. "Batch one" wording is unchanged. The application form also changed the same day, to the founder's new "New creator onboarding - Riffi" form. Rationale: `docs/implementation-plan.md`.
 
+> **Changed again, founder-decided 1 Oct 2026, later the same day:** (18) **The money story changes.** The page no longer says only "no money yet": it says that once Riffi has enough users it will pay creators for the engagement their takes get, so they need not wait on brand deals, and that batch one goes first - never with a number, always as a plan, not a contract. This rewrites Block 4's note, Block 5's heading and three items, and the FAQ answer to "Is this paid right now?", and adds a fifth row to Block 3's comparison, "How you'll earn". The exact text is in `src/content.ts`; the before/after is in `docs/implementation-plan.md`.
+
 ---
 
 # Riffi — Creator Program Landing Page
