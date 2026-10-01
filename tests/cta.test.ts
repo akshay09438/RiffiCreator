@@ -128,7 +128,10 @@ describe('the links the page uses', () => {
   it('points ctaHref at the application form in settings, and nowhere near Instagram', () => {
     expect(ctaHref).toBe(applyFormHref(settings.applyFormUrl));
     expect(ctaHref).toBe(settings.applyFormUrl);
-    expect(ctaHref).toBe('https://forms.gle/chyARXHuKTiwV4Yn6');
+    // 1 Oct 2026: the founder swapped in a new form ("New creator onboarding - Riffi").
+    expect(ctaHref).toBe(
+      'https://docs.google.com/forms/d/e/1FAIpQLSeVrXx9tRYtsIjP_T9V7NnVbRJm2C-u5s5QrhlZDT4vVabY0Q/viewform',
+    );
     expect(ctaHref).not.toMatch(/ig\.me/);
   });
 

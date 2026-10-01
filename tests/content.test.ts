@@ -529,6 +529,11 @@ describe('the open inputs: four still unanswered, three settled on 17 Sep 2026 (
     expect(settings.siteUrl).toMatch(/^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)+$/);
     expect(settings.siteUrl).not.toMatch(/\.(?:example|invalid|test|localhost)\b/);
     expect(settings.instagramHandle).not.toBe('riffi');
-    expect(settings.applyFormUrl).toMatch(/^https:\/\/forms\.gle\/[A-Za-z0-9_-]{4,}$/);
+    // A forms.gle short link, or (since 1 Oct 2026) a published form's full viewform link - no
+    // query string, and never the example id the link-builder tests use.
+    expect(settings.applyFormUrl).toMatch(
+      /^https:\/\/(?:forms\.gle\/[A-Za-z0-9_-]{4,}|docs\.google\.com\/forms\/d\/e\/[A-Za-z0-9_-]{20,}\/viewform)$/,
+    );
+    expect(settings.applyFormUrl).not.toMatch(/EXAMPLE/i);
   });
 });

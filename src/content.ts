@@ -29,8 +29,10 @@ export type Settings = {
 export const settings: Settings = {
   // Riffi's Instagram account, without the @. Confirmed by the founder on 17 Sep 2026.
   instagramHandle: 'get.riffi',
-  // The founder's application form, given on 17 Sep 2026. Every "Claim a seat" opens it.
-  applyFormUrl: 'https://forms.gle/chyARXHuKTiwV4Yn6',
+  // The founder's application form ("New creator onboarding - Riffi"), swapped in on 1 Oct 2026,
+  // replacing the 17 Sep 2026 form. Every "Claim a seat" opens it.
+  applyFormUrl:
+    'https://docs.google.com/forms/d/e/1FAIpQLSeVrXx9tRYtsIjP_T9V7NnVbRJm2C-u5s5QrhlZDT4vVabY0Q/viewform',
   // The live domain, deployed 17 Sep 2026. The preview card Instagram shows is built from it.
   siteUrl: 'https://riffi-creator-page.vercel.app',
   whatsapp: {
