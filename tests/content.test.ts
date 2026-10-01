@@ -408,7 +408,11 @@ describe('copy matches the PRD word for word', () => {
     ]);
   });
 
-  it('FAQ: the four answers that are not open inputs, and real text for the two that are', () => {
+  it('FAQ: all six answers, including the founder\'s launch and ownership answers (1 Oct 2026)', () => {
+    expect(content.faq.items.slice(4).map((item) => item.answer)).toEqual([
+      "We're aiming for the last week of October. This cohort gets in before that, so your takes are already up when everyone else arrives.",
+      'You do. You keep the rights to your posts and you can take them anywhere.',
+    ]);
     expect(content.faq.items.slice(0, 4).map((item) => item.answer)).toEqual([
       'No. Keep posting exactly where you post now. A take is a sentence, not a shoot, so it sits alongside what you already do.',
       "No. We're picking for takes, not reach. Most of this cohort is under 20k and that's deliberate.",
@@ -418,68 +422,46 @@ describe('copy matches the PRD word for word', () => {
     for (const item of content.faq.items) expect(item.answer.trim()).not.toBe('');
   });
 
-  it('close: heading and body, with the footer line as text (empty until PRD input 4 is answered)', () => {
+  it('close: heading, body and the footer contact line (PRD input 4, answered 1 Oct 2026)', () => {
     expect(content.close.heading).toBe('500 seats. Batch one.');
     expect(content.close.body).toBe(
       "If you've got opinions and you're tired of shouting them into a feed that doesn't know you, take one.",
     );
-    expect(typeof content.close.footerLine).toBe('string');
+    expect(content.close.footerLine).toBe('Questions? Message @get.riffi on Instagram.');
+    // The footer names the same account the helper line promises a reply from.
+    expect(content.close.footerLine).toContain(`@${settings.instagramHandle}`);
+  });
+
+  it('seats: the founder\'s weekly ask - no fixed number, three or more appreciated (PRD input 1, answered 1 Oct 2026)', () => {
+    expect(content.seats.body).toBe(
+      'No fixed number. Post as often as you like. If you can manage three or more takes a week before launch, that helps us a lot. No calls, no contracts, no exclusivity. Keep posting wherever else you post.',
+    );
   });
 });
 
-describe('TODAY: open inputs 1 to 5 are still marked [FILL] - update deliberately, one input at a time, as the founder answers each (PRD 8 and 10)', () => {
+describe('TODAY: every open input is answered and no [FILL] marker is left (PRD 8 and 10)', () => {
   const lines = contentSource.split(/\r?\n/);
   const markers = lines
     .map((text, index) => ({ text, index, input: /\[FILL\]\s+(\d+)/.exec(text)?.[1] }))
     .filter(({ text }) => /\[\s*FILL\b/i.test(text));
-  const markersFor = (input: string) => markers.filter((marker) => marker.input === input);
-  const nextLine = (index: number): string => lines.slice(index + 1).find((line) => line.trim() !== '') ?? '';
-  const around = (index: number): string => lines.slice(Math.max(0, index - 3), index + 4).join('\n');
 
-  // 17 Sep 2026: input 5 (the handle and the live domain) and the new form link are answered, so
-  // their markers are gone. Four remain, and the rule below ties each marker to its own input.
-  it('has exactly four marker lines left: inputs 1 to 4, once each', () => {
-    expect(markers.map(({ input }) => input).sort()).toEqual(['1', '2', '3', '4']);
+  // 1 Oct 2026: the founder answered inputs 1 to 4 (input 5 and the form link on 17 Sep 2026), so
+  // every marker is gone. A new marker would need a new input here, added deliberately.
+  it('has no marker lines left', () => {
+    expect(markers).toEqual([]);
   });
 
-  it('uses "[FILL" nowhere except those four marker lines', () => {
-    expect((contentSource.match(/\[\s*FILL\b/gi) ?? []).length).toBe(4);
+  it('uses "[FILL" nowhere in the content file', () => {
+    expect((contentSource.match(/\[\s*FILL\b/gi) ?? []).length).toBe(0);
   });
 
-  it('puts every marker in a comment line, never inside a value', () => {
-    for (const { text } of markers) expect(text.trim()).toMatch(/^(?:\/\/|\/\*|\*)/);
+  it('has real text, not an empty string, behind every answered input', () => {
+    expect(content.seats.body.trim()).not.toBe('');
+    expect(content.faq.items.find((item) => item.question === 'When does Riffi launch?')?.answer.trim()).toBeTruthy();
+    expect(content.faq.items.find((item) => item.question === 'Who owns what I post?')?.answer.trim()).toBeTruthy();
+    expect(content.close.footerLine.trim()).not.toBe('');
   });
 
-  it('marks input 1 directly above the seat commitment body', () => {
-    const [marker] = markersFor('1');
-    expect(marker).toBeDefined();
-    const index = marker?.index ?? -1;
-    expect(nextLine(index)).toMatch(/\bbody\b/);
-    const opening = content.seats.body.split(/['"`\\]/)[0]?.slice(0, 16) ?? '';
-    expect(lines.slice(index + 1, index + 4).join('\n')).toContain(opening);
-  });
-
-  it('marks input 2 directly above the answer to "When does Riffi launch?"', () => {
-    const [marker] = markersFor('2');
-    expect(marker).toBeDefined();
-    expect(nextLine(marker?.index ?? -1)).toMatch(/\banswer\b/);
-    expect(around(marker?.index ?? 0)).toContain('When does Riffi launch?');
-  });
-
-  it('marks input 3 directly above the answer to "Who owns what I post?"', () => {
-    const [marker] = markersFor('3');
-    expect(marker).toBeDefined();
-    expect(nextLine(marker?.index ?? -1)).toMatch(/\banswer\b/);
-    expect(around(marker?.index ?? 0)).toContain('Who owns what I post?');
-  });
-
-  it('marks input 4 directly above the footer line', () => {
-    const [marker] = markersFor('4');
-    expect(marker).toBeDefined();
-    expect(nextLine(marker?.index ?? -1)).toMatch(/\bfooterLine\b/);
-  });
-
-  // Input 5 (the handle and the domain) was answered on 17 Sep 2026, so its markers are gone.
   // Keyed by input number rather than by looking for the settings key on the line below the
   // marker: three of the four markers sit above `body:` or `answer:`, so a name-matching version
   // of this rule would quietly pass for them however they were set.
@@ -501,7 +483,7 @@ describe('TODAY: open inputs 1 to 5 are still marked [FILL] - update deliberatel
   });
 });
 
-describe('the open inputs: four still unanswered, three settled on 17 Sep 2026 (PRD 8)', () => {
+describe('the open inputs: all seven settled - three on 17 Sep 2026, four on 1 Oct 2026 (PRD 8)', () => {
   it('has settings.inputsConfirmed with exactly the seven inputs the page depends on', () => {
     expect(Object.keys(settings.inputsConfirmed).sort()).toEqual([
       'applyFormUrl',
@@ -514,12 +496,12 @@ describe('the open inputs: four still unanswered, three settled on 17 Sep 2026 (
     ]);
   });
 
-  it('marks as confirmed only what the founder actually answered: the handle, the form and the live domain', () => {
+  it('marks every input confirmed, now that the founder has answered all of them', () => {
     expect(settings.inputsConfirmed).toStrictEqual({
-      weeklyCommitment: false,
-      launchTiming: false,
-      contentOwnership: false,
-      footerLine: false,
+      weeklyCommitment: true,
+      launchTiming: true,
+      contentOwnership: true,
+      footerLine: true,
       instagramHandle: true,
       applyFormUrl: true,
       siteUrl: true,

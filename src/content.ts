@@ -53,10 +53,11 @@ export const settings: Settings = {
   // Flip each to true only once the founder has answered that open input (PRD section 8).
   // `npm run presend` fails while any is false - deleting a placeholder comment is not an answer.
   inputsConfirmed: {
-    weeklyCommitment: false,
-    launchTiming: false,
-    contentOwnership: false,
-    footerLine: false,
+    // Answered by the founder on 1 Oct 2026.
+    weeklyCommitment: true,
+    launchTiming: true,
+    contentOwnership: true,
+    footerLine: true,
     instagramHandle: true,
     applyFormUrl: true,
     siteUrl: true,
@@ -226,8 +227,8 @@ export const content = {
   },
   seats: {
     heading: "500 seats. Here's what we ask.",
-    // [FILL] 1 - the actual weekly commitment asked of creators.
-    body: "Post three takes a week through the pre-launch period. That's the whole ask. No calls, no contracts, no exclusivity. Keep posting wherever else you post.",
+    // The founder's answer (1 Oct 2026): no fixed ask, three or more takes a week appreciated.
+    body: "No fixed number. Post as often as you like. If you can manage three or more takes a week before launch, that helps us a lot. No calls, no contracts, no exclusivity. Keep posting wherever else you post.",
     meterLabel: '500 seats in batch one',
     takenLabel: (taken: number, total: number) => `${taken} of ${total} seats taken`,
   },
@@ -256,12 +257,13 @@ export const content = {
       },
       {
         question: 'When does Riffi launch?',
-        // [FILL] 2 - launch timing. It must agree with the weekly commitment in the seats block.
-        answer: "We're in build. This cohort gets in before public launch.",
+        // The founder's answer (1 Oct 2026): the last week of October. A target, so "aiming for".
+        answer:
+          "We're aiming for the last week of October. This cohort gets in before that, so your takes are already up when everyone else arrives.",
       },
       {
         question: 'Who owns what I post?',
-        // [FILL] 3 - content ownership, confirmed against the real terms, or remove this question.
+        // The founder's answer (1 Oct 2026): creators own their posts.
         answer: 'You do. You keep the rights to your posts and you can take them anywhere.',
       },
     ],
@@ -269,7 +271,7 @@ export const content = {
   close: {
     heading: '500 seats. Batch one.',
     body: "If you've got opinions and you're tired of shouting them into a feed that doesn't know you, take one.",
-    // [FILL] 4 - the footer legal / contact line. Leave empty to show the wordmark only.
-    footerLine: '',
+    // The footer contact line, left to Claude by the founder (1 Oct 2026). Empty shows the wordmark only.
+    footerLine: 'Questions? Message @get.riffi on Instagram.',
   },
 };

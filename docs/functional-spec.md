@@ -787,10 +787,10 @@ Five items originally needed Zyra's answer. Put every one in `content.ts` with a
 
 | # | Where | What's needed | Placeholder in place | Status |
 |---|---|---|---|---|
-| 1 | Block 6 | The actual weekly commitment asked of creators | "Post three takes a week through the pre-launch period" | Still open |
-| 2 | Block 7 | Launch timing answer | "We're in build. This cohort gets in before public launch." | Still open |
-| 3 | Block 7 | Content ownership answer, confirmed against terms | "You do. You keep the rights to your posts." | Still open |
-| 4 | Block 8 | Footer legal / contact line | Wordmark only | Still open |
+| 1 | Block 6 | The actual weekly commitment asked of creators | "Post three takes a week through the pre-launch period" | **Answered 1 Oct 2026** - no fixed number; three or more takes a week before launch appreciated |
+| 2 | Block 7 | Launch timing answer | "We're in build. This cohort gets in before public launch." | **Answered 1 Oct 2026** - "We're aiming for the last week of October..." |
+| 3 | Block 7 | Content ownership answer, confirmed against terms | "You do. You keep the rights to your posts." | **Answered 1 Oct 2026** - the founder confirms creators own their posts; the wording stays |
+| 4 | Block 8 | Footer legal / contact line | Wordmark only | **Answered 1 Oct 2026** - left to Claude: "Questions? Message @get.riffi on Instagram." |
 | 5 | Global | Instagram handle for the DM link, and the deploy domain | `riffi` | **Confirmed 17 Sep 2026** - handle is `get.riffi`, domain is `https://riffi-creator-page.vercel.app` (live) |
 
 **Added 17 Sep 2026, answered the same day it appeared:** a sixth setting, `applyFormUrl` (the founder's Google Form), was never itself a `[FILL]` placeholder - the founder supplied and confirmed the real link (`https://forms.gle/chyARXHuKTiwV4Yn6`) the same day the conversion changed from a DM to a form (§5.4). `npm run presend` now lists four open items (1-4 above, each still both a `[FILL]` comment and an unconfirmed `inputsConfirmed` flag) rather than the original five.
