@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../src/App';
-import { cleanUsername } from '../src/components/blocks/Join';
+import { TRAP_FIELD, cleanUsername } from '../src/components/blocks/Join';
 import { content, settings } from '../src/content';
 import { ctaHref, formAction, formFields } from '../src/lib/cta';
 import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, SEAT_COUNT, URGENCY, sentencesOf } from './honesty-rules';
@@ -332,7 +332,7 @@ describe('#join: the details form', () => {
 
   it('hides a trap field from people and keyboards', () => {
     render(<App />);
-    const trap = section('join').querySelector<HTMLInputElement>('input[name="website"]');
+    const trap = section('join').querySelector<HTMLInputElement>(`input[name="${TRAP_FIELD}"]`);
     expect(trap).not.toBeNull();
     expect(trap?.tabIndex).toBe(-1);
     expect(trap?.closest('[aria-hidden="true"]')).not.toBeNull();
@@ -352,8 +352,28 @@ describe('#join: the details form', () => {
     expect(init.mode).toBe('no-cors');
     const sent = new URLSearchParams(String(init.body));
     for (const key of fieldKeys) expect(sent.get(formFields[key])).toBe(`value-${key}`);
-    expect(sent.has('website')).toBe(false);
+    expect(sent.has(TRAP_FIELD)).toBe(false);
     expect(screen.getByText(content.join.sentBody)).toBeInTheDocument();
+  });
+
+  it('names its bot trap something browser autofill does not know, so a real creator can never fill it by accident', () => {
+    expect(TRAP_FIELD).not.toMatch(/website|url|site|web|homepage|fax|phone|email|name|address|company|nickname/i);
+    expect(Object.values(formFields)).not.toContain(TRAP_FIELD);
+  });
+
+  it('brings the thank-you into view and moves focus onto it, so a phone user does not miss it', async () => {
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null)));
+    render(<App />);
+    fill((key) => `value-${key}`);
+    fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
+    await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
+    const panel = only(section('join'), '[role="status"]');
+    expect(document.activeElement).toBe(panel);
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'start' });
+    // @ts-expect-error - removes the stand-in so other tests see jsdom's own (missing) method
+    delete Element.prototype.scrollIntoView;
   });
 
   it('reads their own username back to them in the thank-you, without a doubled @', async () => {
@@ -414,7 +434,7 @@ describe('#join: the details form', () => {
     vi.stubGlobal('fetch', fetchMock);
     render(<App />);
     fill((key) => `value-${key}`);
-    const trap = section('join').querySelector('input[name="website"]') as HTMLInputElement;
+    const trap = section('join').querySelector(`input[name="${TRAP_FIELD}"]`) as HTMLInputElement;
     fireEvent.change(trap, { target: { value: 'https://spam.example' } });
     fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
     await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
