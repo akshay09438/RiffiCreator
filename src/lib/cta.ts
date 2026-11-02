@@ -26,22 +26,44 @@ export function whatsappHref(number: string, message: string): string {
 }
 
 /**
- * The founder's application form (17 Sep 2026). Only Google's own form hosts are accepted, so a
- * mistyped or swapped link fails the build rather than sending creators to a stranger's form.
+ * The Google Form that receives the creators' details (2 Nov 2026). Only the exact formResponse
+ * address of a Google Form is accepted, so a mistyped or swapped link fails the build rather than
+ * sending creators' phone numbers and emails somewhere else.
  */
-const FORM_HOST = /^https:\/\/(?:forms\.gle\/[A-Za-z0-9_-]{4,}|docs\.google\.com\/forms\/[\w./?=&-]+)$/;
+const FORM_RESPONSE =
+  /^https:\/\/docs\.google\.com\/forms\/d\/e\/[A-Za-z0-9_-]{20,}\/formResponse$/;
+const ENTRY_ID = /^entry\.\d{1,12}$/;
 
-export function applyFormHref(url: string): string {
-  if (!FORM_HOST.test(url)) {
+export function formResponseHref(url: string): string {
+  if (!FORM_RESPONSE.test(url)) {
     throw new Error(
-      `Invalid application form link "${url}": it must be an https link to forms.gle or docs.google.com/forms.`,
+      `Invalid form address "${url}": it must be the https://docs.google.com/forms/d/e/<id>/formResponse address of a Google Form.`,
     );
   }
   return url;
 }
 
-/** Where every "Claim a seat" button goes. A bad link fails the build instead of shipping. */
-export const ctaHref = applyFormHref(settings.applyFormUrl);
+export function formEntryId(id: string): string {
+  if (!ENTRY_ID.test(id)) {
+    throw new Error(`Invalid form field id "${id}": it must look like entry.123456789.`);
+  }
+  return id;
+}
+
+/** Where the details go. A bad address fails the build instead of shipping. */
+export const formAction = formResponseHref(settings.form.responseUrl);
+
+/** Each question's field name in the Google Form, checked once at build time. */
+export const formFields = {
+  name: formEntryId(settings.form.fields.name),
+  phone: formEntryId(settings.form.fields.phone),
+  email: formEntryId(settings.form.fields.email),
+  handle: formEntryId(settings.form.fields.handle),
+  username: formEntryId(settings.form.fields.username),
+} as const;
+
+/** The page's one conversion: every button scrolls to the details form (the #join section). */
+export const ctaHref = '#join';
 
 /** Riffi's Instagram account, still used for the reply we promise in the helper line. */
 export const instagramHref = instagramDmHref(settings.instagramHandle);

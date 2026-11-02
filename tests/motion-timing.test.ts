@@ -16,6 +16,35 @@ function animationTimes(selector: string): number[] {
   return [...(declaration?.[1] ?? '').matchAll(/(\d+)ms/g)].map((match) => Number(match[1]));
 }
 
+describe('the badge swish after the form is sent (2 Nov 2026)', () => {
+  it('plays once, in about a second, and never loops', () => {
+    const [duration] = animationTimes('.coin-swipe');
+    expect(duration).toBeGreaterThanOrEqual(800);
+    expect(duration).toBeLessThanOrEqual(1600);
+    const start = css.indexOf('.coin-swipe {');
+    const rule = css.slice(start, css.indexOf('}', start));
+    expect(rule).not.toMatch(/infinite/);
+  });
+
+  it('moves with transform and opacity only, so it never reflows the page', () => {
+    const start = css.indexOf('@keyframes coin-swipe');
+    expect(start).toBeGreaterThan(-1);
+    const end = css.indexOf('\n  }\n', css.indexOf('to {', start));
+    const frames = css.slice(start, end);
+    const properties = [...frames.matchAll(/^\s+([a-z-]+):/gm)].map((match) => match[1]);
+    expect(properties.length).toBeGreaterThan(0);
+    for (const property of properties) expect(['opacity', 'transform']).toContain(property);
+  });
+
+  it('stands still for anyone who asks for reduced motion', () => {
+    const start = css.indexOf('@media (prefers-reduced-motion: reduce) {\n    .hero-line');
+    expect(start).toBeGreaterThan(-1);
+    const block = css.slice(start, css.indexOf('}', start));
+    expect(block).toContain('.coin-swipe');
+    expect(block).toContain('animation: none');
+  });
+});
+
 describe('hero motion timing (PRD 3.5)', () => {
   it('starts the vote count exactly when the sample poll has filled', () => {
     const [duration, delay] = animationTimes(".poll[data-motion='load'] .poll-fill");

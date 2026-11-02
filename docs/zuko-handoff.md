@@ -4,26 +4,28 @@
 
 ## Last updated
 
-17 Sep 2026, about 3am. The page is built, restyled twice, repositioned for reels creators, and **live on the internet** at https://riffi-creator-page.vercel.app. The whole suite is green. Four of the founder's own answers are still missing, and the live page currently shows placeholder wording in their place, so **the link must not be sent to any creator yet**.
+2 Nov 2026. The page was rewritten for creators who are already onboarded (see "What the page is now"). Typecheck, lint, 293 tests, build, `check:dist`, budget and `presend` all pass locally. **Not yet deployed or pushed to `main`; the form has not had a real test submission.**
 
 ## In flight
 
-- Branch `feat/creator-page`, pushed to https://github.com/akshay09438/RiffiCreator (branches `main` and `feat/creator-page`). No pull request; `main` has never been merged into. The push happened at `8c7bfe8`; the handoff's own commits sit on top of it and still need pushing.
-- **Nothing is half-done in code. The suite is green** (292 tests, lint, typecheck, build, budget and the output check - evidence below).
-- **The live page carries four unanswered placeholders.** `npm run presend` refuses with eight problems: four `[FILL]` markers and four unconfirmed inputs.
-  1. The weekly ask - the page currently says "Post three takes a week through the pre-launch period."
-  2. Launch timing - "We're in build. This cohort gets in before public launch."
-  3. Who owns what a creator posts - "You do. You keep the rights to your posts and you can take them anywhere." **A rights claim nobody has checked against real terms.**
-  4. The footer legal / contact line - blank.
-- **Three stock stills are on the live page** (`public/media/sample-one|two|three.jpg`), each behind a burned-in caption, with a line under the deck saying "Stock stills and sample takes. Nobody has posted on Riffi yet, which is the point." CLAIM to re-verify: the founder said these are stock footage and that one is their own shot; nobody has seen a licence. A fourth image the founder offered - a named photographer's promo card carrying his quote - was refused, because on a recruitment page it reads as his endorsement.
+- Branch `claude/peaceful-planck-bn65fr`. Nothing is half-done in code. The founder sent the privacy line back verbatim on 2 Nov 2026, read as confirmation.
+- **The details form is new and personal data now flows through it** (email, phone). Before any creator gets the link: submit one real test entry on the built page and confirm it lands in the Google Form's responses. The form is "Riffi Creator Username"; its entry ids were read from the form's own page on 2 Nov 2026. If the form is ever edited or re-created, the ids in `settings.form.fields` change.
+- **The Form must stay open to everyone** (not "limited to users in your organisation", no sign-in required) or posts will silently fail: Google gives the page no reply to read.
+- **Open promise:** the thank-you says "Once the launch date is fixed, we'll send you an email." No address is named (founder's direction, 2 Nov 2026). The founder must actually email the creators from the form's responses.
+- `CLAUDE.md` now lists `src/lib/submit.ts` in the danger list, but `.zuko/config.json` is generated from it and was **not** regenerated here; regenerate it before relying on the hooks.
+- The Task 9 audit (Lighthouse, widths, keyboard, greyscale, reduced motion, no-JS) has not been re-run on this version.
 
 ## Do first next session
 
-1. Ask the founder for the four open answers, then update `src/content.ts`, flip each `inputsConfirmed` flag, rebuild and redeploy. Until then the live page is for the founder's eyes, not for creators.
-2. Read the final adversarial review's open findings (below) and decide which to close before the link goes out.
-3. Check whether GitHub Actions ran on the push, and whether it is green. CI has never executed before tonight.
+1. Run a real test submission and check the response sheet.
+2. Confirm the privacy line and the "we'll message you" promise with the founder.
+3. Regenerate `.zuko/config.json`, then deploy via `npm run release`.
 
-## What the page is now (17 Sep 2026)
+## What the page is now (2 Nov 2026)
+
+Short, and speaks only to onboarded creators: a thank-you hero, the launch estimate (mid-November; worst case end of November; exact date to be announced), the Founding Creator badge shown clearly (no perk, number or date named), a details form that posts to the founder's Google Form (the badge is shown beside it too), a three-question FAQ and a closing thank-you. No seat count and no "Claim a seat" any more. The notes below describe the 17 Sep 2026 version and are kept where still true (design, honesty rules, no points, no payout figure).
+
+### Earlier: the 17 Sep 2026 page
 
 Nine blocks, video first: hero, **the reels block** ("You already shoot reels. Here it's just you, talking." - three sample cards, each a stock still with the take burned in as captions, a play mark, a sample pill and a length), the typed option ("Or type it, if that's more your thing."), why here, what creators can do, the long game, 50 seats, the FAQ, the close, then the footer.
 

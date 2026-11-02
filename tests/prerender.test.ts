@@ -31,19 +31,12 @@ describe('the pre-rendered page (design option A)', () => {
     expect(siteUrl).toMatch(/^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)+$/i);
   });
 
-  it('has every heading, all three buttons and every FAQ answer before any script runs', () => {
+  it('has every heading, both buttons, the form and every FAQ answer before any script runs', () => {
     const headings = [
       ...content.hero.titleLines,
-      content.videoTakes.heading,
-      content.whatRiffiIs.heading,
-      content.whyHere.heading,
-      content.howYouEarn.heading,
-      // headingMark/headingRest: the long-game h2 now renders as two <span>s, so the full
-      // sentence never sits as one unbroken run in raw HTML - checked as one accessible name
-      // in tests/page.test.tsx (#long-game) instead.
-      content.longGame.headingMark,
-      content.longGame.headingRest,
-      content.seats.heading,
+      content.launch.heading,
+      content.badge.heading,
+      content.join.heading,
       content.faq.heading,
       content.close.heading,
     ];
@@ -51,32 +44,28 @@ describe('the pre-rendered page (design option A)', () => {
     for (const item of content.faq.items) expect(html).toContain(escaped(item.answer));
     // Pinned to the value in settings, not to ctaHref itself: comparing the link with the constant
     // the page built it from would pass no matter where the button actually pointed.
-    expect(ctaHref).toBe(settings.applyFormUrl);
-    expect(count(`href="${settings.applyFormUrl}"`)).toBe(3);
-    expect(count(escaped(content.cta.helper))).toBe(3);
+    expect(ctaHref).toBe('#join');
+    expect(count('href="#join"')).toBe(2);
+    expect(count(`action="${settings.form.responseUrl}"`)).toBe(1);
+    expect(count(escaped(content.cta.helper))).toBe(2);
     expect(html).not.toContain('ig.me');
   });
 
-  it('pre-renders every card still as a sized, lazy image from this site', () => {
-    const stills = content.videoTakes.items.flatMap((item) => ('still' in item ? [item.still] : []));
-    expect(stills.length).toBeGreaterThan(0);
-    for (const still of stills) expect(count(`src="${still}"`)).toBe(1);
-    expect(count('width="360"')).toBe(stills.length);
-    expect(count('height="640"')).toBe(stills.length);
-    expect(count('loading="lazy"')).toBe(stills.length);
+  it('pre-renders the badge as a sized, lazy image from this site, once large and once small', () => {
+    expect(count(`src="${content.badge.image}"`)).toBe(2);
+    expect(count('width="400"')).toBe(2);
+    expect(count('height="400"')).toBe(2);
+    expect(count('loading="lazy"')).toBe(2);
     expect(html).not.toMatch(/<img[^>]+src="(?:https?:)?\/\//i);
   });
 
-  it('works the FAQ without JavaScript: six native disclosures, the first one open', () => {
-    expect(count('<details')).toBe(6);
+  it('works the FAQ without JavaScript: three native disclosures, the first one open', () => {
+    expect(count('<details')).toBe(3);
     expect(count('<details open=""')).toBe(1);
   });
 
-  it('draws every poll bar at its final split in the HTML', () => {
-    const { instagram, riffi } = settings.comparisonSplit;
-    const riffiShare = Math.round((riffi / (instagram + riffi)) * 100);
+  it('draws the sample poll bar at its final split in the HTML', () => {
     expect(html).toContain('--fill:71%');
-    expect(count(`--fill:${riffiShare}%`)).toBe(content.whyHere.rows.length);
     expect(html).not.toContain('data-in-view="true"');
   });
 

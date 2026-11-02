@@ -47,6 +47,8 @@ Stop and escalate the moment you touch anything on the dangerous list (Part B), 
 
 ### What this is and why
 
+**Update 2 Nov 2026 - the page changed audience.** It no longer recruits. It now speaks only to creators who are already onboarded: thanks them for coming in early and trusting Riffi, explains the launch has been delayed to get it right, gives the estimate (mid-November, worst case end of November, exact date to be announced), asks for their details in an on-page form (name, email, phone, current Instagram/X handle, the Riffi username they want) that posts quietly to a Google Form, and teases the founding creator coin without naming it. The seat count and "Claim a seat" are gone; the sections below describe the original recruiting brief and are kept for history where they differ.
+
 One static web page for the Riffi Creator Program. Before launch, Riffi - India's platform for opinions - is recruiting 50 Instagram creators to seed it, and each one gets a personal Instagram DM from Zyra with this link. The page has one job: the creator taps it, reads for about ninety seconds, taps **Claim a seat**, and replies “I'm in” in the DM thread it opens.
 
 There is no backend, no database, no form, no login and no CMS - just honest copy, one poll-bar design device and a DM link, built mobile-first for mid-range Android phones on 4G inside Instagram's in-app browser. Fifty creators in one cohort will compare notes, so every promise on the page has to hold. It is built from the PRD saved as `docs/functional-spec.md`.
@@ -70,7 +72,7 @@ There is no backend, no database, no form, no login and no CMS - just honest cop
 - Zyra rewrites copy, answers an open [FILL] input or sets a real seat count by editing one content file; the brand-kit swap is one tokens file plus one wordmark SVG.
 
 **Non-goals (deliberately not doing):**
-- No backend, database, form, email capture, login, CMS or third-party embed - the only conversion is opening a DM.
+- No backend, database, login, CMS or third-party embed. Since 2 Nov 2026 the one conversion is the page's own details form, which posts to the founder's Google Form (`src/lib/submit.ts`) - and nothing else: no tracker, no cookie, no second form.
 - No forecasting, predictions, accuracy percentages, prediction UI, app screenshots or device mockups - the page is opinion-only and creator-only.
 - No fabricated scarcity or proof: no countdown timer, no invented seat count, no fake testimonials, logos or user counts; sample takes are always labelled as samples.
 - No published reward point values and no guaranteed-earnings language - the payout figure is always framed as an example, and future monetisation as a plan, not a contract.
@@ -118,7 +120,7 @@ Riffi/                   C:\Users\Akshay\Projects\Riffi - outside OneDrive on pu
 This page has no logins, no payments, no database and stores nothing about anyone, so the list is short. What can go wrong here is quiet: the page promises something to fifty creators who will compare notes, or its one button sends them to the wrong place. In both cases nothing errors - the page just looks fine. These are the files where that happens:
 
 - **The promise file** (`src/content.ts`) - every word on the page, plus the settings: the Instagram handle the button opens, the optional WhatsApp number, and the seat count. It is where the honesty rules live in practice: no point values, the payout figure only ever framed as an example, “a plan, not a contract”, no invented seat count. A wrong line here is a promise to fifty people that cannot be quietly taken back, and a one-letter slip in the handle sends their “I'm in” to a stranger's account.
-- **The button's link** (`src/lib/cta.ts`) - builds the Instagram DM link and the WhatsApp fallback: the page's only conversion. If it breaks, nothing errors; creators simply cannot reach you.
+- **The details form's destination** (`src/lib/cta.ts`, `src/lib/submit.ts`, `src/components/blocks/Join.tsx`) - `cta.ts` validates the Google Form address and field ids, `submit.ts` is the page's only network call, and the form carries creators' email and phone numbers: a wrong address sends them to a stranger. `cta.ts` also still builds the Instagram link and the WhatsApp fallback. If it breaks, nothing errors; creators simply cannot reach you.
 - **The page head** (`index.html`) - holds the link-preview card Instagram shows inside the DM before the page is even opened, and is where any tracking script would go. Instagram caches previews, so a broken card can stick; and any tracker other than cookieless Plausible or Umami brings consent and privacy obligations.
 - **The list of code libraries** (`package.json`) - every library added ships to a phone with a 90KB budget, and a bad or look-alike package could inject code into a page creators trust. Adding one is a decision, not a detail.
 - **Secrets** (`.env`, `.env.*`, anything named `*secret*`) - this page should have none. Anything in a `VITE_` variable is baked into the public page for anyone to read, so a key put there is a published key.
@@ -143,6 +145,7 @@ The machine-readable form below is the single source of truth the hooks and the 
     "**/*secret*",
     "src/content.ts",
     "src/lib/cta.ts",
+    "src/lib/submit.ts",
     "index.html",
     "package.json",
     "tests/**",
@@ -236,7 +239,7 @@ The machine-readable form below is the single source of truth the hooks and the 
       "Zyra rewrites copy, answers an open [FILL] input or sets a real seat count by editing one content file; the brand-kit swap is one tokens file plus one wordmark SVG."
     ],
     "nonGoals": [
-      "No backend, database, form, email capture, login, CMS or third-party embed - the only conversion is opening a DM.",
+      "No backend, database, login, CMS or third-party embed. Since 2 Nov 2026 the one conversion is the page's own details form, which posts to the founder's Google Form (`src/lib/submit.ts`) - and nothing else: no tracker, no cookie, no second form.",
       "No forecasting, predictions, accuracy percentages, prediction UI, app screenshots or device mockups - the page is opinion-only and creator-only.",
       "No fabricated scarcity or proof: no countdown timer, no invented seat count, no fake testimonials, logos or user counts; sample takes are always labelled as samples.",
       "No published reward point values and no guaranteed-earnings language - the payout figure is always framed as an example, and future monetisation as a plan, not a contract.",
@@ -264,6 +267,10 @@ The machine-readable form below is the single source of truth the hooks and the 
         "reversibilityClass": "reversible"
       },
       "src/lib/cta.ts": {
+        "sensitivity": "user-data",
+        "reversibilityClass": "reversible"
+      },
+      "src/lib/submit.ts": {
         "sensitivity": "user-data",
         "reversibilityClass": "reversible"
       },
@@ -361,10 +368,10 @@ Missing or unknown values are scored to the **maximum** (most cautious), so an u
 - **Instagram's in-app browser is the real runtime, not Chrome.** Use `100dvh`, never `100vh`; no exotic browser APIs; keep JS tiny; nothing may depend on browser chrome. Check 320px and the PRD's device sizes.
 - **Brand values live only in `src/styles/tokens.css`.** No hex value or font name anywhere else, and no Tailwind arbitrary colours like `bg-[#3B6EF3]` - the coming brand-kit swap must be a one-file edit.
 - **User-facing strings live only in `src/content.ts`.** No hardcoded copy in any `.tsx` file - Zyra rewrites copy without touching components, and the `[FILL]` inputs stay one greppable list.
-- **Motion is CSS-only: one hero moment and two scroll reveals, nothing else.** No Framer Motion or other animation library, and no fade-and-slide-up entrances on every section (the PRD calls that the clearest tell of a generated page). `prefers-reduced-motion` gets a complete, static page.
+- **Motion is CSS-only: one hero moment, two scroll reveals and (since 2 Nov 2026, founder's request) one post-submit moment - the badge swishes into the middle of the green box once the details are sent - nothing else.** No Framer Motion or other animation library, and no fade-and-slide-up entrances on every section (the PRD calls that the clearest tell of a generated page). `prefers-reduced-motion` gets a complete, static page.
 - **The PRD's design direction (functional spec, section 3) beats generic design advice,** including the ui-ux-pro-max skill: no gradients, glassmorphism, dark mode, cream background, centred hero, all-caps eyebrow labels, or arrows on buttons.
 - **Never render an invented number.** With `seats.taken` null or `seats.show` false, no seat count appears anywhere; no reward point values anywhere; the ₹ payout figure is framed as an example in the same sentence.
-- **No `<form>`, email capture or third-party embed.** The conversion is a DM link; a form would be a new dangerous surface, not a quick add.
+- **One form, and only one.** Since 2 Nov 2026 the page has a single `<form>` (`src/components/blocks/Join.tsx`) that posts to the founder's Google Form through `src/lib/submit.ts` - the only file allowed to call `fetch` (the eslint exception and `tests/submit.test.ts` pin that). It collects personal data (email, phone), so a second form, a different destination, a tracker or any new network call is a new dangerous surface: stop and ask.
 - **Not Next.js.** One static page - do not “upgrade” it to a framework with routing or server rendering.
 - **Fonts are self-hosted with `@fontsource-variable`** - never swap in Google Fonts. No Devanagari: the chosen faces do not cover it.
 - **The name is Riffi** (founder-confirmed 14 Sep 2026). The original PRD spells it Rifii - never copy that spelling back. The Instagram handle is still an open `[FILL]` input: never treat the placeholder as the real account.
