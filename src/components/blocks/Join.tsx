@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { content } from '../../content';
 import { formAction, formFields } from '../../lib/cta';
 import { submitDetails } from '../../lib/submit';
@@ -7,6 +7,9 @@ import { Section } from '../primitives/Section';
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 const FIELD_ORDER = ['name', 'email', 'phone', 'handle', 'username'] as const;
+
+/** The hidden bot trap's field name. Exported so tests use the same one. */
+export const TRAP_FIELD = 'extra_notes_hp';
 
 /** The username as they typed it, without a leading @ or stray spaces, and short enough to sit on one card. */
 export function cleanUsername(raw: string): string {
@@ -23,17 +26,29 @@ export function Join() {
   const block = content.join;
   const [status, setStatus] = useState<Status>('idle');
   const [username, setUsername] = useState('');
+  const sent = useRef<HTMLDivElement>(null);
+
+  // The form is much taller than the thank-you that replaces it, so on a phone the panel can end up
+  // partly off screen. Bring it into view and move keyboard and screen-reader focus onto it, so the
+  // coin's swish and the message are not missed.
+  useEffect(() => {
+    if (status !== 'sent') return;
+    sent.current?.scrollIntoView?.({ block: 'start' });
+    sent.current?.focus({ preventScroll: true });
+  }, [status]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
-    // A person never sees the trap field; a bot fills it. Pretend it worked and send nothing.
-    if (data.get('website')) {
+    // A person never sees the trap field; a bot fills it. Pretend it worked and send nothing. Its name
+    // is deliberately not one a browser's autofill knows (such as "website"), so a real creator's
+    // autofill can never fill it and quietly lose their details.
+    if (data.get(TRAP_FIELD)) {
       setStatus('sent');
       return;
     }
-    data.delete('website');
+    data.delete(TRAP_FIELD);
     // Read back to them in the thank-you; kept only in this browser tab's memory.
     setUsername(cleanUsername(String(data.get(formFields.username) ?? '')));
     setStatus('sending');
@@ -50,7 +65,12 @@ export function Join() {
     // as it does in the app, and settles in the middle above the message (2 Nov 2026).
     return (
       <Section id="join" tone="recess" belowFold>
-        <div role="status" className="coin-stage flex flex-col items-center text-center">
+        <div
+          ref={sent}
+          role="status"
+          tabIndex={-1}
+          className="coin-stage flex scroll-mt-4 flex-col items-center text-center outline-none lg:scroll-mt-24"
+        >
           <img
             src={content.badge.image}
             alt={content.join.badgeAlt}
@@ -128,7 +148,7 @@ export function Join() {
             })}
             {/* The trap field: off-screen, skipped by keyboards and screen readers. */}
             <div aria-hidden="true" className="trap">
-              <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+              <input type="text" name={TRAP_FIELD} tabIndex={-1} autoComplete="off" />
             </div>
             <p className="text-meta text-ink-soft sm:col-span-2">{block.privacy}</p>
             {status === 'error' ? (
