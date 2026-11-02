@@ -39,76 +39,85 @@ export function Join() {
 
   return (
     <Section id="join" tone="recess" belowFold>
-      <div className="max-w-[34rem]">
-        <div className="flex items-center gap-4">
-          {/* The badge beside the form: decorative, because the note next to it says it in words. */}
-          <img
-            src={content.badge.image}
-            alt={content.join.badgeAlt}
-            width={400}
-            height={400}
-            loading="lazy"
-            decoding="async"
-            className="badge-coin-small"
-          />
-          <div>
-            <h2 id="join-heading" className="font-display text-display-l font-bold">
-              {block.heading}
-            </h2>
-            <p className="mt-2 text-body-l text-ink">{block.lead}</p>
-          </div>
-        </div>
-        <p className="mt-4 text-body font-semibold text-ink">{block.badgeNote}</p>
-        {status === 'sent' ? (
-          <div role="status" className="feature-card mt-8">
-            <p className="font-display text-body-l font-bold text-ink">{block.sentHeading}</p>
-            <p className="mt-2 text-body text-ink-soft">{block.sentBody}</p>
-          </div>
-        ) : (
-          <form
-            action={formAction}
-            method="post"
-            onSubmit={onSubmit}
-            className="mt-8 grid gap-5"
-          >
-            {FIELD_ORDER.map((key) => {
-              const field = block.fields[key];
-              return (
-                <label key={key} className="grid gap-2 text-body font-semibold text-ink">
-                  {field.label}
-                  <input
-                    className="field"
-                    type={field.type}
-                    name={formFields[key]}
-                    autoComplete={field.autoComplete}
-                    placeholder={field.placeholder || undefined}
-                    required
-                    maxLength={120}
-                  />
-                </label>
-              );
-            })}
-            {/* The trap field: off-screen, skipped by keyboards and screen readers. */}
-            <div aria-hidden="true" className="trap">
-              <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-            </div>
-            <p className="text-meta text-ink-soft">{block.privacy}</p>
-            {status === 'error' ? (
-              <p role="alert" className="text-body font-semibold text-ink">
-                {block.error}
-              </p>
-            ) : null}
+      {/* Two columns from a laptop up, like the other blocks: the badge and heading on the left, the
+          form on the right. On a phone everything stacks and the coin sits beside the heading. */}
+      <div className="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12">
+        <div className="lg:col-span-5">
+          <div className="flex items-center gap-4 lg:flex-col lg:items-start lg:gap-6">
+            {/* Decorative: the note below says the same thing in words. */}
+            <img
+              src={content.badge.image}
+              alt={content.join.badgeAlt}
+              width={400}
+              height={400}
+              loading="lazy"
+              decoding="async"
+              className="badge-coin-small"
+            />
             <div>
-              <button
-                type="submit"
-                disabled={status === 'sending'}
-                className="bg-ink text-paper cta-sticker inline-flex min-h-11 items-center justify-center rounded-pill px-8 py-3 text-body-l font-bold"
-              >
-                {status === 'sending' ? block.sending : block.submit}
-              </button>
+              <h2 id="join-heading" className="font-display text-display-l font-bold">
+                {block.heading}
+              </h2>
+              <p className="mt-2 text-body-l text-ink">{block.lead}</p>
             </div>
-          </form>
-        )}
+          </div>
+          <p className="mt-4 text-body font-semibold text-ink">{block.badgeNote}</p>
+        </div>
+        <div className="lg:col-span-7">
+          {status === 'sent' ? (
+            <div role="status" className="feature-card">
+              <p className="font-display text-body-l font-bold text-ink">{block.sentHeading}</p>
+              <p className="mt-2 text-body text-ink-soft">{block.sentBody}</p>
+            </div>
+          ) : (
+            <form
+              action={formAction}
+              method="post"
+              onSubmit={onSubmit}
+              className="grid gap-5 sm:grid-cols-2"
+            >
+              {FIELD_ORDER.map((key) => {
+                const field = block.fields[key];
+                return (
+                  <label
+                    key={key}
+                    className={`grid gap-2 text-body font-semibold text-ink ${key === 'username' ? 'sm:col-span-2' : ''}`}
+                  >
+                    {field.label}
+                    <input
+                      className="field"
+                      type={field.type}
+                      name={formFields[key]}
+                      autoComplete={field.autoComplete}
+                      placeholder={field.placeholder || undefined}
+                      required
+                      maxLength={120}
+                    />
+                  </label>
+                );
+              })}
+              {/* The trap field: off-screen, skipped by keyboards and screen readers. */}
+              <div aria-hidden="true" className="trap">
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+              </div>
+              <p className="text-meta text-ink-soft sm:col-span-2">{block.privacy}</p>
+              {status === 'error' ? (
+                <p role="alert" className="text-body font-semibold text-ink sm:col-span-2">
+                  {block.error}
+                </p>
+              ) : null}
+              <div className="sm:col-span-2">
+                <button
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="bg-ink text-paper cta-sticker inline-flex min-h-11 items-center justify-center rounded-pill px-8 py-3 text-body-l font-bold"
+                >
+                  {status === 'sending' ? block.sending : block.submit}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
     </Section>
   );

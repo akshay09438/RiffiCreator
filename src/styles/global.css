@@ -320,7 +320,7 @@
   /* The details form: drawn inputs in the same sticker language. 16px type stops phones zooming in. */
   .field {
     width: 100%;
-    min-height: 48px;
+    min-height: 44px;
     border: var(--edge-width) solid var(--edge);
     border-radius: var(--corner-take);
     background-color: var(--paper);
@@ -329,7 +329,7 @@
     font: inherit;
     font-size: 16px;
     font-weight: 500;
-    padding: 10px 14px;
+    padding: 8px 14px;
   }
 
   .field::placeholder {
@@ -360,6 +360,12 @@
     flex-shrink: 0;
     width: clamp(64px, 20vw, 96px);
     height: auto;
+  }
+
+  @media (min-width: 64rem) {
+    .badge-coin-small {
+      width: 150px;
+    }
   }
 
   /* The one moment of pure typographic scale on the page (PRD Block 6). */
