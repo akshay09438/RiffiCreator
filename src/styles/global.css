@@ -1,0 +1,454 @@
+@import 'tailwindcss' source('../');
+@import './tokens.css';
+
+/* Only the brand's own colours and typefaces exist as utilities, so there is no stray palette. */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-recess: var(--recess);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-signal: var(--signal);
+  --color-take: var(--take);
+  --color-chip-blue-bg: var(--chip-blue-bg);
+  --color-chip-blue-ink: var(--chip-blue-ink);
+  --color-chip-butter-bg: var(--chip-butter-bg);
+  --color-chip-butter-ink: var(--chip-butter-ink);
+  --color-chip-coral-bg: var(--chip-coral-bg);
+  --color-chip-coral-ink: var(--chip-coral-ink);
+  --color-hairline: var(--hairline);
+  --color-on-ink-body: var(--on-ink-body);
+  --color-on-ink-meta: var(--on-ink-meta);
+  --color-lime: var(--lime);
+  --color-flare: var(--flare);
+  --color-edge: var(--edge);
+  --color-grid-line: var(--grid-line);
+
+  --default-font-family: var(--typeface-body);
+  --font-display: var(--typeface-display);
+  --font-body: var(--typeface-body);
+
+  --radius-take: var(--corner-take);
+  --radius-pill: var(--corner-pill);
+  --radius-panel: var(--corner-panel);
+  --shadow-take: var(--lift-take);
+  --shadow-sticker: var(--lift-sticker);
+  --shadow-sticker-sm: var(--lift-sticker-sm);
+  --shadow-cta: var(--lift-cta);
+}
+
+/* Type scale from 360px to 1280px through clamp(), so in-between widths look intentional (PRD 3.3). */
+@theme {
+  /* Stepped down on 16 Sep 2026: the founder's longer second line pushed "Claim a seat" off the
+     first screen at 320x640 and 1440x900 at the old size. */
+  --text-display-xl: clamp(2.25rem, 1.4675rem + 3.478vw, 4.25rem);
+  --text-display-xl--line-height: 1;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-l: clamp(1.875rem, 1.435rem + 1.957vw, 3rem);
+  --text-display-l--line-height: 1.02;
+  --text-display-l--letter-spacing: -0.02em;
+  --text-display-m: clamp(1.375rem, 1.228rem + 0.652vw, 1.75rem);
+  --text-display-m--line-height: 1.02;
+  --text-display-m--letter-spacing: -0.02em;
+  --text-body-l: clamp(1.125rem, 1.076rem + 0.217vw, 1.25rem);
+  --text-body-l--line-height: 1.55;
+  --text-body: clamp(1.0625rem, 1.038rem + 0.109vw, 1.125rem);
+  --text-body--line-height: 1.55;
+  --text-meta: clamp(0.8125rem, 0.788rem + 0.109vw, 0.875rem);
+  --text-meta--line-height: 1.4;
+}
+
+@layer base {
+  html {
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--paper);
+    /* A faint drawing-board grid: two 1px lines, no image file, so it costs the page nothing. */
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 44px 44px;
+    color: var(--ink);
+    font-family: var(--typeface-body);
+    font-size: var(--text-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    touch-action: manipulation;
+  }
+
+  /* PRD 7: a visible 2px --signal focus ring with a 2px offset, never removed. */
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Below-the-fold sections skip rendering work until they near the viewport (PRD 7). */
+  .below-fold {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
+
+  /*
+   * The sticker layer (founder's direction, 16 Sep 2026): a drawn edge and a hard offset shadow.
+   * `panel` is a whole section's coloured block, `sticker` a small object (chips), `cta-sticker` the
+   * button, whose shadow is the signal blue rather than ink.
+   */
+  .panel {
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-panel);
+    box-shadow: var(--lift-sticker);
+  }
+
+  /* Dividers inside a coloured panel need a darker line than the one that works on white. */
+  .panel:not(.bg-ink) {
+    --hairline: var(--hairline-on-panel);
+  }
+
+  .sticker {
+    border: var(--edge-width) solid var(--edge);
+    box-shadow: var(--lift-sticker-sm);
+  }
+
+  .cta-sticker {
+    border: var(--edge-width) solid var(--edge);
+    box-shadow: var(--lift-cta);
+  }
+
+  /* Hover lift belongs only to take cards, and only on pointer devices (PRD 3.5). */
+  .take-card {
+    border: var(--edge-width) solid var(--edge);
+    box-shadow: var(--lift-sticker);
+    transition: transform 200ms ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .take-card:hover {
+      transform: translateY(-4px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .take-card {
+      transition: none;
+    }
+
+    .take-card:hover {
+      transform: none;
+    }
+  }
+}
+
+@layer components {
+  .poll-track {
+    display: flex;
+    height: 44px;
+    overflow: hidden;
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-pill);
+    background-color: var(--chip-coral-bg);
+  }
+
+  @media (min-width: 64rem) {
+    .poll-track {
+      height: 52px;
+    }
+  }
+
+  .poll-fill {
+    width: var(--fill);
+    height: 100%;
+    background-color: var(--signal);
+  }
+
+  /* A right-side fill grows from the right edge: the comparison rows' Riffi side (PRD Block 3).
+     direction: rtl pins the fill's start edge on the right, so growing it is not a layout shift;
+     flex-direction: row-reverse would move its left edge every frame, which counts as CLS. */
+  .poll[data-fill='right'] .poll-track {
+    direction: rtl;
+  }
+
+  /* The seat meter's empty track is an outline on the recess band, not a coral "no" side. */
+  .poll[data-variant='meter'] .poll-track {
+    background-color: var(--paper);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  /* Motion moment 1 (PRD 3.5): the hero sample fills from zero once the headline has risen. */
+  @keyframes poll-fill-in {
+    from {
+      width: 0;
+    }
+  }
+
+  .poll[data-motion='load'] .poll-fill {
+    animation: poll-fill-in 900ms cubic-bezier(0.22, 1, 0.36, 1) 420ms both;
+  }
+
+  /*
+   * Moments 2 and 3: the comparison rows and the seat meter fill when scrolled into view. With no
+   * JavaScript at all there is no `js` class, so the bars simply render full. If the inline script
+   * ran but the bundle never did (no `app-ready`), a failsafe fills them after 6 seconds.
+   */
+  .js .poll[data-motion='view'] .poll-fill {
+    width: 0;
+    transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1) var(--stagger);
+  }
+
+  .js .poll[data-motion='view'][data-in-view='true'] .poll-fill {
+    width: var(--fill);
+  }
+
+  @keyframes poll-failsafe {
+    to {
+      width: var(--fill);
+    }
+  }
+
+  .js:not(.app-ready) .poll[data-motion='view'] .poll-fill {
+    animation: poll-failsafe 1ms linear 6s forwards;
+  }
+
+  /* One selector per motion rule, each at least as specific as the rule it switches off. */
+  @media (prefers-reduced-motion: reduce) {
+    .poll .poll-fill,
+    .poll[data-motion='load'] .poll-fill,
+    .js .poll[data-motion='view'] .poll-fill,
+    .js:not(.app-ready) .poll[data-motion='view'] .poll-fill {
+      width: var(--fill);
+      animation: none;
+      transition: none;
+    }
+  }
+}
+
+@layer components {
+  /* The header's hairline appears once the page scrolls, where the browser supports scroll timelines. */
+  @keyframes nav-hairline {
+    to {
+      box-shadow: 0 1px 0 var(--hairline);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    @supports (animation-timeline: scroll()) {
+      .nav {
+        animation: nav-hairline linear both;
+        animation-timeline: scroll();
+        animation-range: 0 48px;
+      }
+    }
+
+    @supports not (animation-timeline: scroll()) {
+      .nav {
+        box-shadow: 0 1px 0 var(--hairline);
+      }
+    }
+  }
+
+  /* The headline is pushed toward the expanded end of the display face's width axis (PRD 3.3).
+     115% keeps "On Instagram" on one line in the desktop text column. It carries its own stand-in
+     font (tokens.css), matched to that width, so the headline keeps its line breaks when the real
+     font arrives and the page does not jump. */
+  .hero-title {
+    font-family: var(--typeface-display-wide);
+    font-stretch: 115%;
+  }
+
+  /* Motion moment 1 (PRD 3.5): the headline lines rise in sequence. Transform only, so the
+     headline is never invisible and LCP is not delayed. */
+  @keyframes hero-rise {
+    from {
+      transform: translateY(0.32em);
+    }
+  }
+
+  .hero-line {
+    animation: hero-rise 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* The marker sweep behind the second headline line: it hugs the words on every wrapped line. */
+  /* Painted as a sized background, not a padded background colour: at line-height 1 the inline box
+     is about 1.19em tall, so each wrapped fragment's colour would paint over the descenders of the
+     line above (the y in "you're", the comma in "first,"). A background of a fixed height sits
+     inside the line box instead, which keeps the line breaks and the zero layout shift. */
+  .hero-mark {
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding-block: 0;
+    padding-inline: 0.12em;
+    background-image: linear-gradient(var(--flare), var(--flare));
+    background-repeat: no-repeat;
+    background-size: 100% 1.02em;
+    background-position: 0 0.04em;
+  }
+
+  .hero-line + .hero-line {
+    animation-delay: 60ms;
+  }
+
+  /* The vote count appears once the sample poll has filled; JavaScript ticks its number up. */
+  @keyframes vote-count-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .vote-count {
+    animation: vote-count-in 240ms ease-out 1320ms both;
+  }
+
+  /* The features grid: each way of posting as its own small card on the panel. */
+  .feature-card {
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-take);
+    background-color: var(--paper);
+    box-shadow: var(--lift-sticker-sm);
+    padding: 16px 18px 18px;
+  }
+
+
+  /* The details form: drawn inputs in the same sticker language. 16px type stops phones zooming in. */
+  .field {
+    width: 100%;
+    min-height: 44px;
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-take);
+    background-color: var(--paper);
+    box-shadow: var(--lift-sticker-sm);
+    color: var(--ink);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 14px;
+  }
+
+  .field::placeholder {
+    color: var(--ink-soft);
+  }
+
+  .field:focus-visible {
+    outline: 3px solid var(--signal);
+    outline-offset: 2px;
+  }
+
+  /* A trap for bots: out of sight and out of the tab order, but still in the page. */
+  .trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* The badge is a still: no motion. The big one stands alone; the small one sits beside the form. */
+  .badge-coin {
+    width: clamp(160px, 44vw, 260px);
+    height: auto;
+  }
+
+  .badge-coin-small {
+    flex-shrink: 0;
+    width: clamp(64px, 20vw, 96px);
+    height: auto;
+  }
+
+  /*
+   * After the details are sent: the badge swishes up from the lower left of the green box, spinning
+   * the way it does in the app, and settles in the middle. Transform and opacity only, once, and
+   * never on the page's first paint. The stage clips sideways so the sweep cannot widen the page.
+   */
+  .coin-stage {
+    overflow-x: clip;
+    perspective: 900px;
+  }
+
+  .coin-swipe {
+    width: clamp(150px, 42vw, 240px);
+    height: auto;
+    animation: coin-swipe 1300ms cubic-bezier(0.18, 0.85, 0.25, 1) both;
+  }
+
+  @keyframes coin-swipe {
+    from {
+      opacity: 0;
+      transform: translate(-60vw, 70%) rotate(-28deg) rotateY(-120deg) scale(0.6);
+    }
+
+    25% {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(0, 0) rotate(0deg) rotateY(360deg) scale(1);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .badge-coin-small {
+      width: 150px;
+    }
+  }
+
+  /* FAQ: native disclosures with the marker replaced by a rotating plus. */
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-icon {
+    transition: rotate 200ms ease-out;
+  }
+
+  .faq details[open] .faq-icon {
+    rotate: 45deg;
+  }
+
+  /* The answer's height animates where the browser supports it; elsewhere it simply appears. */
+  @supports (interpolate-size: allow-keywords) {
+    .faq details {
+      interpolate-size: allow-keywords;
+    }
+
+    .faq details::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size 240ms ease-out,
+        content-visibility 240ms allow-discrete;
+    }
+
+    .faq details[open]::details-content {
+      block-size: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-line,
+    .vote-count,
+    .coin-swipe {
+      animation: none;
+    }
+
+    @media (min-width: 64rem) {
+      .nav {
+        animation: none;
+        box-shadow: 0 1px 0 var(--hairline);
+      }
+    }
+
+    .faq-icon,
+    .faq details::details-content {
+      transition: none;
+    }
+  }
+}
