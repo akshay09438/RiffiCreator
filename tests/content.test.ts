@@ -203,16 +203,26 @@ describe('copy matches the PRD word for word', () => {
     });
   });
 
-  it('launch: an estimate, a worst case and a date still to be announced - never a promise', () => {
-    expect(content.launch.heading).toBe('Mid-November, we think.');
-    expect(content.launch.timeline).toEqual([
-      { label: 'Our estimate', value: 'Mid-November' },
-      { label: 'Worst case', value: 'End of November' },
-      { label: 'Exact date', value: 'To be announced' },
+  it('perks: three at launch and two soon, in the founder\'s own words, framed as a plan', () => {
+    expect(content.perks.heading).toBe("What's waiting for you.");
+    expect(content.perks.lead).toBe('Everything below comes with being first in.');
+    expect(content.perks.items).toEqual([
+      { label: 'Boosted reach on your posts', when: 'At launch' },
+      { label: 'A direct line to the Riffi team', when: 'At launch' },
+      { label: 'Early access to new features', when: 'At launch' },
+      { label: 'First pick of the brand deals', when: 'Soon' },
+      { label: 'First in line for creator earnings', when: 'Soon' },
     ]);
-    expect(content.launch.framing).toBe(
-      "Estimates, not promises. You'll get the exact date as soon as we're sure.",
-    );
+    expect(content.perks.framing).toBe('"Soon" is our plan, not a contract.');
+    // Riffi has not launched, so nothing may be called "Live" (the app's own word for it).
+    expect(JSON.stringify(content.perks)).not.toMatch(/\blive\b/i);
+    expect(JSON.stringify(content.perks)).not.toMatch(/\d/);
+  });
+
+  it('the exact launch dates now live only in the hero and the FAQ, not in a block of their own', () => {
+    expect(content).not.toHaveProperty('launch');
+    expect(content.hero.subline).toContain('mid-November');
+    expect(content.faq.items[0]?.answer).toContain('mid-November');
   });
 
   // 2 Nov 2026: the badge went from a blurred teaser to a clear picture, because the founder wanted
@@ -244,6 +254,8 @@ describe('copy matches the PRD word for word', () => {
       "Your details are with us. Once the launch date is fixed, we'll send you an email.",
     );
     expect(content.join.sentBody).not.toMatch(/@|\.com|\bget\.riffi\b/i);
+    // Their own username is read back to them, and nothing else is invented around it.
+    expect(content.join.sentHolding('riffi_fan')).toBe("We're holding @riffi_fan for you.");
   });
 
   it('FAQ: heading and the three questions, in order', () => {
@@ -290,7 +302,7 @@ describe('TODAY: every open input is answered and no [FILL] marker is left (PRD 
   });
 
   it('has real text, not an empty string, behind every answered input', () => {
-    expect(content.launch.framing.trim()).not.toBe('');
+    expect(content.perks.framing.trim()).not.toBe('');
     expect(content.faq.items.find((item) => item.question === 'When does Riffi launch?')?.answer.trim()).toBeTruthy();
     expect(content.faq.items.find((item) => item.question === 'Who owns what I post?')?.answer.trim()).toBeTruthy();
     expect(content.close.footerLine.trim()).not.toBe('');

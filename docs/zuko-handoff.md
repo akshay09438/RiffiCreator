@@ -23,7 +23,7 @@
 
 ## What the page is now (2 Nov 2026)
 
-Short, and speaks only to onboarded creators: a thank-you hero, the launch estimate (mid-November; worst case end of November; exact date to be announced), the Founding Creator badge shown clearly (no perk, number or date named), a details form that posts to the founder's Google Form (the badge is shown beside it too), a three-question FAQ and a closing thank-you. No seat count and no "Claim a seat" any more. The notes below describe the 17 Sep 2026 version and are kept where still true (design, honesty rules, no points, no payout figure).
+Short, and speaks only to onboarded creators: a thank-you hero with the launch estimate in its line (mid-November; end of November at worst), the Founding Creator badge shown clearly, a "What's waiting for you." block of five perks (three "At launch", two "Soon"), a details form that posts to the founder's Google Form (the badge is shown beside it too), a three-question FAQ and a closing thank-you. No seat count and no "Claim a seat" any more. The notes below describe the 17 Sep 2026 version and are kept where still true (design, honesty rules, no points, no payout figure).
 
 ### Earlier: the 17 Sep 2026 page
 

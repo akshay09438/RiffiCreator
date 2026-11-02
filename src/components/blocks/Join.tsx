@@ -8,6 +8,11 @@ type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 const FIELD_ORDER = ['name', 'email', 'phone', 'handle', 'username'] as const;
 
+/** The username as they typed it, without a leading @ or stray spaces, and short enough to sit on one card. */
+export function cleanUsername(raw: string): string {
+  return raw.trim().replace(/^@+/, '').trim().slice(0, 40);
+}
+
 /**
  * Block 7: the details form. Without JavaScript it is a plain POST to the Google Form, so it still
  * works; with JavaScript the answers are sent quietly and the creator never leaves the page. Google
@@ -17,6 +22,7 @@ const FIELD_ORDER = ['name', 'email', 'phone', 'handle', 'username'] as const;
 export function Join() {
   const block = content.join;
   const [status, setStatus] = useState<Status>('idle');
+  const [username, setUsername] = useState('');
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -28,6 +34,8 @@ export function Join() {
       return;
     }
     data.delete('website');
+    // Read back to them in the thank-you; kept only in this browser tab's memory.
+    setUsername(cleanUsername(String(data.get(formFields.username) ?? '')));
     setStatus('sending');
     try {
       await submitDetails(new URLSearchParams(data as never));
@@ -54,7 +62,12 @@ export function Join() {
           <h2 id="join-heading" className="mt-6 font-display text-display-l font-bold">
             {block.sentHeading}
           </h2>
-          <p className="mt-3 max-w-[30rem] text-body-l text-ink">{block.sentBody}</p>
+          {username ? (
+            <p className="feature-card mt-4 max-w-full break-words font-display text-body-l font-bold text-ink">
+              {block.sentHolding(username)}
+            </p>
+          ) : null}
+          <p className="mt-4 max-w-[30rem] text-body-l text-ink">{block.sentBody}</p>
         </div>
       </Section>
     );
