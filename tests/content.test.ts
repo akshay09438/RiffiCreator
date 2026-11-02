@@ -169,10 +169,11 @@ describe('the call-to-action copy', () => {
     expect(content.cta.label).toBe('Send your details');
   });
 
-  // 2 Nov 2026: the button scrolls to the form, and the helper line names the account that replies.
-  it('builds the helper line from the handle in settings, and promises the form the button leads to', () => {
-    expect(content.cta.helper).toBe(`About a minute. We reply from @${settings.instagramHandle}`);
-    expect(content.cta.helper).toContain(`@${settings.instagramHandle}`);
+  // 2 Nov 2026: the button scrolls to the form. The founder asked for the helper line to name no
+  // account, so it only says how long the form takes.
+  it('says only how long the form takes, and names no account', () => {
+    expect(content.cta.helper).toBe('About a minute.');
+    expect(content.cta.helper).not.toMatch(/@|\.com|get\.riffi/i);
   });
 
   it('labels the WhatsApp fallback "Or message us on WhatsApp"', () => {
