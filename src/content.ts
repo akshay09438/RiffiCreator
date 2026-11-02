@@ -77,7 +77,8 @@ export const content = {
   },
   cta: {
     label: 'Send your details',
-    helper: `About a minute. We reply from @${settings.instagramHandle}`,
+    // No account is named here (founder's direction, 2 Nov 2026).
+    helper: 'About a minute.',
     whatsappLabel: 'Or message us on WhatsApp',
   },
   hero: {

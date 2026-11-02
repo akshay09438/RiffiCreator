@@ -186,13 +186,13 @@ describe('the call to action (PRD 5.4, design 4)', () => {
   });
 
   it.each(['hero', 'close'])(
-    'shows the helper line in #%s, naming the handle that replies and leading to the form',
+    'shows the helper line in #%s, naming no account, next to the link that leads to the form',
     (id) => {
       const block = section(id);
       const helper = within(block).getByText(content.cta.helper);
       const link = within(block).getByRole('link', { name: content.cta.label });
-      const shownHandle = /@([A-Za-z0-9._]+)$/.exec(normalize(helper.textContent))?.[1];
-      expect(shownHandle).toBe(settings.instagramHandle);
+      expect(normalize(helper.textContent)).toBe('About a minute.');
+      expect(normalize(helper.textContent)).not.toContain('@');
       expect(link.getAttribute('href')).toBe('#join');
     },
   );

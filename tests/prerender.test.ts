@@ -47,7 +47,8 @@ describe('the pre-rendered page (design option A)', () => {
     expect(ctaHref).toBe('#join');
     expect(count('href="#join"')).toBe(2);
     expect(count(`action="${settings.form.responseUrl}"`)).toBe(1);
-    expect(count(escaped(content.cta.helper))).toBe(2);
+    // The exact helper line under each button; the form's own lead also contains the same words.
+    expect(count(`>${escaped(content.cta.helper)}<`)).toBe(2);
     expect(html).not.toContain('ig.me');
   });
 

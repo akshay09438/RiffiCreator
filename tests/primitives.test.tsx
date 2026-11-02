@@ -33,7 +33,7 @@ describe('Chip', () => {
 
 describe('CtaButton', () => {
   it.each(['dark', 'light'] as const)(
-    'the %s button jumps to the details form on the same page and names the handle that replies',
+    'the %s button jumps to the details form on the same page and shows how long it takes',
     (variant) => {
       render(<CtaButton variant={variant} />);
       const link = screen.getByRole('link', { name: content.cta.label });
