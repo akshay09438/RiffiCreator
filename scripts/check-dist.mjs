@@ -1,5 +1,7 @@
 // Output check on the production build (PRD 5.4, 5.6, 7): the built page may load only its own files,
-// may link out only to Instagram and WhatsApp, has one form that posts only to a Google Form, and points its preview card at a real URL.
+// may link out only to Instagram and WhatsApp, has one form that posts only to a Google Form, matches the
+// security headers in vercel.json, and points its preview card at a real URL.
+import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
@@ -51,6 +53,34 @@ for (const tag of forms) {
   if (!/^https:\/\/docs\.google\.com\/forms\/d\/e\/[A-Za-z0-9_-]{20,}\/formResponse$/.test(action)) {
     problems.push(`a <form> posts to "${action}" - it may post only to a Google Form's formResponse address`);
   }
+}
+
+// The security headers in vercel.json (2 Nov 2026). The policy must let the page's own inline script run
+// (by fingerprint, never 'unsafe-inline') and must allow exactly one outside address: the Google Form.
+// Without this check a changed inline script would be silently blocked on the live site.
+try {
+  const config = JSON.parse(readFileSync('vercel.json', 'utf8'));
+  const everywhere = (config.headers ?? []).find((rule) => rule.source === '/(.*)');
+  const header = (key) => everywhere?.headers?.find((item) => item.key === key)?.value ?? '';
+  const policy = header('Content-Security-Policy');
+  const directive = (name) => policy.split(';').map((part) => part.trim()).find((part) => part.startsWith(`${name} `)) ?? '';
+  if (!policy) problems.push('vercel.json has no Content-Security-Policy on /(.*)');
+  const scripts = directive('script-src');
+  if (/'unsafe-inline'|'unsafe-eval'/.test(scripts)) problems.push("the script-src policy allows 'unsafe-inline' or 'unsafe-eval'");
+  for (const [, attributes, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    if (/\ssrc=/.test(attributes)) continue;
+    const fingerprint = `'sha256-${createHash('sha256').update(body).digest('base64')}'`;
+    if (!scripts.includes(fingerprint)) {
+      problems.push(`an inline <script> has fingerprint ${fingerprint}, which vercel.json's script-src does not allow - the live site would block it`);
+    }
+  }
+  if (/\son[a-z]+\s*=\s*["']/i.test(html)) problems.push('the built page has an inline event handler, which the security policy blocks');
+  if (!/connect-src 'self' https:\/\/docs\.google\.com$/.test(directive('connect-src'))) problems.push("connect-src must be exactly 'self' and https://docs.google.com");
+  if (directive('form-action') !== 'form-action https://docs.google.com') problems.push('form-action must be exactly https://docs.google.com');
+  if (directive('frame-ancestors') !== "frame-ancestors 'none'") problems.push("frame-ancestors must be 'none'");
+  if (header('X-Content-Type-Options') !== 'nosniff') problems.push('vercel.json must send X-Content-Type-Options: nosniff');
+} catch (error) {
+  problems.push(`vercel.json could not be read as JSON: ${error.message}`);
 }
 
 if (problems.length > 0) {
