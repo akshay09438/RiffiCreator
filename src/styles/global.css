@@ -362,6 +362,38 @@
     height: auto;
   }
 
+  /*
+   * After the details are sent: the badge swishes up from the lower left of the green box, spinning
+   * the way it does in the app, and settles in the middle. Transform and opacity only, once, and
+   * never on the page's first paint. The stage clips sideways so the sweep cannot widen the page.
+   */
+  .coin-stage {
+    overflow-x: clip;
+    perspective: 900px;
+  }
+
+  .coin-swipe {
+    width: clamp(150px, 42vw, 240px);
+    height: auto;
+    animation: coin-swipe 1300ms cubic-bezier(0.18, 0.85, 0.25, 1) both;
+  }
+
+  @keyframes coin-swipe {
+    from {
+      opacity: 0;
+      transform: translate(-60vw, 70%) rotate(-28deg) rotateY(-120deg) scale(0.6);
+    }
+
+    25% {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(0, 0) rotate(0deg) rotateY(360deg) scale(1);
+    }
+  }
+
   @media (min-width: 64rem) {
     .badge-coin-small {
       width: 150px;
@@ -418,7 +450,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     .hero-line,
-    .vote-count {
+    .vote-count,
+    .coin-swipe {
       animation: none;
     }
 

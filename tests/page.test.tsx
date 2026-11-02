@@ -341,6 +341,26 @@ describe('#join: the details form', () => {
     expect(screen.getByText(content.join.sentBody)).toBeInTheDocument();
   });
 
+  it('turns the whole green panel into the thank-you, with the badge swishing in and no form left', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null)));
+    render(<App />);
+    fill((key) => `value-${key}`);
+    fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
+    await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
+    const block = section('join');
+    expect(block.querySelector('form')).toBeNull();
+    expect(block.querySelectorAll('input')).toHaveLength(0);
+    // The one coin in the panel carries the swish, is the real badge from this site, and is
+    // decorative: the message beside it says everything in words.
+    const coin = only(block, 'img');
+    expect(coin.className).toContain('coin-swipe');
+    expect(coin.getAttribute('src')).toBe(content.badge.image);
+    expect(coin.getAttribute('alt')).toBe('');
+    expect(only(block, '[role="status"]')).toHaveTextContent(content.join.sentHeading);
+    // No email address or handle is named in the confirmation.
+    expect(readableText(block)).not.toMatch(/@|\.com/);
+  });
+
   it('says so, keeps what was typed, and lets them try again when the network fails', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('offline')));
     render(<App />);

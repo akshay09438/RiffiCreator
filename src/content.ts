@@ -139,7 +139,8 @@ export const content = {
     privacy: 'We use these details to reserve your username and set up your Riffi account.',
     error: "That didn't go through. Check your connection and try again.",
     sentHeading: 'Got it. Thank you.',
-    sentBody: "Your details are with us. We'll message you from @get.riffi once the launch date is fixed.",
+    // No address named on purpose (founder, 2 Nov 2026): only that an email will come.
+    sentBody: "Your details are with us. Once the launch date is fixed, we'll send you an email.",
   },
   faq: {
     heading: 'Before you ask',

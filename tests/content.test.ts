@@ -239,7 +239,11 @@ describe('copy matches the PRD word for word', () => {
     );
     expect(content.join.error).toBe("That didn't go through. Check your connection and try again.");
     expect(content.join.sentHeading).toBe('Got it. Thank you.');
-    expect(content.join.sentBody).toContain(`@${settings.instagramHandle}`);
+    // 2 Nov 2026: the founder asked for no address to be named - only that an email will come.
+    expect(content.join.sentBody).toBe(
+      "Your details are with us. Once the launch date is fixed, we'll send you an email.",
+    );
+    expect(content.join.sentBody).not.toMatch(/@|\.com|\bget\.riffi\b/i);
   });
 
   it('FAQ: heading and the three questions, in order', () => {

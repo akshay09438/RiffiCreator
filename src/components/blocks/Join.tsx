@@ -37,6 +37,29 @@ export function Join() {
     }
   }
 
+  if (status === 'sent') {
+    // The whole green panel becomes the thank-you: the badge swishes up from the lower left, spinning
+    // as it does in the app, and settles in the middle above the message (2 Nov 2026).
+    return (
+      <Section id="join" tone="recess" belowFold>
+        <div role="status" className="coin-stage flex flex-col items-center text-center">
+          <img
+            src={content.badge.image}
+            alt={content.join.badgeAlt}
+            width={400}
+            height={400}
+            decoding="async"
+            className="coin-swipe"
+          />
+          <h2 id="join-heading" className="mt-6 font-display text-display-l font-bold">
+            {block.sentHeading}
+          </h2>
+          <p className="mt-3 max-w-[30rem] text-body-l text-ink">{block.sentBody}</p>
+        </div>
+      </Section>
+    );
+  }
+
   return (
     <Section id="join" tone="recess" belowFold>
       {/* Two columns from a laptop up, like the other blocks: the badge and heading on the left, the
@@ -64,59 +87,52 @@ export function Join() {
           <p className="mt-4 text-body font-semibold text-ink">{block.badgeNote}</p>
         </div>
         <div className="lg:col-span-7">
-          {status === 'sent' ? (
-            <div role="status" className="feature-card">
-              <p className="font-display text-body-l font-bold text-ink">{block.sentHeading}</p>
-              <p className="mt-2 text-body text-ink-soft">{block.sentBody}</p>
-            </div>
-          ) : (
-            <form
-              action={formAction}
-              method="post"
-              onSubmit={onSubmit}
-              className="grid gap-5 sm:grid-cols-2"
-            >
-              {FIELD_ORDER.map((key) => {
-                const field = block.fields[key];
-                return (
-                  <label
-                    key={key}
-                    className={`grid gap-2 text-body font-semibold text-ink ${key === 'username' ? 'sm:col-span-2' : ''}`}
-                  >
-                    {field.label}
-                    <input
-                      className="field"
-                      type={field.type}
-                      name={formFields[key]}
-                      autoComplete={field.autoComplete}
-                      placeholder={field.placeholder || undefined}
-                      required
-                      maxLength={120}
-                    />
-                  </label>
-                );
-              })}
-              {/* The trap field: off-screen, skipped by keyboards and screen readers. */}
-              <div aria-hidden="true" className="trap">
-                <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-              </div>
-              <p className="text-meta text-ink-soft sm:col-span-2">{block.privacy}</p>
-              {status === 'error' ? (
-                <p role="alert" className="text-body font-semibold text-ink sm:col-span-2">
-                  {block.error}
-                </p>
-              ) : null}
-              <div className="sm:col-span-2">
-                <button
-                  type="submit"
-                  disabled={status === 'sending'}
-                  className="bg-ink text-paper cta-sticker inline-flex min-h-11 items-center justify-center rounded-pill px-8 py-3 text-body-l font-bold"
+          <form
+            action={formAction}
+            method="post"
+            onSubmit={onSubmit}
+            className="grid gap-5 sm:grid-cols-2"
+          >
+            {FIELD_ORDER.map((key) => {
+              const field = block.fields[key];
+              return (
+                <label
+                  key={key}
+                  className={`grid gap-2 text-body font-semibold text-ink ${key === 'username' ? 'sm:col-span-2' : ''}`}
                 >
-                  {status === 'sending' ? block.sending : block.submit}
-                </button>
-              </div>
-            </form>
-          )}
+                  {field.label}
+                  <input
+                    className="field"
+                    type={field.type}
+                    name={formFields[key]}
+                    autoComplete={field.autoComplete}
+                    placeholder={field.placeholder || undefined}
+                    required
+                    maxLength={120}
+                  />
+                </label>
+              );
+            })}
+            {/* The trap field: off-screen, skipped by keyboards and screen readers. */}
+            <div aria-hidden="true" className="trap">
+              <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+            </div>
+            <p className="text-meta text-ink-soft sm:col-span-2">{block.privacy}</p>
+            {status === 'error' ? (
+              <p role="alert" className="text-body font-semibold text-ink sm:col-span-2">
+                {block.error}
+              </p>
+            ) : null}
+            <div className="sm:col-span-2">
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="bg-ink text-paper cta-sticker inline-flex min-h-11 items-center justify-center rounded-pill px-8 py-3 text-body-l font-bold"
+              >
+                {status === 'sending' ? block.sending : block.submit}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </Section>
