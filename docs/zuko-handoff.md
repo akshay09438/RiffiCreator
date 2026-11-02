@@ -15,7 +15,7 @@
 
 ## Still open (founder)
 
-1. **A shorter URL.** The page still lives at `riffi-creator-page.vercel.app`. When a new address is chosen and working, change `settings.siteUrl` in `src/content.ts` (it builds the link-preview image address), rebuild, and check the preview card. Do **not** change it before the new address works: the preview image would break.
+1. ~~A shorter URL.~~ **Done 2 Nov 2026:** `riffi-creators.vercel.app` was added in Vercel and checked live (it serves the latest page); `settings.siteUrl` now builds the preview image from it. The old `riffi-creator-page.vercel.app` still works, so links already sent do not break. Instagram caches the preview card of any link it has already seen, so an old link may keep its old card. `riffi.vercel.app` was the first choice but belongs to someone else's app.
 2. **One real test submission** on the live page; confirm it lands in the Google Form's responses (the page cannot tell), then delete the test rows. The Form must stay open to anyone without sign-in.
 3. **Wording decisions:** (a) add "keep posting to keep it" for the badge (the app requires weekly posts); (b) soften "We're holding @name for you" (two creators can ask for the same name); (c) "end of November at the very worst" is a firm date; (d) keep or remove the made-up sample poll in the hero; (e) `noindex` (the spec says leave indexable unless Zyra asks).
 4. **Open promises:** the founder must email creators when the launch date is fixed, and honour the held usernames.
