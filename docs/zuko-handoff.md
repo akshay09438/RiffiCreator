@@ -13,6 +13,7 @@
 - **The Form must stay open to everyone** (not "limited to users in your organisation", no sign-in required) or posts will silently fail: Google gives the page no reply to read.
 - **Open promise:** the thank-you says "Once the launch date is fixed, we'll send you an email." No address is named (founder's direction, 2 Nov 2026). The founder must actually email the creators from the form's responses.
 - `CLAUDE.md` now lists `src/lib/submit.ts` in the danger list, but `.zuko/config.json` is generated from it and was **not** regenerated here; regenerate it before relying on the hooks.
+- **CI hardening (2 Nov 2026):** the semgrep job was red on every run for old reasons (floating action tags, shell interpolation of the base branch name, `.npmrc`, two scripts). Fixed and reviewed; **confirm the next CI run is green** - semgrep could not be run locally. If it is still red, read the job log for the exact rule and line.
 - The Task 9 audit (Lighthouse, widths, keyboard, greyscale, reduced motion, no-JS) has not been re-run on this version.
 
 ## Do first next session
@@ -23,7 +24,7 @@
 
 ## What the page is now (2 Nov 2026)
 
-Short, and speaks only to onboarded creators: a thank-you hero, the launch estimate (mid-November; worst case end of November; exact date to be announced), the Founding Creator badge shown clearly (no perk, number or date named), a details form that posts to the founder's Google Form (the badge is shown beside it too), a three-question FAQ and a closing thank-you. No seat count and no "Claim a seat" any more. The notes below describe the 17 Sep 2026 version and are kept where still true (design, honesty rules, no points, no payout figure).
+Short, and speaks only to onboarded creators: a thank-you hero with the launch estimate in its line (mid-November; end of November at worst), the Founding Creator badge shown clearly, a "What's waiting for you." block of five perks (three "At launch", two "Soon"), a details form that posts to the founder's Google Form (the badge is shown beside it too), a three-question FAQ and a closing thank-you. No seat count and no "Claim a seat" any more. The notes below describe the 17 Sep 2026 version and are kept where still true (design, honesty rules, no points, no payout figure).
 
 ### Earlier: the 17 Sep 2026 page
 

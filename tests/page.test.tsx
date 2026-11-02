@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../src/App';
+import { cleanUsername } from '../src/components/blocks/Join';
 import { content, settings } from '../src/content';
 import { ctaHref, formAction, formFields } from '../src/lib/cta';
 import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, SEAT_COUNT, URGENCY, sentencesOf } from './honesty-rules';
@@ -15,8 +16,8 @@ const normalize = (text: string | null | undefined): string => (text ?? '').repl
 // (reels deck, what a take is, the Instagram comparison, the earn list, the long game) are gone.
 const SECTION_IDS = [
   'hero',
-  'launch',
   'badge',
+  'perks',
   'join',
   'faq',
   'close',
@@ -95,7 +96,7 @@ describe('page structure and semantics (PRD 7)', () => {
     const expectedName: Record<string, string> = {
       hero: content.hero.titleLines.join(' '),
       badge: content.badge.heading,
-      launch: content.launch.heading,
+      perks: content.perks.heading,
       join: content.join.heading,
       faq: content.faq.heading,
       close: content.close.heading,
@@ -259,30 +260,44 @@ describe('#badge: the Founding Creator badge, shown clearly', () => {
   });
 });
 
-// ---------- block 6: when it launches ----------
+// ---------- what is waiting for them ----------
 
-describe('#launch: an estimate, a worst case and a date still to be announced', () => {
+describe('#perks: what is waiting for creators who came in early (2 Nov 2026)', () => {
   beforeEach(() => {
     render(<App />);
   });
 
-  it('shows the big word as decoration, then the heading, the three dates and the framing', () => {
-    const block = section('launch');
-    const decoration = Array.from(block.querySelectorAll('p[aria-hidden="true"]')).filter(
-      (element) => normalize(element.textContent) === content.launch.bigWord,
-    );
-    expect(decoration).toHaveLength(1);
-    expect(within(block).getByRole('heading', { level: 2, name: content.launch.heading })).toBeInTheDocument();
-    expect(within(block).getByText(content.launch.framing)).toBeInTheDocument();
-    const terms = Array.from(block.querySelectorAll('dt')).map((term) => normalize(term.textContent));
-    const values = Array.from(block.querySelectorAll('dd')).map((value) => normalize(value.textContent));
-    expect(terms).toEqual(content.launch.timeline.map((row) => row.label));
-    expect(values).toEqual(content.launch.timeline.map((row) => row.value));
+  it('shows the heading, the lead, the framing line and every perk with when it comes', () => {
+    const block = section('perks');
+    expect(within(block).getByRole('heading', { level: 2, name: content.perks.heading })).toBeInTheDocument();
+    expect(within(block).getByText(content.perks.lead)).toBeInTheDocument();
+    expect(within(block).getByText(content.perks.framing)).toBeInTheDocument();
+    const items = Array.from(only(block, 'ul').children) as HTMLElement[];
+    expect(items).toHaveLength(content.perks.items.length);
+    content.perks.items.forEach((perk, index) => {
+      const item = within(items[index] as HTMLElement);
+      expect(items[index]?.tagName).toBe('LI');
+      expect(item.getByText(perk.label)).toBeInTheDocument();
+      expect(item.getByText(perk.when)).toBeInTheDocument();
+    });
   });
 
-  it('shows no seat count, countdown or exact day anywhere on the page', () => {
+  it('says plainly that the later perks are a plan, and that the page has no number, date or money in it', () => {
+    const text = readableText(section('perks'));
+    expect(text).toContain('plan, not a contract');
+    expect(text).not.toMatch(/\d/);
+    expect(text).not.toMatch(MONEY);
+    expect(text).not.toMatch(URGENCY);
+    expect(text).not.toMatch(NUMBER_NEXT_TO_POINTS);
+  });
+
+  it('never calls anything "Live", because Riffi has not launched', () => {
+    expect(readableText(section('perks'))).not.toMatch(/\blive\b/i);
+  });
+
+  it('shows no seat count or countdown anywhere on the page', () => {
     expect(readableText(document.body)).not.toMatch(SEAT_COUNT);
-    expect(readableText(section('launch'))).not.toMatch(/\d/);
+    expect(document.querySelectorAll('[role="timer"]')).toHaveLength(0);
   });
 });
 
@@ -341,6 +356,27 @@ describe('#join: the details form', () => {
     expect(screen.getByText(content.join.sentBody)).toBeInTheDocument();
   });
 
+  it('reads their own username back to them in the thank-you, without a doubled @', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null)));
+    render(<App />);
+    fill((key) => (key === 'username' ? '  @@riffi_fan  ' : `value-${key}`));
+    fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
+    await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
+    expect(within(section('join')).getByText(content.join.sentHolding('riffi_fan'))).toBeInTheDocument();
+    expect(readableText(section('join'))).not.toContain('@@');
+  });
+
+  it('shows a hostile username as plain text only, never as markup', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null)));
+    render(<App />);
+    fill((key) => (key === 'username' ? '<img src=x onerror=alert(1)>' : `value-${key}`));
+    fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
+    await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
+    const block = section('join');
+    expect(block.querySelectorAll('img')).toHaveLength(1);
+    expect(readableText(block)).toContain('<img src=x onerror=alert(1)>');
+  });
+
   it('turns the whole green panel into the thank-you, with the badge swishing in and no form left', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null)));
     render(<App />);
@@ -357,8 +393,9 @@ describe('#join: the details form', () => {
     expect(coin.getAttribute('src')).toBe(content.badge.image);
     expect(coin.getAttribute('alt')).toBe('');
     expect(only(block, '[role="status"]')).toHaveTextContent(content.join.sentHeading);
-    // No email address or handle is named in the confirmation.
-    expect(readableText(block)).not.toMatch(/@|\.com/);
+    // Apart from their own username read back to them, no email address or handle is named.
+    const withoutTheirOwn = readableText(block).replace(content.join.sentHolding('value-username'), '');
+    expect(withoutTheirOwn).not.toMatch(/@|\.com/);
   });
 
   it('says so, keeps what was typed, and lets them try again when the network fails', async () => {
@@ -558,7 +595,7 @@ describe('honesty on the rendered page (PRD 2.4, design 5)', () => {
 // ---------- before any JavaScript runs ----------
 
 describe('the pre-rendered HTML, before any JavaScript runs (design 2 and 3)', () => {
-  it('already holds the headline, both CTAs as plain links, the final vote count, the launch dates, the form and the first FAQ open', () => {
+  it('already holds the headline, both CTAs as plain links, the final vote count, the perks, the form and the first FAQ open', () => {
     const doc = new DOMParser().parseFromString(renderToString(<App />), 'text/html');
     const h1s = doc.querySelectorAll('h1');
     expect(h1s).toHaveLength(1);
@@ -567,12 +604,26 @@ describe('the pre-rendered HTML, before any JavaScript runs (design 2 and 3)', (
     const ctas = Array.from(doc.querySelectorAll('a')).filter((link) => normalize(link.textContent) === content.cta.label);
     expect(ctas.map((link) => link.getAttribute('href'))).toEqual([ctaHref, ctaHref]);
     expect(byFullText(doc.body, '2,140 votes')).toHaveLength(1);
-    expect(normalize(doc.querySelector('#launch dt')?.textContent)).toBe(content.launch.timeline[0]?.label);
+    expect(normalize(doc.querySelector('#perks li')?.textContent)).toContain(content.perks.items[0]?.label);
     expect(doc.querySelector('form')?.getAttribute('action')).toBe(formAction);
     expect(Array.from(doc.querySelectorAll('details')).map((details) => details.hasAttribute('open'))).toEqual([
       true,
       false,
       false,
     ]);
+  });
+});
+
+describe('cleanUsername', () => {
+  it.each([
+    ['riffi', 'riffi'],
+    ['@riffi', 'riffi'],
+    ['  @@riffi  ', 'riffi'],
+    ['@ riffi', 'riffi'],
+    ['', ''],
+    ['@', ''],
+    ['a'.repeat(60), 'a'.repeat(40)],
+  ])('turns %j into %j', (raw, expected) => {
+    expect(cleanUsername(raw)).toBe(expected);
   });
 });

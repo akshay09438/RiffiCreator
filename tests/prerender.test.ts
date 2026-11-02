@@ -34,7 +34,7 @@ describe('the pre-rendered page (design option A)', () => {
   it('has every heading, both buttons, the form and every FAQ answer before any script runs', () => {
     const headings = [
       ...content.hero.titleLines,
-      content.launch.heading,
+      content.perks.heading,
       content.badge.heading,
       content.join.heading,
       content.faq.heading,

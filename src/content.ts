@@ -93,16 +93,21 @@ export const content = {
       votesLabel: 'votes',
     },
   },
-  launch: {
-    // Decorative, like the big number it replaces: the heading carries the meaning.
-    bigWord: 'Nov',
-    heading: 'Mid-November, we think.',
-    timeline: [
-      { label: 'Our estimate', value: 'Mid-November' },
-      { label: 'Worst case', value: 'End of November' },
-      { label: 'Exact date', value: 'To be announced' },
+  // What is waiting for them (2 Nov 2026). The wording is the founder's own, from the creator
+  // screen in the app. "At launch" and "Soon" are used instead of the app's "Live" and "Soon",
+  // because the page says Riffi has not launched. Nothing here is a number, a payout or a promise
+  // of money: the two "Soon" perks are named as a plan, in the framing line.
+  perks: {
+    heading: "What's waiting for you.",
+    lead: 'Everything below comes with being first in.',
+    items: [
+      { label: 'Boosted reach on your posts', when: 'At launch' },
+      { label: 'A direct line to the Riffi team', when: 'At launch' },
+      { label: 'Early access to new features', when: 'At launch' },
+      { label: 'First pick of the brand deals', when: 'Soon' },
+      { label: 'First in line for creator earnings', when: 'Soon' },
     ],
-    framing: "Estimates, not promises. You'll get the exact date as soon as we're sure.",
+    framing: '"Soon" is our plan, not a contract.',
   },
   badge: {
     heading: 'Your Founding Creator badge.',
@@ -141,6 +146,8 @@ export const content = {
     sentHeading: 'Got it. Thank you.',
     // No address named on purpose (founder, 2 Nov 2026): only that an email will come.
     sentBody: "Your details are with us. Once the launch date is fixed, we'll send you an email.",
+    // Their own username, read back to them (2 Nov 2026). Only ever shown to the person who typed it.
+    sentHolding: (username: string) => `We're holding @${username} for you.`,
   },
   faq: {
     heading: 'Before you ask',
