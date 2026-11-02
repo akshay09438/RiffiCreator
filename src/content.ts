@@ -47,8 +47,9 @@ export const settings: Settings = {
       username: 'entry.1972389049',
     },
   },
-  // The live domain, deployed 17 Sep 2026. The preview card Instagram shows is built from it.
-  siteUrl: 'https://riffi-creator-page.vercel.app',
+  // The live domain: the short address riffi-creators.vercel.app, added in Vercel on 2 Nov 2026 (the old
+  // riffi-creator-page.vercel.app still works). The preview card Instagram shows is built from it.
+  siteUrl: 'https://riffi-creators.vercel.app',
   whatsapp: {
     enabled: false,
     // Digits only, with the country code and no plus sign. Needed only when `enabled` is true.

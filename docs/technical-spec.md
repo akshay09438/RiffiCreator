@@ -188,7 +188,7 @@ All created at build step 1 and in use since (`package.json`):
 
 ## Deploy
 
-**Live**, since 17 Sep 2026: `https://riffi-creator-page.vercel.app`, on Vercel static hosting (PRD 5.1). `settings.siteUrl` in `src/content.ts` holds this address, and `scripts/prerender.mjs` writes it into every `__SITE_URL__` placeholder in the built head tags, including `og:image` - so the link-preview card Instagram would show is already built from the real domain, not a placeholder. The founder deployed it directly; this was not routed through a CI/CD pipeline (none is wired up - see "Safety net" above).
+**Live**, since 17 Sep 2026 at `https://riffi-creator-page.vercel.app`, and since 2 Nov 2026 also at the short address `https://riffi-creators.vercel.app` (`settings.siteUrl` points the link-preview image at the short one; both serve the same deployment), on Vercel static hosting (PRD 5.1). `settings.siteUrl` in `src/content.ts` holds this address, and `scripts/prerender.mjs` writes it into every `__SITE_URL__` placeholder in the built head tags, including `og:image` - so the link-preview card Instagram would show is already built from the real domain, not a placeholder. The founder deployed it directly; this was not routed through a CI/CD pipeline (none is wired up - see "Safety net" above).
 
 ## Known limits
 
