@@ -27,13 +27,17 @@ const tokensForFilePage = tokensCss.replaceAll(
 );
 
 function token(name) {
-  const match = tokensCss.match(new RegExp(`${name}:\\s*(#[0-9a-fA-F]{6})`));
+  // Finds the line that declares exactly this token, then reads its six-digit colour with a fixed pattern.
+  const line = tokensCss.split(/\r?\n/).find((text) => text.trim().startsWith(`${name}:`)) ?? '';
+  const match = /^[^:]+:\s*(#[0-9a-fA-F]{6})/.exec(line.trim());
   if (!match) throw new Error(`images: ${name} is not defined in tokens.css`);
   return match[1];
 }
 
+const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;' };
+
 function escapeHtml(text) {
-  return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+  return text.replace(/[&<>]/g, (character) => HTML_ESCAPES[character]);
 }
 
 function page(body) {
