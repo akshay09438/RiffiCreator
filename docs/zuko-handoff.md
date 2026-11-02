@@ -11,7 +11,7 @@
 - Branch `claude/peaceful-planck-bn65fr`. Nothing is half-done in code. The founder sent the privacy line back verbatim on 2 Nov 2026, read as confirmation.
 - **The details form is new and personal data now flows through it** (email, phone). Before any creator gets the link: submit one real test entry on the built page and confirm it lands in the Google Form's responses. The form is "Riffi Creator Username"; its entry ids were read from the form's own page on 2 Nov 2026. If the form is ever edited or re-created, the ids in `settings.form.fields` change.
 - **The Form must stay open to everyone** (not "limited to users in your organisation", no sign-in required) or posts will silently fail: Google gives the page no reply to read.
-- **CLAIM to re-verify:** the thank-you message promises a message "from @get.riffi once the launch date is fixed".
+- **Open promise:** the thank-you says "Once the launch date is fixed, we'll send you an email." No address is named (founder's direction, 2 Nov 2026). The founder must actually email the creators from the form's responses.
 - `CLAUDE.md` now lists `src/lib/submit.ts` in the danger list, but `.zuko/config.json` is generated from it and was **not** regenerated here; regenerate it before relying on the hooks.
 - The Task 9 audit (Lighthouse, widths, keyboard, greyscale, reduced motion, no-JS) has not been re-run on this version.
 
