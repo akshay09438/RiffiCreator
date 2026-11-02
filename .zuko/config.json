@@ -1,7 +1,7 @@
 {
   "version": 1,
   "appName": "Riffi Creator Page",
-  "summary": "One static landing page for the Riffi Creator Program. A creator who got a personal Instagram DM from Zyra taps the link, reads for ninety seconds, and taps Claim a seat to open a DM and reply 'I'm in'. No backend, forms or logins; mobile-first for Instagram's in-app browser, and honest about every promise.",
+  "summary": "One static thank-you and update page for the creators who are already onboarded to the Riffi Creator Program. A creator who got a personal Instagram DM from Zyra reads the launch estimate, sees the Founding Creator badge and the perks waiting for them, and sends their details in an on-page form that posts to the founder's Google Form. No backend or logins; mobile-first for Instagram's in-app browser, and honest about every promise.",
   "protectedBranch": "main",
   "dangerousGlobs": [
     ".env",
@@ -9,7 +9,10 @@
     "**/*secret*",
     "src/content.ts",
     "src/lib/cta.ts",
+    "src/lib/submit.ts",
+    "src/components/blocks/Join.tsx",
     "index.html",
+    "vercel.json",
     "package.json",
     "tests/**",
     "**/*.test.*",
@@ -45,7 +48,7 @@
     },
     {
       "surface": "conversion",
-      "service": "Instagram DM deep link (ig.me) with an optional WhatsApp wa.me fallback - no forms"
+      "service": "the page's own details form posting to a Google Form the founder owns (Instagram ig.me and WhatsApp wa.me links remain as unused settings)"
     },
     {
       "surface": "fonts",
@@ -87,28 +90,28 @@
     "skill": "ui-ux-pro-max"
   },
   "product": {
-    "audience": "Instagram creators who make opinionated video content: under 20k followers, largely college students early in their content journey, posting about politics, cricket, sports, entertainment, food and adjacent topics. They arrive only through a personal Instagram DM from Zyra - never cold traffic - overwhelmingly on mid-range Android phones on 4G, inside Instagram's in-app browser. They already had a warm intro, and they have been pitched by plenty of growth-hack programs before.",
+    "audience": "Instagram creators who make opinionated video content (under 20k followers, largely college students) and who have already said yes to joining Riffi. Zyra sends each of them the link in a personal Instagram DM, so they arrive warm, never as cold traffic, overwhelmingly on mid-range Android phones on 4G inside Instagram's in-app browser. They have been pitched by plenty of growth-hack programs before and compare notes with each other.",
     "jobs": [
-      "Understand within seconds what Riffi is and what a take is - an opinion, not news - so they know exactly what they would post.",
-      "See why being one of 50 early creators here beats being one of lakhs on Instagram - and that a take costs forty seconds, not a four-hour reel.",
-      "Know honestly what they get now (points from the first post, convertible to vouchers), what may come later (first in line for view-based payouts and brand deals - a plan, not a contract), and what is asked of them in return.",
-      "Decide and act in one tap: Claim a seat opens a DM with Riffi's Instagram account, so they can reply 'I'm in'."
+      "Feel thanked, and understand honestly why the launch is later than they expected and when to expect it (an estimate, never a promise).",
+      "See what is waiting for them: the Founding Creator badge, and the perks (three at launch, two \"soon\" - the later ones a plan, not a contract).",
+      "Send the five details Riffi needs to hold their username and set them up, in about a minute, and know it worked.",
+      "Know honestly what is and is not paid, and that they own what they post."
     ],
-    "success": "A creator who got the DM reads for about ninety seconds, taps Claim a seat and replies 'I'm in' - feeling it was a decision, not a risk - and nothing the page said turns out untrue when the fifty of them compare notes. On the phone they actually use, the page is fast inside Instagram, never breaks at any width from 320px up, and still reads correctly without colour or motion.",
+    "success": "A creator opens the link, feels thanked and informed, sends their details in a minute and sees a clear thank-you - and nothing the page said turns out untrue when they compare notes. On the phone they actually use, the page is fast inside Instagram, never breaks at any width from 320px up, and still reads correctly without colour or motion.",
     "keyFlows": [
-      "Zyra DMs a creator the link -> Instagram shows the preview card (the one-of-50 line and a 71/29 poll bar) -> the creator taps it.",
-      "The page opens in Instagram's in-app browser -> the headline renders at once and the sample poll bar fills -> the creator reads down the eight blocks: hero, what Riffi is, why here not there, how you earn, the long game, 50 seats, FAQ, close.",
-      "The creator taps Claim a seat (in the hero or the close) -> a DM thread with Riffi's Instagram account opens (WhatsApp as an optional fallback) -> they reply 'I'm in'.",
-      "Zyra rewrites copy, answers an open [FILL] input or sets a real seat count by editing one content file; the brand-kit swap is one tokens file plus one wordmark SVG."
+      "Zyra DMs a creator the link -> Instagram shows the preview card (the thank-you headline) -> the creator taps it.",
+      "The page opens -> hero (thank-you and the estimate), the badge, the perks, the details form, a three-question FAQ, the close.",
+      "The creator taps \"Send your details\" (hero or close) -> the page scrolls to the form -> they fill five fields and send -> the panel becomes a thank-you, the badge swishes in, and \"We're holding @name for you\" is read back.",
+      "Zyra rewrites copy or changes a setting by editing one content file; the brand-kit swap is one tokens file plus one wordmark SVG."
     ],
     "nonGoals": [
-      "No backend, database, form, email capture, login, CMS or third-party embed - the only conversion is opening a DM.",
-      "No forecasting, predictions, accuracy percentages, prediction UI, app screenshots or device mockups - the page is opinion-only and creator-only.",
-      "No fabricated scarcity or proof: no countdown timer, no invented seat count, no fake testimonials, logos or user counts; sample takes are always labelled as samples.",
-      "No published reward point values and no guaranteed-earnings language - the payout figure is always framed as an example, and future monetisation as a plan, not a contract.",
+      "No backend, database, login, CMS or third-party embed. The one conversion is the page's own details form, which posts to the founder's Google Form (`src/lib/submit.ts`) - and nothing else: no tracker, no cookie, no second form.",
+      "No forecasting, predictions, accuracy percentages, prediction UI, app screenshots or device mockups.",
+      "No fabricated scarcity or proof: no countdown timer, no seat count, no fake testimonials, logos or user counts; the one sample take on the page is always labelled as a sample.",
+      "No published reward point values, no payout figures and no guaranteed-earnings language - future monetisation is always \"a plan, not a contract\".",
       "No Next.js, no animation library, UI kit, form library or state manager, and no dark mode; analytics stays off unless switched on, and then only cookieless Plausible or Umami."
     ],
-    "scale": "Fifty creator seats in batch one. Traffic is only the people Zyra DMs personally - tens to a few hundred visits - served as static files from a CDN, so there is no server, no database and nothing that grows without limit. The binding constraint is weight, not scale: fast on a mid-range Android on 4G inside Instagram (JS under 90KB gzipped, whole page under 400KB, LCP under 2s, CLS under 0.02, Lighthouse mobile Performance 95+ and Accessibility 100). maturityTier = prelaunch until the first creator is sent the link."
+    "scale": "Traffic is only the creators Zyra DMs personally - tens to a few hundred visits - served as static files from a CDN, so there is no server, no database and nothing that grows without limit. The binding constraint is weight, not scale: fast on a mid-range Android on 4G inside Instagram (JS under 90KB gzipped, whole page under 400KB, LCP about 2s, CLS under 0.02, Lighthouse mobile Performance 95+ and Accessibility 100). maturityTier = prelaunch until the first creator is sent the link."
   },
   "riskModel": {
     "maturityTier": "prelaunch",
@@ -130,6 +133,10 @@
         "reversibilityClass": "reversible"
       },
       "src/lib/cta.ts": {
+        "sensitivity": "user-data",
+        "reversibilityClass": "reversible"
+      },
+      "src/lib/submit.ts": {
         "sensitivity": "user-data",
         "reversibilityClass": "reversible"
       },
@@ -194,6 +201,14 @@
         "reversibilityClass": "reversible"
       },
       "public/**": {
+        "sensitivity": "user-data",
+        "reversibilityClass": "reversible"
+      },
+      "src/components/blocks/Join.tsx": {
+        "sensitivity": "user-data",
+        "reversibilityClass": "reversible"
+      },
+      "vercel.json": {
         "sensitivity": "user-data",
         "reversibilityClass": "reversible"
       }
