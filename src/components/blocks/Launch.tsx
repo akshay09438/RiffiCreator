@@ -1,5 +1,4 @@
 import { content } from '../../content';
-import { CtaButton } from '../primitives/CtaButton';
 import { Section } from '../primitives/Section';
 
 /**
@@ -21,7 +20,6 @@ export function Launch() {
           <h2 id="launch-heading" className="font-display text-display-l font-bold">
             {block.heading}
           </h2>
-          <p className="mt-5 max-w-[34rem] text-body text-ink-soft">{block.body}</p>
           <dl className="mt-8 grid max-w-[34rem] gap-3">
             {block.timeline.map((row) => (
               <div
@@ -34,9 +32,6 @@ export function Launch() {
             ))}
           </dl>
           <p className="mt-6 max-w-[34rem] text-meta text-ink-soft">{block.framing}</p>
-          <div className="mt-8">
-            <CtaButton variant="dark" />
-          </div>
         </div>
       </div>
     </Section>

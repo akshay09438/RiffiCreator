@@ -47,6 +47,11 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, URGENCY, sentencesOf } f
 // and teases the founding creator coin without naming it. The seat count and the "Claim a seat"
 // button are gone. Every honesty guardrail below still applies unchanged.
 
+// Later on 2 Nov 2026 the page was cut down to what onboarded creators need: the reels deck, the
+// "what is a take" block, the Instagram-versus-Riffi bars, the earn list and the long-game block
+// were removed (they were the recruiting pitch), and so were their copy tests. The "plan, not a
+// contract" honesty rule now lives in the FAQ's pay answer, which the guardrails above still pin.
+
 const contentSource = readFileSync(fileURLToPath(new URL('../src/content.ts', import.meta.url)), 'utf8');
 
 // A present-tense claim that someone is paid today - "you earn", "we pay", "is/are/gets paid" -
@@ -89,9 +94,10 @@ describe('honesty guardrails in the content (PRD 2.4, design 5)', () => {
     expect(offending(PRESENT_TENSE_PAYMENT)).toEqual([]);
   });
 
-  it('has no digits at all in the earn rows or the earn note, so no point value can hide there', () => {
-    const earnCopy = collectStrings(content.howYouEarn, 'content.howYouEarn');
-    expect(earnCopy.filter(({ text }) => /\d/.test(text))).toEqual([]);
+  it('has no digits in the pay answer, so no point value or payout figure can hide there', () => {
+    const paid = content.faq.items.find((item) => item.question === 'Is this paid right now?');
+    expect(paid?.answer).toBeTruthy();
+    expect(paid?.answer).not.toMatch(/\d/);
   });
 
   it('names no rupee or currency figure anywhere in the copy (17 Sep 2026: the founder will not invent a payout number)', () => {
@@ -109,20 +115,13 @@ describe('honesty guardrails in the content (PRD 2.4, design 5)', () => {
     expect(moneySentences.filter(({ sentence }) => !EXAMPLE_FRAMING.test(sentence))).toEqual([]);
   });
 
-  it('frames the long game as "plan, not a contract"', () => {
-    expect(content.longGame.framing).toContain('plan, not a contract');
-  });
-
   it('frames the answer to "Is this paid right now?" as "plan, not a contract"', () => {
     const paid = content.faq.items.find((item) => item.question === 'Is this paid right now?');
     expect(paid?.answer).toContain('plan, not a contract');
   });
 
-  it('labels every sample take as a sample: the hero chip, the marquee chip, the hidden list label and the video-takes chip', () => {
+  it('labels the one sample take on the page as a sample', () => {
     expect(content.hero.sampleTake.chip).toBe('sample take');
-    expect(content.whatRiffiIs.marqueeChip).toBe('sample take');
-    expect(content.whatRiffiIs.marqueeLabel).toBe('Sample takes');
-    expect(content.videoTakes.chip).toBe('sample');
   });
 
   it('uses no countdown, deadline or urgency language', () => {
@@ -163,15 +162,6 @@ describe('settings', () => {
     expect(settings).not.toHaveProperty('seats');
     expect(content).not.toHaveProperty('seats');
   });
-
-  it('uses one split for every comparison row, with the Instagram side smaller than the Riffi side', () => {
-    const { instagram, riffi } = settings.comparisonSplit;
-    expect(Number.isFinite(instagram) && instagram > 0).toBe(true);
-    expect(Number.isFinite(riffi) && riffi > instagram).toBe(true);
-    for (const row of content.whyHere.rows) {
-      expect(Object.keys(row).sort()).toEqual(['instagram', 'label', 'riffi']);
-    }
-  });
 });
 
 describe('the call-to-action copy', () => {
@@ -198,7 +188,7 @@ describe('copy matches the PRD word for word', () => {
   it('hero: the two title lines and the subline', () => {
     expect(content.hero.titleLines).toEqual(['You came in early.', 'Thank you for trusting us.']);
     expect(content.hero.subline).toBe(
-      'Riffi is taking longer to launch than we planned, because we want it right before you arrive. We now expect mid-November, and the end of November at the very worst.',
+      'Launch is taking longer because we want it right. New estimate: mid-November, end of November at the very worst.',
     );
   });
 
@@ -213,206 +203,36 @@ describe('copy matches the PRD word for word', () => {
     });
   });
 
-  it('what Riffi is: heading, lead and the contrast pair (the typed option, second since 17 Sep 2026)', () => {
-    expect(content.whatRiffiIs.heading).toBe("Or type it, if that's more your thing.");
-    expect(content.whatRiffiIs.lead).toBe(
-      'Same forty seconds either way. What matters is that the post is your opinion, not the news.',
-    );
-    expect(content.whatRiffiIs.notTake).toEqual({
-      chip: 'not a take',
-      text: 'The new season dropped on Friday.',
-      caption: "That's news. It's already everywhere.",
-    });
-    expect(content.whatRiffiIs.take).toEqual({
-      chip: 'a take',
-      text: 'Every season after the third is just fan service with a budget.',
-      caption: "That's yours. Nobody else posted it.",
-    });
-  });
-
-  it('what Riffi is: the ten category chips, in order', () => {
-    expect(content.whatRiffiIs.categories).toEqual([
-      'Movies',
-      'Politics',
-      'Food',
-      'Campus',
-      'Money',
-      'Music',
-      'Startups',
-      'Fashion',
-      'Sports',
-      'Cricket',
-    ]);
-  });
-
-  it('what Riffi is: the eight marquee takes, in order', () => {
-    expect(content.whatRiffiIs.marqueeTakes).toEqual([
-      'Your favourite startup is a spreadsheet with a good logo.',
-      "Bengaluru traffic isn't an infrastructure problem, it's a scheduling one.",
-      'Every biopic in the last five years is an ad for its subject.',
-      "Filter coffee beats any third-wave pour over and it isn't close.",
-      'Hostel mess food built more resilience than any gym ever will.',
-      'Reels killed the Indian meme page.',
-      'Paneer is overrated and we all know it.',
-      'Every playlist app ends up playing the same six songs.',
-    ]);
-  });
-
-  it('video takes: heading, lead, badge, chip, the three items in order, and the footer (rewritten to lead the page, 17 Sep 2026)', () => {
-    expect(content.videoTakes.heading).toBe('When the doors open, this is the whole job.');
-    expect(content.videoTakes.lead).toBe(
-      'No hook, no thumbnail, no four hour edit. Point the phone at yourself, say what you actually think, and post it. The room votes on the opinion, not the edit.',
-    );
-    expect(content.videoTakes.badge).toBe('40 seconds, one opinion');
-    expect(content.videoTakes.chip).toBe('sample');
-    expect(content.videoTakes.items).toEqual([
-      {
-        text: 'Every biopic in the last five years is an ad for its subject.',
-        length: '0:38',
-        still: '/media/sample-one.jpg',
-      },
-      {
-        text: 'Bengaluru traffic is a scheduling problem, not a road problem.',
-        length: '0:41',
-        still: '/media/sample-two.jpg',
-      },
-      {
-        text: 'Hostel mess food built more resilience than any gym ever will.',
-        length: '0:29',
-        still: '/media/sample-three.jpg',
-      },
-    ]);
-    expect(content.videoTakes.footer).toBe(
-      'One rule, whatever you shoot: it has to be your opinion, not the news.',
-    );
-  });
-
-  // 17 Sep 2026: each card carries a stock still. The rule is no longer "no media at all" but
-  // "only a still, only from this site". A clip, a poster or a remote URL still fails.
-  it('video takes: a still is the only media a card may name, and only from this site', () => {
-    expect(Object.keys(content.videoTakes).sort()).toEqual([
-      'badge',
-      'chip',
-      'footer',
-      'heading',
-      'items',
-      'lead',
-      'stillAlt',
-      'stillNote',
-    ]);
-    const seenStills = new Set<string>();
-    for (const item of content.videoTakes.items) {
-      expect(Object.keys(item).sort()).toEqual(['length', 'still', 'text']);
-      expect(item.still).toMatch(/^\/media\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/);
-      expect(item.still).not.toMatch(/^https?:|^\/\//);
-      // Each card gets its own picture, and the file the path names must actually be on disk -
-      // a path that merely looks right would otherwise ship as a silently broken image (empty
-      // alt means nothing would even announce the failure to a screen reader).
-      expect(seenStills.has(item.still), `${item.still} is reused by more than one card`).toBe(false);
-      seenStills.add(item.still);
-      const onDisk = fileURLToPath(new URL(`../public${item.still}`, import.meta.url));
-      expect(existsSync(onDisk), `no file on disk at public${item.still}`).toBe(true);
-    }
-  });
-
-  it('video takes: says out loud that the stills are stock and nobody has posted yet', () => {
-    expect(content.videoTakes.stillNote).toBe(
-      'Stock stills and sample takes. Nobody has posted on Riffi yet, which is the point.',
-    );
-    expect(content.videoTakes.stillAlt).toBe('');
-  });
-
-  it('why here: heading, side labels, the five comparison rows and the closer (1 Oct 2026: a fifth, how you get paid)', () => {
-    expect(content.whyHere.heading).toBe("What you signed up for hasn't changed.");
-    expect(content.whyHere.instagramLabel).toBe('Instagram');
-    expect(content.whyHere.riffiLabel).toBe('Riffi');
-    expect(content.whyHere.rows).toEqual([
-      { label: 'Who you share the feed with', instagram: 'Lakhs', riffi: 'A small first group' },
-      { label: 'Who decides your reach', instagram: 'A feed tuned for watch time', riffi: "A feed we're still writing" },
-      { label: 'What your first post gets', instagram: 'Buried', riffi: 'The front page' },
-      { label: "How you'll earn", instagram: 'Brand deals, if one finds you', riffi: "Engagement, once we're big enough" },
-      {
-        label: 'What you own at the end',
-        instagram: 'Followers on rented land',
-        riffi: 'A position on a platform still being built',
-      },
-    ]);
-    expect(content.whyHere.closer).toBe('And a reel costs you four hours. A take costs you forty seconds.');
-  });
-
-  it('how you earn: heading, lead, the four next steps and the honest no-money-yet note - no pill (2 Nov 2026: what happens next)', () => {
-    expect(content.howYouEarn).not.toHaveProperty('pill');
-    expect(Object.keys(content.howYouEarn).sort()).toEqual(['heading', 'lead', 'note', 'rows']);
-    expect(content.howYouEarn.heading).toBe('What happens next.');
-    expect(content.howYouEarn.lead).toBe('Four steps from here to launch day.');
-    expect(content.howYouEarn.rows).toEqual([
-      { action: 'Send your details', description: 'Five short fields in the form further down. About a minute.' },
-      {
-        action: 'We hold your username',
-        description: 'Once your details are in, your Riffi username is reserved for you.',
-      },
-      {
-        action: 'We announce the date',
-        description: "We'll message you the exact launch date as soon as we're sure of it.",
-      },
-      { action: 'You post first', description: 'Your takes are already up when everyone else arrives.' },
-    ]);
-    expect(content.howYouEarn.note).toBe(
-      "Straight answer on money: not on day one. Once Riffi has enough people reading, we start paying creators for the engagement their takes get. That means you don't need a brand deal to earn. Until then, what you get is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
-    );
-  });
-
-  it('the long game: heading in three parts (for the marker sweep and the accessible name), the three items and the framing line (17 Sep 2026: no payout number is named)', () => {
-    expect(content.longGame.headingMark).toBe('Early now.');
-    expect(content.longGame.headingRest).toBe('Paid for engagement later.');
-    expect(content.longGame.heading).toBe('Early now. Paid for engagement later.');
-    // The rendered h2 splits headingMark and headingRest into two spans (for the marker sweep);
-    // heading must stay their exact join so a screen reader still hears it as one sentence.
-    expect(content.longGame.heading).toBe(`${content.longGame.headingMark} ${content.longGame.headingRest}`);
-    expect(content.longGame.items).toEqual([
-      {
-        title: 'Paid for engagement',
-        body: "On Instagram, your views earn the platform money, not you. On Riffi, once we have enough users, we'll pay creators for the engagement their takes get: the votes, replies and reshares. We won't put a number on it today, because we'd be making it up. You'll see how it works before it starts.",
-      },
-      {
-        title: 'No brand deal needed',
-        body: "Most creators only earn once a brand picks them. Here, your takes can earn on their own. Brand deals are a bonus, not the only way in.",
-      },
-      {
-        title: 'Batch one goes first',
-        body: "When payments start, the creators who were here before launch are in the first group.",
-      },
-    ]);
-    expect(content.longGame.framing).toBe(
-      "All of this is our plan, not a contract. You're backing us early, and we'd rather you do it knowing exactly that.",
-    );
-  });
-
   it('launch: an estimate, a worst case and a date still to be announced - never a promise', () => {
-    expect(content.launch.heading).toBe('Mid-November is our estimate.');
+    expect(content.launch.heading).toBe('Mid-November, we think.');
     expect(content.launch.timeline).toEqual([
       { label: 'Our estimate', value: 'Mid-November' },
       { label: 'Worst case', value: 'End of November' },
       { label: 'Exact date', value: 'To be announced' },
     ]);
     expect(content.launch.framing).toBe(
-      "These are estimates, not promises. We'd rather tell you that than a date we might miss.",
+      "Estimates, not promises. You'll get the exact date as soon as we're sure.",
     );
-    expect(content.launch.body.trim()).not.toBe('');
   });
 
-  it('badge: a teaser that names no perk, number or date, and points at a real image on this site', () => {
-    expect(content.badge.heading).toBe('One more thing.');
+  // 2 Nov 2026: the badge went from a blurred teaser to a clear picture, because the founder wanted
+  // it understood. It still names no perk, number or date: the only claim is that early creators get
+  // one when Riffi launches.
+  it('badge: shown clearly, named once, with no perk, number or date, and a real image on this site', () => {
+    expect(content.badge.heading).toBe('Your Founding Creator badge.');
+    expect(content.badge.lead).toBe("Everyone who came in early gets one. It's yours when we launch.");
     expect(content.badge.image).toMatch(/^\/media\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/);
     expect(existsSync(fileURLToPath(new URL(`../public${content.badge.image}`, import.meta.url)))).toBe(true);
-    const teaser = Object.values(content.badge).join(' ');
-    expect(teaser).not.toMatch(/\d/);
-    expect(teaser).not.toMatch(/founding|perk|reward|voucher|points?\b/i);
+    const claims = [content.badge.heading, content.badge.lead, content.join.badgeNote].join(' ');
+    expect(claims).not.toMatch(/\d/);
+    expect(claims).not.toMatch(/perk|reward|voucher|points?\b|worth|rare|limited/i);
   });
 
   it('join: the five details the founder needs, the privacy line and every state of the form', () => {
     expect(Object.keys(content.join.fields)).toEqual(['name', 'email', 'phone', 'handle', 'username']);
-    expect(content.join.heading).toBe('Send us your details.');
+    expect(content.join.heading).toBe('Your details.');
+    expect(content.join.lead).toBe('Five fields. About a minute.');
+    expect(content.join.badgeNote).toBe('Your Founding Creator badge is waiting.');
     expect(content.join.submit).toBe('Send my details');
     expect(content.join.privacy).toBe(
       'We use these details to reserve your username and set up your Riffi account.',
@@ -422,24 +242,18 @@ describe('copy matches the PRD word for word', () => {
     expect(content.join.sentBody).toContain(`@${settings.instagramHandle}`);
   });
 
-  it('FAQ: heading and the six questions, in order', () => {
+  it('FAQ: heading and the three questions, in order', () => {
     expect(content.faq.heading).toBe('Before you ask');
     expect(content.faq.items.map((item) => item.question)).toEqual([
       'When does Riffi launch?',
-      'Why has it taken longer?',
-      'What do you need from me?',
-      'Do I have to leave Instagram?',
       'Is this paid right now?',
       'Who owns what I post?',
     ]);
   });
 
-  it('FAQ: all six answers, including the launch estimate (2 Nov 2026) and the ownership answer (1 Oct 2026)', () => {
+  it('FAQ: all three answers, including the launch estimate (2 Nov 2026) and the ownership answer (1 Oct 2026)', () => {
     expect(content.faq.items.map((item) => item.answer)).toEqual([
       "Our estimate is mid-November, and the worst case is the end of November. We'll announce the exact date as soon as we're sure of it.",
-      "We wanted to get this right before anyone arrives, so launch day isn't the day we find the problems. Thank you for trusting us while we did.",
-      "Five details: your name, your email, your phone number, your current Instagram or X handle, and the username you want on Riffi. That's all we need to set you up.",
-      'No. Keep posting exactly where you post now. A take is a sentence, not a shoot, so it sits alongside what you already do.',
       "Not yet, and we won't pretend otherwise. Riffi hasn't launched. Once we have enough users, we start paying creators for the engagement their takes get, so you don't have to wait on brand deals to earn. Batch one is first in line. That's the plan, not a contract.",
       'You do. You keep the rights to your posts and you can take them anywhere.',
     ]);
@@ -448,9 +262,7 @@ describe('copy matches the PRD word for word', () => {
 
   it('close: heading, body and the footer contact line (PRD input 4, answered 1 Oct 2026)', () => {
     expect(content.close.heading).toBe('Thank you for being first.');
-    expect(content.close.body).toBe(
-      "You trusted us before there was anything to see. Send your details and we'll take it from there.",
-    );
+    expect(content.close.body).toBe("Send your details and we'll take it from there.");
     expect(content.close.footerLine).toBe('Questions? Message @get.riffi on Instagram.');
     // The footer names the same account the helper line promises a reply from.
     expect(content.close.footerLine).toContain(`@${settings.instagramHandle}`);
@@ -474,7 +286,7 @@ describe('TODAY: every open input is answered and no [FILL] marker is left (PRD 
   });
 
   it('has real text, not an empty string, behind every answered input', () => {
-    expect(content.launch.body.trim()).not.toBe('');
+    expect(content.launch.framing.trim()).not.toBe('');
     expect(content.faq.items.find((item) => item.question === 'When does Riffi launch?')?.answer.trim()).toBeTruthy();
     expect(content.faq.items.find((item) => item.question === 'Who owns what I post?')?.answer.trim()).toBeTruthy();
     expect(content.close.footerLine.trim()).not.toBe('');

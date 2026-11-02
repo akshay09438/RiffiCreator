@@ -8,10 +8,9 @@
 
 ## In flight
 
-- Branch `claude/peaceful-planck-bn65fr`. Nothing is half-done in code.
+- Branch `claude/peaceful-planck-bn65fr`. Nothing is half-done in code. The founder sent the privacy line back verbatim on 2 Nov 2026, read as confirmation.
 - **The details form is new and personal data now flows through it** (email, phone). Before any creator gets the link: submit one real test entry on the built page and confirm it lands in the Google Form's responses. The form is "Riffi Creator Username"; its entry ids were read from the form's own page on 2 Nov 2026. If the form is ever edited or re-created, the ids in `settings.form.fields` change.
 - **The Form must stay open to everyone** (not "limited to users in your organisation", no sign-in required) or posts will silently fail: Google gives the page no reply to read.
-- **CLAIM to re-verify:** the privacy line ("We use these details to reserve your username and set up your Riffi account.") was written from the Form's own description; the founder has not confirmed it.
 - **CLAIM to re-verify:** the thank-you message promises a message "from @get.riffi once the launch date is fixed".
 - `CLAUDE.md` now lists `src/lib/submit.ts` in the danger list, but `.zuko/config.json` is generated from it and was **not** regenerated here; regenerate it before relying on the hooks.
 - The Task 9 audit (Lighthouse, widths, keyboard, greyscale, reduced motion, no-JS) has not been re-run on this version.
@@ -24,7 +23,7 @@
 
 ## What the page is now (2 Nov 2026)
 
-Speaks only to onboarded creators: a thank-you hero, the launch estimate (mid-November; worst case end of November; exact date to be announced), what happens next, a softened teaser of the founding creator coin (no perk, number or date named), and a details form that posts to the founder's Google Form. No seat count and no "Claim a seat" any more. The notes below describe the 17 Sep 2026 version and are kept where still true (design, honesty rules, no points, no payout figure).
+Short, and speaks only to onboarded creators: a thank-you hero, the launch estimate (mid-November; worst case end of November; exact date to be announced), the Founding Creator badge shown clearly (no perk, number or date named), a details form that posts to the founder's Google Form (the badge is shown beside it too), a three-question FAQ and a closing thank-you. No seat count and no "Claim a seat" any more. The notes below describe the 17 Sep 2026 version and are kept where still true (design, honesty rules, no points, no payout figure).
 
 ### Earlier: the 17 Sep 2026 page
 

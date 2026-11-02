@@ -40,10 +40,25 @@ export function Join() {
   return (
     <Section id="join" tone="recess" belowFold>
       <div className="max-w-[34rem]">
-        <h2 id="join-heading" className="font-display text-display-l font-bold">
-          {block.heading}
-        </h2>
-        <p className="mt-4 text-body-l text-ink">{block.lead}</p>
+        <div className="flex items-center gap-4">
+          {/* The badge beside the form: decorative, because the note next to it says it in words. */}
+          <img
+            src={content.badge.image}
+            alt={content.join.badgeAlt}
+            width={400}
+            height={400}
+            loading="lazy"
+            decoding="async"
+            className="badge-coin-small"
+          />
+          <div>
+            <h2 id="join-heading" className="font-display text-display-l font-bold">
+              {block.heading}
+            </h2>
+            <p className="mt-2 text-body-l text-ink">{block.lead}</p>
+          </div>
+        </div>
+        <p className="mt-4 text-body font-semibold text-ink">{block.badgeNote}</p>
         {status === 'sent' ? (
           <div role="status" className="feature-card mt-8">
             <p className="font-display text-body-l font-bold text-ink">{block.sentHeading}</p>
