@@ -1,5 +1,6 @@
-// Renders the link-preview card (public/og.png, 1200x630), the apple touch icon (180x180) and the SVG
-// favicon from the page's own tokens and copy, using the Microsoft Edge already on this laptop.
+// Renders the link-preview card (public/og.png, 1200x630) from the page's own tokens and copy, and the
+// icons (favicon.svg, favicon.ico, apple-touch-icon.png) from the Founding Creator badge, using the
+// Microsoft Edge already on this laptop.
 // Usage: npm run images   (set EDGE_PATH to use another Chromium-based browser)
 //
 // Edge is driven over the DevTools protocol rather than with --screenshot: Edge 153 quietly ignores
@@ -25,14 +26,6 @@ const tokensForFilePage = tokensCss.replaceAll(
   /url\('(@fontsource-variable\/[^']+)'\)/g,
   (_match, specifier) => `url('${pathToFileURL(path.join(root, 'node_modules', specifier)).href}')`,
 );
-
-function token(name) {
-  // Finds the line that declares exactly this token, then reads its six-digit colour with a fixed pattern.
-  const line = tokensCss.split(/\r?\n/).find((text) => text.trim().startsWith(`${name}:`)) ?? '';
-  const match = /^[^:]+:\s*(#[0-9a-fA-F]{6})/.exec(line.trim());
-  if (!match) throw new Error(`images: ${name} is not defined in tokens.css`);
-  return match[1];
-}
 
 const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;' };
 
@@ -124,25 +117,35 @@ async function connect(webSocketDebuggerUrl) {
   return { send, on, close: () => ws.close() };
 }
 
-async function screenshot(browser, name, body, width, height) {
+/** Renders the body at exactly width x height and returns the PNG bytes. `transparent` leaves the page background clear. */
+async function render(browser, name, body, width, height, transparent = false) {
   const htmlFile = path.join(work, `${name}.html`);
-  const output = path.join(publicDir, name);
   writeFileSync(htmlFile, page(body));
-  // Remove the old image first, so a failed render can never pass off a stale card as new.
-  rmSync(output, { force: true });
 
-  // A window of exactly this size: the size is only accepted for a new window, not a tab.
+  // A window of exactly this size: the size is only accepted for a new window, not a tab. Browsers will
+  // not make a window smaller than about 180px, so a small icon is drawn in a bigger window and only
+  // its top-left corner is captured.
+  const windowWidth = Math.max(width, 180);
+  const windowHeight = Math.max(height, 180);
   const { targetId } = await browser.send('Target.createTarget', {
     url: 'about:blank',
-    width,
-    height,
+    width: windowWidth,
+    height: windowHeight,
     newWindow: true,
   });
   const { sessionId } = await browser.send('Target.attachToTarget', { targetId, flatten: true });
   const send = (method, params = {}) => browser.send(method, params, sessionId);
   try {
     await send('Page.enable');
-    await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
+    await send('Emulation.setDeviceMetricsOverride', {
+      width: windowWidth,
+      height: windowHeight,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    if (transparent) {
+      await send('Emulation.setDefaultBackgroundColorOverride', { color: { r: 0, g: 0, b: 0, a: 0 } });
+    }
     const loaded = new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         off();
@@ -162,13 +165,43 @@ async function screenshot(browser, name, body, width, height) {
     // The card is type, so it is only right once the brand fonts have actually loaded.
     await send('Runtime.evaluate', { expression: 'document.fonts.ready', awaitPromise: true });
     await sleep(300);
-    const { data } = await send('Page.captureScreenshot', { format: 'png' });
-    writeFileSync(output, Buffer.from(data, 'base64'));
+    const { data } = await send('Page.captureScreenshot', {
+      format: 'png',
+      clip: { x: 0, y: 0, width, height, scale: 1 },
+    });
+    return Buffer.from(data, 'base64');
   } finally {
     await browser.send('Target.closeTarget', { targetId }).catch(() => undefined);
   }
+}
+
+async function screenshot(browser, name, body, width, height) {
+  const output = path.join(publicDir, name);
+  // Remove the old image first, so a failed render can never pass off a stale card as new.
+  rmSync(output, { force: true });
+  writeFileSync(output, await render(browser, name, body, width, height));
   if (!existsSync(output)) throw new Error(`images: Edge did not write public/${name}`);
   console.log(`images: wrote public/${name} (${statSync(output).size} bytes)`);
+}
+
+/** A .ico file holding PNG images (every current browser reads that form): a 6-byte header, one 16-byte entry per size, then the images. */
+function buildIco(images) {
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(1, 2); // type: icon
+  header.writeUInt16LE(images.length, 4);
+  let offset = 6 + 16 * images.length;
+  const entries = images.map(({ size, png }) => {
+    const entry = Buffer.alloc(16);
+    entry.writeUInt8(size, 0);
+    entry.writeUInt8(size, 1);
+    entry.writeUInt16LE(1, 4); // colour planes
+    entry.writeUInt16LE(32, 6); // bits per pixel
+    entry.writeUInt32LE(png.length, 8);
+    entry.writeUInt32LE(offset, 12);
+    offset += png.length;
+    return entry;
+  });
+  return Buffer.concat([header, ...entries, ...images.map(({ png }) => png)]);
 }
 
 let edgeProcess;
@@ -203,17 +236,41 @@ try {
     630,
   );
 
+  // The icons are the Founding Creator badge (public/media/badge.webp, a transparent square with the coin
+  // centred in it), so the tab, the home screen and the badge on the page all match.
+  const coin = pathToFileURL(path.join(publicDir, 'media', 'badge.webp')).href;
+  const coinAt = (size) =>
+    `<div style="width:${size}px;height:${size}px"><img src="${coin}" width="${size}" height="${size}" style="display:block"></div>`;
+
+  // iOS fills a transparent icon with black, so the home-screen icon sits on the page's lime panel.
   await screenshot(
     browser,
     'apple-touch-icon.png',
-    `<div style="box-sizing:border-box;width:180px;height:180px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--paper);font-family:var(--typeface-display);font-weight:800;font-size:112px;line-height:1">${escapeHtml(content.nav.wordmark.charAt(0))}</div>`,
+    `<div style="box-sizing:border-box;width:180px;height:180px;display:flex;align-items:center;justify-content:center;background:var(--lime)">${coinAt(136)}</div>`,
     180,
     180,
   );
 
-  const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="${token('--ink')}"/><rect x="6" y="13" width="20" height="6" rx="3" fill="${token('--chip-coral-bg')}"/><rect x="6" y="13" width="14" height="6" rx="3" fill="${token('--signal')}"/><rect x="11" y="13" width="9" height="6" fill="${token('--signal')}"/></svg>\n`;
+  const png = (size) => render(browser, `icon-${size}.png`, coinAt(size), size, size, true);
+  // One at a time: each render opens its own window, and several at once can stall the browser.
+  const small = await png(16);
+  const medium = await png(32);
+  const large = await png(48);
+  const retina = await png(64);
+
+  // The SVG favicon wraps the 64px coin, so modern browsers show the same art, sharp on dense screens.
+  const favicon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32"><image width="32" height="32" xlink:href="data:image/png;base64,${retina.toString('base64')}"/></svg>\n`;
   writeFileSync(path.join(publicDir, 'favicon.svg'), favicon);
-  console.log('images: wrote public/favicon.svg');
+  console.log(`images: wrote public/favicon.svg (${Buffer.byteLength(favicon)} bytes)`);
+
+  // Safari and older browsers ask for /favicon.ico on their own, with no <link> needed.
+  const ico = buildIco([
+    { size: 16, png: small },
+    { size: 32, png: medium },
+    { size: 48, png: large },
+  ]);
+  writeFileSync(path.join(publicDir, 'favicon.ico'), ico);
+  console.log(`images: wrote public/favicon.ico (${ico.length} bytes)`);
 } finally {
   // Always close the browser and remove the temporary pages and profile, even when a render fails.
   if (browser) {

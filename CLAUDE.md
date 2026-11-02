@@ -47,63 +47,64 @@ Stop and escalate the moment you touch anything on the dangerous list (Part B), 
 
 ### What this is and why
 
-**Update 2 Nov 2026 - the page changed audience.** It no longer recruits. It now speaks only to creators who are already onboarded: thanks them for coming in early and trusting Riffi, explains the launch has been delayed to get it right, gives the estimate (mid-November, worst case end of November, exact date to be announced), asks for their details in an on-page form (name, email, phone, current Instagram/X handle, the Riffi username they want) that posts quietly to a Google Form, and teases the founding creator coin without naming it. The seat count and "Claim a seat" are gone; the sections below describe the original recruiting brief and are kept for history where they differ.
+One static web page for the Riffi Creator Program, sent to the creators who are **already onboarded**. It thanks them for coming in early and trusting Riffi, says the launch is taking longer because Riffi is being built right (estimate: mid-November, end of November at the very worst, exact date to be announced), shows the Founding Creator badge and the perks waiting for them, and asks for their details in an on-page form (name, email, phone, current Instagram or X handle, the Riffi username they want). The form posts quietly to the founder's Google Form; the founder emails creators when the date is fixed.
 
-One static web page for the Riffi Creator Program. Before launch, Riffi - India's platform for opinions - is recruiting 50 Instagram creators to seed it, and each one gets a personal Instagram DM from Zyra with this link. The page has one job: the creator taps it, reads for about ninety seconds, taps **Claim a seat**, and replies “I'm in” in the DM thread it opens.
-
-There is no backend, no database, no form, no login and no CMS - just honest copy, one poll-bar design device and a DM link, built mobile-first for mid-range Android phones on 4G inside Instagram's in-app browser. Fifty creators in one cohort will compare notes, so every promise on the page has to hold. It is built from the PRD saved as `docs/functional-spec.md`.
+There is no backend, database, login or CMS - just honest copy, one poll-bar design device, one form and a Google Form behind it, built mobile-first for mid-range Android phones on 4G inside Instagram's in-app browser. The creators compare notes, so every promise on the page has to hold. The page began as a recruiting page for 50 creators (the PRD in `docs/functional-spec.md`, kept for history); on 2 Nov 2026 it changed audience, and the drift log in `docs/implementation-plan.md` records every departure from the PRD.
 
 ### Product DNA - who it is for and why (check every change against this)
 
-**Who it is for:** Instagram creators who make opinionated video content: under 20k followers, largely college students early in their content journey, posting about politics, cricket, sports, entertainment, food and adjacent topics. They arrive only through a personal Instagram DM from Zyra - never cold traffic - overwhelmingly on mid-range Android phones on 4G, inside Instagram's in-app browser. They already had a warm intro, and they have been pitched by plenty of growth-hack programs before.
+**Who it is for:** Instagram creators who make opinionated video content (under 20k followers, largely college students) and who have **already said yes** to joining Riffi. Zyra sends each of them the link in a personal Instagram DM, so they arrive warm, never as cold traffic, overwhelmingly on mid-range Android phones on 4G inside Instagram's in-app browser. They have been pitched by plenty of growth-hack programs before and compare notes with each other.
 
 **Jobs it does for them:**
-- Understand within seconds what Riffi is and what a take is - an opinion, not news - so they know exactly what they would post.
-- See why being one of 50 early creators here beats being one of lakhs on Instagram - and that a take costs forty seconds, not a four-hour reel.
-- Know honestly what they get now (points from the first post, convertible to vouchers), what may come later (first in line for view-based payouts and brand deals - a plan, not a contract), and what is asked of them in return.
-- Decide and act in one tap: Claim a seat opens a DM with Riffi's Instagram account, so they can reply 'I'm in'.
+- Feel thanked, and understand honestly why the launch is later than they expected and when to expect it (an estimate, never a promise).
+- See what is waiting for them: the Founding Creator badge, and the perks (three at launch, two "soon" - the later ones a plan, not a contract).
+- Send the five details Riffi needs to hold their username and set them up, in about a minute, and know it worked.
+- Know honestly what is and is not paid, and that they own what they post.
 
-**What success looks like (for the user):** A creator who got the DM reads for about ninety seconds, taps Claim a seat and replies 'I'm in' - feeling it was a decision, not a risk - and nothing the page said turns out untrue when the fifty of them compare notes. On the phone they actually use, the page is fast inside Instagram, never breaks at any width from 320px up, and still reads correctly without colour or motion.
+**What success looks like (for the user):** A creator opens the link, feels thanked and informed, sends their details in a minute and sees a clear thank-you - and nothing the page said turns out untrue when they compare notes. On the phone they actually use, the page is fast inside Instagram, never breaks at any width from 320px up, and still reads correctly without colour or motion.
 
 **Key user flows:**
-- Zyra DMs a creator the link -> Instagram shows the preview card (the one-of-50 line and a 71/29 poll bar) -> the creator taps it.
-- The page opens in Instagram's in-app browser -> the headline renders at once and the sample poll bar fills -> the creator reads down the eight blocks: hero, what Riffi is, why here not there, how you earn, the long game, 50 seats, FAQ, close.
-- The creator taps Claim a seat (in the hero or the close) -> a DM thread with Riffi's Instagram account opens (WhatsApp as an optional fallback) -> they reply 'I'm in'.
-- Zyra rewrites copy, answers an open [FILL] input or sets a real seat count by editing one content file; the brand-kit swap is one tokens file plus one wordmark SVG.
+- Zyra DMs a creator the link -> Instagram shows the preview card (the thank-you headline) -> the creator taps it.
+- The page opens -> hero (thank-you and the estimate), the badge, the perks, the details form, a three-question FAQ, the close.
+- The creator taps "Send your details" (hero or close) -> the page scrolls to the form -> they fill five fields and send -> the panel becomes a thank-you, the badge swishes in, and "We're holding @name for you" is read back.
+- Zyra rewrites copy or changes a setting by editing one content file; the brand-kit swap is one tokens file plus one wordmark SVG.
 
 **Non-goals (deliberately not doing):**
-- No backend, database, login, CMS or third-party embed. Since 2 Nov 2026 the one conversion is the page's own details form, which posts to the founder's Google Form (`src/lib/submit.ts`) - and nothing else: no tracker, no cookie, no second form.
-- No forecasting, predictions, accuracy percentages, prediction UI, app screenshots or device mockups - the page is opinion-only and creator-only.
-- No fabricated scarcity or proof: no countdown timer, no invented seat count, no fake testimonials, logos or user counts; sample takes are always labelled as samples.
-- No published reward point values and no guaranteed-earnings language - the payout figure is always framed as an example, and future monetisation as a plan, not a contract.
+- No backend, database, login, CMS or third-party embed. The one conversion is the page's own details form, which posts to the founder's Google Form (`src/lib/submit.ts`) - and nothing else: no tracker, no cookie, no second form.
+- No forecasting, predictions, accuracy percentages, prediction UI, app screenshots or device mockups.
+- No fabricated scarcity or proof: no countdown timer, no seat count, no fake testimonials, logos or user counts; the one sample take on the page is always labelled as a sample.
+- No published reward point values, no payout figures and no guaranteed-earnings language - future monetisation is always "a plan, not a contract".
 - No Next.js, no animation library, UI kit, form library or state manager, and no dark mode; analytics stays off unless switched on, and then only cookieless Plausible or Umami.
 
-**Expected scale (calibrate performance and maintainability to this - do not over-build):** Fifty creator seats in batch one. Traffic is only the people Zyra DMs personally - tens to a few hundred visits - served as static files from a CDN, so there is no server, no database and nothing that grows without limit. The binding constraint is weight, not scale: fast on a mid-range Android on 4G inside Instagram (JS under 90KB gzipped, whole page under 400KB, LCP under 2s, CLS under 0.02, Lighthouse mobile Performance 95+ and Accessibility 100). maturityTier = prelaunch until the first creator is sent the link.
+**Expected scale (calibrate performance and maintainability to this - do not over-build):** Traffic is only the creators Zyra DMs personally - tens to a few hundred visits - served as static files from a CDN, so there is no server, no database and nothing that grows without limit. The binding constraint is weight, not scale: fast on a mid-range Android on 4G inside Instagram (JS under 90KB gzipped, whole page under 400KB, LCP about 2s, CLS under 0.02, Lighthouse mobile Performance 95+ and Accessibility 100). maturityTier = prelaunch until the first creator is sent the link.
 
 ### Architecture map
-
-_Planned from the PRD (section 5.3) - nothing is built yet. This map becomes as-built as each build step lands._
 
 ```
 Riffi/                   C:\Users\Akshay\Projects\Riffi - outside OneDrive on purpose
   index.html             head tags: title, description, the Instagram link-preview card, theme colour
-  package.json           scripts: dev, build, typecheck, lint, test, coverage, format
+  vercel.json            security headers (incl. the content policy) and cache rules - nothing else
+  package.json           scripts: dev, build, typecheck, lint, test, coverage, format, release
   vite.config.ts         the Vite build (static output) - no test settings in here
   vitest.config.ts       tests + coverage (writes coverage/coverage-summary.json for CI)
-  eslint.config.js       lint rules
-  public/                og.png (1200x630 preview card), favicon.svg, apple-touch-icon.png
+  eslint.config.js       lint rules (fetch is banned everywhere except src/lib/submit.ts)
+  public/                og.png (1200x630 preview card), favicon.svg + favicon.ico + apple-touch-icon.png
+                         (all from the badge), media/badge.webp (the Founding Creator coin)
+  scripts/               prerender, budget, check-dist (output + header check), presend, make-images
   src/
-    main.tsx, App.tsx    App composes the eight blocks in order, nothing else
-    content.ts           ALL copy + settings (Instagram handle, WhatsApp flag, seats). Single source of truth.
+    main.tsx, App.tsx    App composes the blocks in order, nothing else
+    content.ts           ALL copy + settings (Instagram handle, WhatsApp flag, the Google Form address
+                         and field ids). Single source of truth.
     styles/tokens.css    ALL brand values (colours, fonts, radii, shadow). Single source of truth.
     styles/global.css    resets, base type, the Tailwind v4 @theme mapping
-    hooks/               useInView, useReducedMotion
+    hooks/               useInView, useCountUp, useReducedMotion
     components/
-      primitives/        Section, Chip, CtaButton, TakeCard, PollBar (the page's structural device)
-      blocks/            Nav, Hero, WhatRiffiIs, WhyHere, HowYouEarn, LongGame, Seats, Faq, Close
-    lib/cta.ts           builds the Instagram DM link (and the optional WhatsApp fallback)
-  tests/                 Vitest: the honesty guardrails and component behaviour
-  docs/                  functional spec (the PRD), technical spec, implementation plan, handoff
+      primitives/        Section, Chip, CtaButton, TakeCard, PollBar, Wordmark
+      blocks/            Nav, Hero, Badge, Perks, Join (the form), Faq, Close, Footer
+    lib/cta.ts           validates the Google Form address and field ids; the Instagram and WhatsApp links
+    lib/submit.ts        the page's only network request: posts the details to the Google Form
+  tests/                 Vitest: the honesty guardrails, the form, the headers and component behaviour
+  docs/                  functional spec (the PRD, history), technical spec, implementation plan, handoff
   .github/  .zuko/       CI, review routing and the Zuko harness (scaffolded by /bootstrap)
 ```
 
@@ -117,10 +118,11 @@ Riffi/                   C:\Users\Akshay\Projects\Riffi - outside OneDrive on pu
 
 ### The dangerous 5% for this app (the "stop and ask" surfaces; canonical danger list)
 
-This page has no logins, no payments, no database and stores nothing about anyone, so the list is short. What can go wrong here is quiet: the page promises something to fifty creators who will compare notes, or its one button sends them to the wrong place. In both cases nothing errors - the page just looks fine. These are the files where that happens:
+This page has no logins, no payments and no database of its own, but its form collects creators' emails and phone numbers and hands them to a Google Form. What can go wrong here is quiet: the page promises something the creators will compare notes on, or the form sends their details to the wrong place. In both cases nothing errors - the page just looks fine. These are the files where that happens:
 
-- **The promise file** (`src/content.ts`) - every word on the page, plus the settings: the Instagram handle the button opens, the optional WhatsApp number, and the seat count. It is where the honesty rules live in practice: no point values, the payout figure only ever framed as an example, “a plan, not a contract”, no invented seat count. A wrong line here is a promise to fifty people that cannot be quietly taken back, and a one-letter slip in the handle sends their “I'm in” to a stranger's account.
+- **The promise file** (`src/content.ts`) - every word on the page, plus the settings: the Instagram handle, the optional WhatsApp number, and the Google Form address and field ids. It is where the honesty rules live in practice: no point values, no payout figures, “a plan, not a contract”, the dates only ever an estimate. A wrong line here is a promise to every creator that cannot be quietly taken back, and a one-letter slip in the form address or a field id sends their email and phone number to the wrong place.
 - **The details form's destination** (`src/lib/cta.ts`, `src/lib/submit.ts`, `src/components/blocks/Join.tsx`) - `cta.ts` validates the Google Form address and field ids, `submit.ts` is the page's only network call, and the form carries creators' email and phone numbers: a wrong address sends them to a stranger. `cta.ts` also still builds the Instagram link and the WhatsApp fallback. If it breaks, nothing errors; creators simply cannot reach you.
+- **The headers file** (`vercel.json`) - the security headers and the content policy the live site sends. A wrong policy fails quietly: the page looks fine in development and is broken only on the live site (a blocked script, a blocked form post), or it quietly lets something in that should be kept out. `npm run check:dist` fails the build if the page's inline script no longer matches the policy.
 - **The page head** (`index.html`) - holds the link-preview card Instagram shows inside the DM before the page is even opened, and is where any tracking script would go. Instagram caches previews, so a broken card can stick; and any tracker other than cookieless Plausible or Umami brings consent and privacy obligations.
 - **The list of code libraries** (`package.json`) - every library added ships to a phone with a 90KB budget, and a bad or look-alike package could inject code into a page creators trust. Adding one is a decision, not a detail.
 - **Secrets** (`.env`, `.env.*`, anything named `*secret*`) - this page should have none. Anything in a `VITE_` variable is baked into the public page for anyone to read, so a key put there is a published key.
@@ -128,7 +130,7 @@ This page has no logins, no payments, no database and stores nothing about anyon
 - **The rulebook itself** (`CLAUDE.md`, `AGENTS.md`, `.zuko/config.json`) - this list lives inside these files. Without guarding them, anyone could quietly take a file off the list and then edit it freely.
 - **What decides what ships** (`package-lock.json`, `.npmrc`, `vite.config.*`, `src/main.tsx`, `scripts/**`, `public/**`) - the exact library versions, the build and pre-render steps, the pre-send and output checks, and the link-preview image Instagram caches. Changing any of these can put something on the page, or switch a check off, without touching another file on this list.
 
-_No accounts, forms, payments, stored personal data or analytics exist here. If any ever appear - an email form, a `vercel.json` with redirects, an analytics file - they join this list the same day._
+_The page stores nothing itself: the one form posts to a Google Form and nothing is kept in the browser beyond the open tab. No accounts, payments or analytics exist here. If any ever appear - a second form, a redirect or rewrite in `vercel.json`, an analytics file - they join this list the same day._
 
 The machine-readable form below is the single source of truth the hooks and the build router read. The working copy at `.zuko/config.json` is generated from it - never hand-maintained. Keep this block and the prose above in agreement.
 
@@ -137,7 +139,7 @@ The machine-readable form below is the single source of truth the hooks and the 
 {
   "version": 1,
   "appName": "Riffi Creator Page",
-  "summary": "One static landing page for the Riffi Creator Program. A creator who got a personal Instagram DM from Zyra taps the link, reads for ninety seconds, and taps Claim a seat to open a DM and reply 'I'm in'. No backend, forms or logins; mobile-first for Instagram's in-app browser, and honest about every promise.",
+  "summary": "One static thank-you and update page for the creators who are already onboarded to the Riffi Creator Program. A creator who got a personal Instagram DM from Zyra reads the launch estimate, sees the Founding Creator badge and the perks waiting for them, and sends their details in an on-page form that posts to the founder's Google Form. No backend or logins; mobile-first for Instagram's in-app browser, and honest about every promise.",
   "protectedBranch": "main",
   "dangerousGlobs": [
     ".env",
@@ -146,7 +148,9 @@ The machine-readable form below is the single source of truth the hooks and the 
     "src/content.ts",
     "src/lib/cta.ts",
     "src/lib/submit.ts",
+    "src/components/blocks/Join.tsx",
     "index.html",
+    "vercel.json",
     "package.json",
     "tests/**",
     "**/*.test.*",
@@ -182,7 +186,7 @@ The machine-readable form below is the single source of truth the hooks and the 
     },
     {
       "surface": "conversion",
-      "service": "Instagram DM deep link (ig.me) with an optional WhatsApp wa.me fallback - no forms"
+      "service": "the page's own details form posting to a Google Form the founder owns (Instagram ig.me and WhatsApp wa.me links remain as unused settings)"
     },
     {
       "surface": "fonts",
@@ -224,28 +228,28 @@ The machine-readable form below is the single source of truth the hooks and the 
     "skill": "ui-ux-pro-max"
   },
   "product": {
-    "audience": "Instagram creators who make opinionated video content: under 20k followers, largely college students early in their content journey, posting about politics, cricket, sports, entertainment, food and adjacent topics. They arrive only through a personal Instagram DM from Zyra - never cold traffic - overwhelmingly on mid-range Android phones on 4G, inside Instagram's in-app browser. They already had a warm intro, and they have been pitched by plenty of growth-hack programs before.",
+    "audience": "Instagram creators who make opinionated video content (under 20k followers, largely college students) and who have already said yes to joining Riffi. Zyra sends each of them the link in a personal Instagram DM, so they arrive warm, never as cold traffic, overwhelmingly on mid-range Android phones on 4G inside Instagram's in-app browser. They have been pitched by plenty of growth-hack programs before and compare notes with each other.",
     "jobs": [
-      "Understand within seconds what Riffi is and what a take is - an opinion, not news - so they know exactly what they would post.",
-      "See why being one of 50 early creators here beats being one of lakhs on Instagram - and that a take costs forty seconds, not a four-hour reel.",
-      "Know honestly what they get now (points from the first post, convertible to vouchers), what may come later (first in line for view-based payouts and brand deals - a plan, not a contract), and what is asked of them in return.",
-      "Decide and act in one tap: Claim a seat opens a DM with Riffi's Instagram account, so they can reply 'I'm in'."
+      "Feel thanked, and understand honestly why the launch is later than they expected and when to expect it (an estimate, never a promise).",
+      "See what is waiting for them: the Founding Creator badge, and the perks (three at launch, two \"soon\" - the later ones a plan, not a contract).",
+      "Send the five details Riffi needs to hold their username and set them up, in about a minute, and know it worked.",
+      "Know honestly what is and is not paid, and that they own what they post."
     ],
-    "success": "A creator who got the DM reads for about ninety seconds, taps Claim a seat and replies 'I'm in' - feeling it was a decision, not a risk - and nothing the page said turns out untrue when the fifty of them compare notes. On the phone they actually use, the page is fast inside Instagram, never breaks at any width from 320px up, and still reads correctly without colour or motion.",
+    "success": "A creator opens the link, feels thanked and informed, sends their details in a minute and sees a clear thank-you - and nothing the page said turns out untrue when they compare notes. On the phone they actually use, the page is fast inside Instagram, never breaks at any width from 320px up, and still reads correctly without colour or motion.",
     "keyFlows": [
-      "Zyra DMs a creator the link -> Instagram shows the preview card (the one-of-50 line and a 71/29 poll bar) -> the creator taps it.",
-      "The page opens in Instagram's in-app browser -> the headline renders at once and the sample poll bar fills -> the creator reads down the eight blocks: hero, what Riffi is, why here not there, how you earn, the long game, 50 seats, FAQ, close.",
-      "The creator taps Claim a seat (in the hero or the close) -> a DM thread with Riffi's Instagram account opens (WhatsApp as an optional fallback) -> they reply 'I'm in'.",
-      "Zyra rewrites copy, answers an open [FILL] input or sets a real seat count by editing one content file; the brand-kit swap is one tokens file plus one wordmark SVG."
+      "Zyra DMs a creator the link -> Instagram shows the preview card (the thank-you headline) -> the creator taps it.",
+      "The page opens -> hero (thank-you and the estimate), the badge, the perks, the details form, a three-question FAQ, the close.",
+      "The creator taps \"Send your details\" (hero or close) -> the page scrolls to the form -> they fill five fields and send -> the panel becomes a thank-you, the badge swishes in, and \"We're holding @name for you\" is read back.",
+      "Zyra rewrites copy or changes a setting by editing one content file; the brand-kit swap is one tokens file plus one wordmark SVG."
     ],
     "nonGoals": [
-      "No backend, database, login, CMS or third-party embed. Since 2 Nov 2026 the one conversion is the page's own details form, which posts to the founder's Google Form (`src/lib/submit.ts`) - and nothing else: no tracker, no cookie, no second form.",
-      "No forecasting, predictions, accuracy percentages, prediction UI, app screenshots or device mockups - the page is opinion-only and creator-only.",
-      "No fabricated scarcity or proof: no countdown timer, no invented seat count, no fake testimonials, logos or user counts; sample takes are always labelled as samples.",
-      "No published reward point values and no guaranteed-earnings language - the payout figure is always framed as an example, and future monetisation as a plan, not a contract.",
+      "No backend, database, login, CMS or third-party embed. The one conversion is the page's own details form, which posts to the founder's Google Form (`src/lib/submit.ts`) - and nothing else: no tracker, no cookie, no second form.",
+      "No forecasting, predictions, accuracy percentages, prediction UI, app screenshots or device mockups.",
+      "No fabricated scarcity or proof: no countdown timer, no seat count, no fake testimonials, logos or user counts; the one sample take on the page is always labelled as a sample.",
+      "No published reward point values, no payout figures and no guaranteed-earnings language - future monetisation is always \"a plan, not a contract\".",
       "No Next.js, no animation library, UI kit, form library or state manager, and no dark mode; analytics stays off unless switched on, and then only cookieless Plausible or Umami."
     ],
-    "scale": "Fifty creator seats in batch one. Traffic is only the people Zyra DMs personally - tens to a few hundred visits - served as static files from a CDN, so there is no server, no database and nothing that grows without limit. The binding constraint is weight, not scale: fast on a mid-range Android on 4G inside Instagram (JS under 90KB gzipped, whole page under 400KB, LCP under 2s, CLS under 0.02, Lighthouse mobile Performance 95+ and Accessibility 100). maturityTier = prelaunch until the first creator is sent the link."
+    "scale": "Traffic is only the creators Zyra DMs personally - tens to a few hundred visits - served as static files from a CDN, so there is no server, no database and nothing that grows without limit. The binding constraint is weight, not scale: fast on a mid-range Android on 4G inside Instagram (JS under 90KB gzipped, whole page under 400KB, LCP about 2s, CLS under 0.02, Lighthouse mobile Performance 95+ and Accessibility 100). maturityTier = prelaunch until the first creator is sent the link."
   },
   "riskModel": {
     "maturityTier": "prelaunch",
@@ -337,6 +341,14 @@ The machine-readable form below is the single source of truth the hooks and the 
       "public/**": {
         "sensitivity": "user-data",
         "reversibilityClass": "reversible"
+      },
+      "src/components/blocks/Join.tsx": {
+        "sensitivity": "user-data",
+        "reversibilityClass": "reversible"
+      },
+      "vercel.json": {
+        "sensitivity": "user-data",
+        "reversibilityClass": "reversible"
       }
     }
   }
@@ -356,11 +368,11 @@ Missing or unknown values are scored to the **maximum** (most cautious), so an u
 ### Buy-not-built map
 
 - **Hosting** - static files on **Vercel** (its command-line tool is already on this laptop); Cloudflare Pages is the PRD's equal alternative. No server of our own.
-- **The conversion** - **Instagram's own DM link** (`ig.me/m/<handle>`), with an optional **WhatsApp** `wa.me` link behind a setting. No form, no email capture, no CRM.
+- **The conversion** - the page's own **details form**, posting to a **Google Form** the founder owns (responses land in its sheet). No CRM, no email service. The Instagram DM link and an optional **WhatsApp** `wa.me` link remain as settings but are not used on the page today.
 - **Fonts** - **Fontsource** self-hosted variable fonts (Archivo, Hanken Grotesk). Never a Google Fonts or other third-party round trip.
 - **Icons** - **Lucide React**, six at most, tree-shaken.
 - **Analytics** - off by default. If switched on, only **Plausible** or **Umami** (cookieless, so no consent banner) - never a cookie-based tracker.
-- **Logins, payments, secrets** - none on this page, and none to be hand-built. There are no accounts; points, vouchers and payouts live in the Riffi app, not here; and there is nothing secret to store.
+- **Logins, payments, secrets** - none on this page, and none to be hand-built. There are no accounts; points, vouchers and payouts live in the Riffi app, not here; and there is nothing secret to store (the Google Form address in the page is public by design).
 - **Everything else stays small and hand-written** - CSS-only animation plus a ~20-line in-view hook. No animation library, UI kit, form library or state manager: the 90KB JS budget cannot carry them.
 
 ### Stack gotchas
@@ -370,11 +382,12 @@ Missing or unknown values are scored to the **maximum** (most cautious), so an u
 - **User-facing strings live only in `src/content.ts`.** No hardcoded copy in any `.tsx` file - Zyra rewrites copy without touching components, and the `[FILL]` inputs stay one greppable list.
 - **Motion is CSS-only: one hero moment, two scroll reveals and (since 2 Nov 2026, founder's request) one post-submit moment - the badge swishes into the middle of the green box once the details are sent - nothing else.** No Framer Motion or other animation library, and no fade-and-slide-up entrances on every section (the PRD calls that the clearest tell of a generated page). `prefers-reduced-motion` gets a complete, static page.
 - **The PRD's design direction (functional spec, section 3) beats generic design advice,** including the ui-ux-pro-max skill: no gradients, glassmorphism, dark mode, cream background, centred hero, all-caps eyebrow labels, or arrows on buttons.
-- **Never render an invented number.** With `seats.taken` null or `seats.show` false, no seat count appears anywhere; no reward point values anywhere; the ₹ payout figure is framed as an example in the same sentence.
+- **Never render an invented number.** No seat count, no reward point values and no payout figure appear anywhere; the only numbers on the page are the sample poll (labelled a sample) and nothing a creator could take as a promise.
+- **Security headers live in `vercel.json` and must match the page.** The content policy allows scripts only from this site plus the one inline script by its fingerprint, and one outside address (the Google Form). Change the inline script in `index.html` and the fingerprint in `vercel.json` must change with it - `npm run check:dist` and `tests/vercel-config.test.ts` fail if not. A new font host, analytics script or embed needs a deliberate policy change, not a workaround.
 - **One form, and only one.** Since 2 Nov 2026 the page has a single `<form>` (`src/components/blocks/Join.tsx`) that posts to the founder's Google Form through `src/lib/submit.ts` - the only file allowed to call `fetch` (the eslint exception and `tests/submit.test.ts` pin that). It collects personal data (email, phone), so a second form, a different destination, a tracker or any new network call is a new dangerous surface: stop and ask.
 - **Not Next.js.** One static page - do not “upgrade” it to a framework with routing or server rendering.
 - **Fonts are self-hosted with `@fontsource-variable`** - never swap in Google Fonts. No Devanagari: the chosen faces do not cover it.
-- **The name is Riffi** (founder-confirmed 14 Sep 2026). The original PRD spells it Rifii - never copy that spelling back. The Instagram handle is still an open `[FILL]` input: never treat the placeholder as the real account.
+- **The name is Riffi** (founder-confirmed 14 Sep 2026). The original PRD spells it Rifii - never copy that spelling back. The Instagram handle (`get.riffi`) is confirmed; never swap in a guessed one.
 - **`npm test` must run once and exit** (`vitest run`, never watch mode) - the end-of-turn check waits for it. Tests live in `tests/`; test settings live only in `vitest.config.ts` (never a `test:` block inside `vite.config.ts`); and coverage must write `coverage/coverage-summary.json` (Vitest's `json-summary` reporter), which CI's coverage check reads.
 - **This laptop is Windows 11 on ARM64.** The native pieces this stack needs publish win32-arm64 builds (checked 14 Sep 2026: esbuild, Rollup, Lightning CSS, Tailwind's engine). If an install fails on a missing native package, fix the install - never swap the tool.
 - **The formatter never downloads anything:** the format command runs `npx --no`, so until Prettier is installed it quietly does nothing.
