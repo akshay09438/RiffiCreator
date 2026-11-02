@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
+import { Badge } from './components/blocks/Badge';
 import { Close } from './components/blocks/Close';
 import { Faq } from './components/blocks/Faq';
 import { Footer } from './components/blocks/Footer';
 import { Hero } from './components/blocks/Hero';
 import { HowYouEarn } from './components/blocks/HowYouEarn';
+import { Join } from './components/blocks/Join';
+import { Launch } from './components/blocks/Launch';
 import { LongGame } from './components/blocks/LongGame';
 import { Nav } from './components/blocks/Nav';
-import { Seats } from './components/blocks/Seats';
 import { VideoTakes } from './components/blocks/VideoTakes';
 import { WhatRiffiIs } from './components/blocks/WhatRiffiIs';
 import { WhyHere } from './components/blocks/WhyHere';
-import { settings } from './content';
 
-/** The page: the eight blocks in the order a creator's objections come up (PRD 2.2) - nothing else. */
+/** The page: the blocks in the order a creator's objections come up (PRD 2.2) - nothing else. */
 export default function App() {
   useEffect(() => {
     // Hydration is done, so scroll reveals may wait for the reader. After 6 seconds the CSS failsafe
@@ -29,8 +30,10 @@ export default function App() {
         <WhatRiffiIs />
         <WhyHere />
         <HowYouEarn />
+        <Badge />
         <LongGame />
-        <Seats seats={settings.seats} />
+        <Launch />
+        <Join />
         <Faq />
         <Close />
       </main>

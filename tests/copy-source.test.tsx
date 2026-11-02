@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import App from '../src/App';
-import { content, settings } from '../src/content';
+import { content } from '../src/content';
 
 /** Every string anywhere inside `content`, including inside arrays and nested objects. */
 function strings(value: unknown, into: Set<string>): Set<string> {
@@ -18,7 +18,6 @@ describe('where the words come from (PRD 5.2, rule 2)', () => {
     const allowed = strings(content, new Set<string>());
     const { sampleTake } = content.hero;
     // Values the page formats from content and settings rather than copying.
-    allowed.add(String(settings.seats.total));
     allowed.add(`${sampleTake.agree.percent}%`);
     allowed.add(`${sampleTake.disagree.percent}%`);
     allowed.add(`${sampleTake.votes.toLocaleString('en-IN')} ${sampleTake.votesLabel}`);

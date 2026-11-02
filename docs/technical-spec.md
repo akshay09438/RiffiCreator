@@ -2,6 +2,17 @@
 
 _How the page is built, as it actually exists. Updated in the same change as the code. Where this file and the code disagree, the code is right - fix this file and note why in the drift log._
 
+## Changed 2 Nov 2026: the page now speaks to onboarded creators
+
+The audience changed from recruits to creators already in, so the copy changed and the design did not (tokens, motion and layout are untouched). Blocks in order: `Hero`, `VideoTakes`, `WhatRiffiIs`, `WhyHere`, `HowYouEarn` ("What happens next."), `Badge` (new), `LongGame`, `Launch` (replaces `Seats`), `Join` (new), `Faq`, `Close`, then `Footer`.
+
+- **`Launch`** shows the estimate (mid-November), the worst case (end of November) and "To be announced" as a plain `<dl>`, with a line saying they are estimates, not promises. No countdown and no seat count exists any more: `settings.seats` and `content.seats` are removed.
+- **`Badge`** shows the founding creator coin as a teaser: one 200px image, blurred in the file itself so the lettering cannot be recovered, with copy that names no perk, number or date. Static, no motion.
+- **`Join`** is the page's one `<form>`. Five required inputs (name, email, phone, Instagram or X handle, the Riffi username wanted), each named with its Google Form entry id (`settings.form.fields`, validated at build by `formEntryId` in `src/lib/cta.ts`). `action` is the Google Form's `formResponse` address (`formResponseHref` accepts nothing else), so without JavaScript it is a plain POST. With JavaScript, `onSubmit` sends the answers through `src/lib/submit.ts` (`fetch`, `mode: 'no-cors'`) and shows a thank-you without leaving the page; a network failure shows an error and keeps what was typed. A hidden `website` trap field catches bots: if filled, nothing is sent but the page still shows success. Google gives a cross-site post no readable reply, so success means delivered, not confirmed.
+- **Every button** ("Send your details" in the hero, `Launch` and `Close`) is a plain in-page link to `#join`; `ctaHref` is now the literal `'#join'`.
+- **Guards:** `eslint.config.js` lets only `src/lib/submit.ts` call `fetch`; `tests/submit.test.ts` fails if any other file under `src/` uses a network API; `scripts/check-dist.mjs` requires exactly one `<form>` whose `action` is a Google Form `formResponse` address and allows links only to `#join`, `ig.me` and `wa.me`.
+- **Measured 2 Nov 2026:** JavaScript 69.7KB gzipped (limit 90KB); page weight 206.5KB (limit 400KB). 293 tests pass; typecheck, lint, `check:dist` and `presend` pass. The Task 9 audit (Lighthouse, 320px to 1920px, keyboard, greyscale, reduced motion, no-JavaScript) has **not** been re-run on this version.
+
 ## Status
 
 **Built and deployed, live at `https://riffi-creator-page.vercel.app` (17 Sep 2026).** All nine build steps (PRD section 5, tracked in `docs/implementation-plan.md`) are done: the page pre-renders to full HTML and hydrates in the browser, it passes its own size budget and output check, and the Task 9 audit (Lighthouse mobile, every width from 320px to 1920px, keyboard-only, greyscale, and reduced motion and no-JavaScript passes) is green, with one layout-shift fix applied (see "Budgets and audit" below).

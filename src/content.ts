@@ -8,11 +8,17 @@
 
 export type Settings = {
   instagramHandle: string;
-  /** Where "Claim a seat" goes: the founder's Google Form (17 Sep 2026). */
-  applyFormUrl: string;
+  /**
+   * The page's own form posts to a Google Form behind the scenes (2 Nov 2026): the creator sees a
+   * designed form, the founder reads the answers in the Form's response sheet. `responseUrl` is the
+   * Form's formResponse address; `fields` maps each question to its entry id.
+   */
+  form: {
+    responseUrl: string;
+    fields: Record<'name' | 'phone' | 'email' | 'handle' | 'username', string>;
+  };
   siteUrl: string;
   whatsapp: { enabled: boolean; number: string; message: string };
-  seats: { total: number; taken: number | null; show: boolean };
   comparisonSplit: { instagram: number; riffi: number };
   inputsConfirmed: Record<
     | 'weeklyCommitment'
@@ -20,7 +26,7 @@ export type Settings = {
     | 'contentOwnership'
     | 'footerLine'
     | 'instagramHandle'
-    | 'applyFormUrl'
+    | 'formResponseUrl'
     | 'siteUrl',
     boolean
   >;
@@ -29,10 +35,19 @@ export type Settings = {
 export const settings: Settings = {
   // Riffi's Instagram account, without the @. Confirmed by the founder on 17 Sep 2026.
   instagramHandle: 'get.riffi',
-  // The founder's application form ("New creator onboarding - Riffi"), swapped in on 1 Oct 2026,
-  // replacing the 17 Sep 2026 form. Every "Claim a seat" opens it.
-  applyFormUrl:
-    'https://docs.google.com/forms/d/e/1FAIpQLSeVrXx9tRYtsIjP_T9V7NnVbRJm2C-u5s5QrhlZDT4vVabY0Q/viewform',
+  // The founder's "Riffi Creator Username" Google Form, made on 2 Nov 2026. Entry ids read from the
+  // form's own page: Name, Phone No., Email ID, Instagram/X Handle, Riffi Username.
+  form: {
+    responseUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6-FCxNST98HVcsn6RGA/formResponse',
+    fields: {
+      name: 'entry.1947302392',
+      phone: 'entry.19523587',
+      email: 'entry.1533783917',
+      handle: 'entry.990724691',
+      username: 'entry.1972389049',
+    },
+  },
   // The live domain, deployed 17 Sep 2026. The preview card Instagram shows is built from it.
   siteUrl: 'https://riffi-creator-page.vercel.app',
   whatsapp: {
@@ -40,13 +55,6 @@ export const settings: Settings = {
     // Digits only, with the country code and no plus sign. Needed only when `enabled` is true.
     number: '',
     message: "I'm in",
-  },
-  seats: {
-    total: 500,
-    // A real, hand-counted number. Leave null to show no number at all.
-    taken: null,
-    // Turn on only when `taken` is real and kept up to date by hand.
-    show: false,
   },
   // Rhetoric, not data: every comparison row uses the same dramatic split (PRD Block 3).
   comparisonSplit: { instagram: 12, riffi: 88 },
@@ -59,7 +67,8 @@ export const settings: Settings = {
     contentOwnership: true,
     footerLine: true,
     instagramHandle: true,
-    applyFormUrl: true,
+    // Answered by the founder on 2 Nov 2026: the new form, in-page.
+    formResponseUrl: true,
     siteUrl: true,
   },
 };
@@ -70,17 +79,14 @@ export const content = {
     batch: 'Batch 01',
   },
   cta: {
-    label: 'Claim a seat',
-    helper: `A one minute form. We reply from @${settings.instagramHandle}`,
+    label: 'Send your details',
+    helper: `About a minute. We reply from @${settings.instagramHandle}`,
     whatsappLabel: 'Or message us on WhatsApp',
   },
   hero: {
-    titleLines: [
-      "On Instagram you're one of lakhs.",
-      "Here you're one of the first, with almost no competition.",
-    ],
+    titleLines: ['You came in early.', 'Thank you for trusting us.'],
     subline:
-      "Riffi is India's platform for opinions. We're taking 500 creators in before launch and pointing the feed at them.",
+      "Riffi is taking longer to launch than we planned, because we want it right before you arrive. We now expect mid-November, and the end of November at the very worst.",
     sampleTake: {
       chip: 'sample take',
       text: 'Being early beats being good.',
@@ -129,7 +135,7 @@ export const content = {
     ],
   },
   videoTakes: {
-    heading: "You already shoot reels. Here it's just you, talking.",
+    heading: "When the doors open, this is the whole job.",
     lead: 'No hook, no thumbnail, no four hour edit. Point the phone at yourself, say what you actually think, and post it. The room votes on the opinion, not the edit.',
     badge: '40 seconds, one opinion',
     chip: 'sample',
@@ -158,11 +164,11 @@ export const content = {
     footer: 'One rule, whatever you shoot: it has to be your opinion, not the news.',
   },
   whyHere: {
-    heading: "You're not early on Instagram. You're early here.",
+    heading: "What you signed up for hasn't changed.",
     instagramLabel: 'Instagram',
     riffiLabel: 'Riffi',
     rows: [
-      { label: "Creators you're up against", instagram: 'Lakhs', riffi: '499' },
+      { label: 'Who you share the feed with', instagram: 'Lakhs', riffi: 'A small first group' },
       {
         label: 'Who decides your reach',
         instagram: 'A feed tuned for watch time',
@@ -183,25 +189,35 @@ export const content = {
     closer: 'And a reel costs you four hours. A take costs you forty seconds.',
   },
   howYouEarn: {
-    heading: 'What creators can do here.',
-    lead: 'Five ways to put an opinion out. Pick whichever suits the take.',
+    heading: 'What happens next.',
+    lead: 'Four steps from here to launch day.',
     rows: [
-      { action: 'Post a take', description: "One opinion, one line. That's the whole format." },
       {
-        action: 'Write the long version',
-        description: 'Some takes need a paragraph. Write it out when they do.',
+        action: 'Send your details',
+        description: 'Five short fields in the form further down. About a minute.',
       },
       {
-        action: 'Add images',
-        description: 'Screenshots, stills, memes. Whatever makes the point land.',
+        action: 'We hold your username',
+        description: 'Once your details are in, your Riffi username is reserved for you.',
       },
-      { action: 'Drop a story', description: 'Short-lived posts, the same as you already do.' },
       {
-        action: 'Get the room talking',
-        description: "Votes, replies and reshares. That's how you find out if the room agrees.",
+        action: 'We announce the date',
+        description: "We'll message you the exact launch date as soon as we're sure of it.",
+      },
+      {
+        action: 'You post first',
+        description: 'Your takes are already up when everyone else arrives.',
       },
     ],
     note: "Straight answer on money: not on day one. Once Riffi has enough people reading, we start paying creators for the engagement their takes get. That means you don't need a brand deal to earn. Until then, what you get is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
+  },
+  badge: {
+    chip: 'Sneak peek',
+    heading: 'One more thing.',
+    lead: "We haven't told you about this yet. It's yours for coming in early, and we think you'll like it.",
+    note: "We're keeping the rest back. You'll see it when the doors open.",
+    alt: 'A coin, deliberately out of focus.',
+    image: '/media/badge-teaser.webp',
   },
   longGame: {
     // Two halves so the first can carry the marker sweep, the way the hero's second line does.
@@ -225,41 +241,72 @@ export const content = {
     framing:
       "All of this is our plan, not a contract. You're backing us early, and we'd rather you do it knowing exactly that.",
   },
-  seats: {
-    heading: "500 seats. Here's what we ask.",
-    // The founder's answer (1 Oct 2026): no fixed ask, three or more takes a week appreciated.
-    body: "No fixed number. Post as often as you like. If you can manage three or more takes a week before launch, that helps us a lot. No calls, no contracts, no exclusivity. Keep posting wherever else you post.",
-    meterLabel: '500 seats in batch one',
-    takenLabel: (taken: number, total: number) => `${taken} of ${total} seats taken`,
+  launch: {
+    // Decorative, like the big number it replaces: the heading carries the meaning.
+    bigWord: 'Nov',
+    heading: 'Mid-November is our estimate.',
+    body: "Thank you for waiting. We've used the time to get things right, so launch day works for all of you. We'll announce the exact date as soon as we're sure of it.",
+    timeline: [
+      { label: 'Our estimate', value: 'Mid-November' },
+      { label: 'Worst case', value: 'End of November' },
+      { label: 'Exact date', value: 'To be announced' },
+    ],
+    framing: "These are estimates, not promises. We'd rather tell you that than a date we might miss.",
+  },
+  join: {
+    heading: 'Send us your details.',
+    lead: 'We need five things to set you up before launch. It takes about a minute.',
+    fields: {
+      name: { label: 'Your name', autoComplete: 'name', type: 'text', placeholder: '' },
+      email: { label: 'Your email', autoComplete: 'email', type: 'email', placeholder: '' },
+      phone: { label: 'Your phone number', autoComplete: 'tel', type: 'tel', placeholder: '' },
+      handle: {
+        label: 'Your Instagram or X handle',
+        autoComplete: 'off',
+        type: 'text',
+        placeholder: '@yourhandle',
+      },
+      username: {
+        label: 'The username you want on Riffi',
+        autoComplete: 'off',
+        type: 'text',
+        placeholder: 'yourname',
+      },
+    },
+    submit: 'Send my details',
+    sending: 'Sending',
+    privacy: 'We use these details to reserve your username and set up your Riffi account.',
+    error: "That didn't go through. Check your connection and try again.",
+    sentHeading: 'Got it. Thank you.',
+    sentBody: "Your details are with us. We'll message you from @get.riffi once the launch date is fixed.",
   },
   faq: {
     heading: 'Before you ask',
     items: [
+      {
+        question: 'When does Riffi launch?',
+        answer:
+          "Our estimate is mid-November, and the worst case is the end of November. We'll announce the exact date as soon as we're sure of it.",
+      },
+      {
+        question: 'Why has it taken longer?',
+        answer:
+          "We wanted to get this right before anyone arrives, so launch day isn't the day we find the problems. Thank you for trusting us while we did.",
+      },
+      {
+        question: 'What do you need from me?',
+        answer:
+          "Five details: your name, your email, your phone number, your current Instagram or X handle, and the username you want on Riffi. That's all we need to set you up.",
+      },
       {
         question: 'Do I have to leave Instagram?',
         answer:
           'No. Keep posting exactly where you post now. A take is a sentence, not a shoot, so it sits alongside what you already do.',
       },
       {
-        question: 'My following is small. Does that matter?',
-        answer:
-          "No. We're picking for takes, not reach. Most of this cohort is under 20k and that's deliberate.",
-      },
-      {
         question: 'Is this paid right now?',
         answer:
           "Not yet, and we won't pretend otherwise. Riffi hasn't launched. Once we have enough users, we start paying creators for the engagement their takes get, so you don't have to wait on brand deals to earn. Batch one is first in line. That's the plan, not a contract.",
-      },
-      {
-        question: 'What can I post about?',
-        answer:
-          'Anything you have a real opinion on. Cricket, politics, films, food, campus, money. Opinions, not news reports.',
-      },
-      {
-        question: 'When does Riffi launch?',
-        // The founder's answer (1 Oct 2026): the last week of October. A target, so "aiming for".
-        answer:
-          "We're aiming for the last week of October. This cohort gets in before that, so your takes are already up when everyone else arrives.",
       },
       {
         question: 'Who owns what I post?',
@@ -269,8 +316,8 @@ export const content = {
     ],
   },
   close: {
-    heading: '500 seats. Batch one.',
-    body: "If you've got opinions and you're tired of shouting them into a feed that doesn't know you, take one.",
+    heading: 'Thank you for being first.',
+    body: "You trusted us before there was anything to see. Send your details and we'll take it from there.",
     // The footer contact line, left to Claude by the founder (1 Oct 2026). Empty shows the wordmark only.
     footerLine: 'Questions? Message @get.riffi on Instagram.',
   },

@@ -43,7 +43,9 @@ describe('the pre-rendered page (design option A)', () => {
       // in tests/page.test.tsx (#long-game) instead.
       content.longGame.headingMark,
       content.longGame.headingRest,
-      content.seats.heading,
+      content.badge.heading,
+      content.launch.heading,
+      content.join.heading,
       content.faq.heading,
       content.close.heading,
     ];
@@ -51,8 +53,9 @@ describe('the pre-rendered page (design option A)', () => {
     for (const item of content.faq.items) expect(html).toContain(escaped(item.answer));
     // Pinned to the value in settings, not to ctaHref itself: comparing the link with the constant
     // the page built it from would pass no matter where the button actually pointed.
-    expect(ctaHref).toBe(settings.applyFormUrl);
-    expect(count(`href="${settings.applyFormUrl}"`)).toBe(3);
+    expect(ctaHref).toBe('#join');
+    expect(count('href="#join"')).toBe(3);
+    expect(count(`action="${settings.form.responseUrl}"`)).toBe(1);
     expect(count(escaped(content.cta.helper))).toBe(3);
     expect(html).not.toContain('ig.me');
   });
@@ -63,7 +66,9 @@ describe('the pre-rendered page (design option A)', () => {
     for (const still of stills) expect(count(`src="${still}"`)).toBe(1);
     expect(count('width="360"')).toBe(stills.length);
     expect(count('height="640"')).toBe(stills.length);
-    expect(count('loading="lazy"')).toBe(stills.length);
+    // The three stills, plus the softened coin in #badge (2 Nov 2026).
+    expect(count('loading="lazy"')).toBe(stills.length + 1);
+    expect(count(`src="${content.badge.image}"`)).toBe(1);
     expect(html).not.toMatch(/<img[^>]+src="(?:https?:)?\/\//i);
   });
 

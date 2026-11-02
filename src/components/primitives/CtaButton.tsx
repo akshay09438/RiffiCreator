@@ -8,15 +8,13 @@ const VARIANTS = {
 
 type CtaButtonProps = { variant: keyof typeof VARIANTS };
 
-/** The page's only conversion: open a DM with Riffi's Instagram account (PRD 5.4). */
+/** The page's one conversion: jump to the details form further down the same page. */
 export function CtaButton({ variant }: CtaButtonProps) {
   const styles = VARIANTS[variant];
   return (
     <div className="flex flex-col items-stretch lg:items-start">
       <a
         href={ctaHref}
-        target="_blank"
-        rel="noopener noreferrer"
         className={`${styles.button} cta-sticker inline-flex min-h-11 items-center justify-center rounded-pill px-8 py-3 text-body-l font-bold`}
       >
         {content.cta.label}

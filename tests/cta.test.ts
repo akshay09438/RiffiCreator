@@ -2,8 +2,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { settings } from '../src/content';
 import {
-  applyFormHref,
   ctaHref,
+  formAction,
+  formEntryId,
+  formFields,
+  formResponseHref,
   instagramDmHref,
   instagramHref,
   whatsappFallbackHref,
@@ -73,66 +76,66 @@ describe('whatsappHref builds the optional WhatsApp link (PRD 5.4)', () => {
   });
 });
 
-describe('applyFormHref builds the application form link (PRD 5.4, 17 Sep 2026: the conversion moved from a DM to a form)', () => {
-  it('builds the link by returning the URL unchanged once it passes the host check', () => {
-    expect(applyFormHref('https://forms.gle/chyARXHuKTiwV4Yn6')).toBe('https://forms.gle/chyARXHuKTiwV4Yn6');
+describe('formResponseHref accepts only the formResponse address of a Google Form (2 Nov 2026: creators now fill in the page itself)', () => {
+  const GOOD = 'https://docs.google.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6-FCxNST98HVcsn6RGA/formResponse';
+
+  it('returns the address unchanged once it passes the check', () => {
+    expect(formResponseHref(GOOD)).toBe(GOOD);
   });
 
   it.each([
-    'https://forms.gle/AbCd',
-    'https://forms.gle/AbC_-9x',
-    'https://docs.google.com/forms/d/e/1FAIpQLSc-EXAMPLE_ID1234567890/viewform',
-    'https://docs.google.com/forms/d/e/1FAIpQLSc-EXAMPLE_ID1234567890/viewform?usp=sf_link',
-  ])('accepts the valid form link %j', (url) => {
-    expect(applyFormHref(url)).toBe(url);
-  });
-
-  it.each([
-    ['http://forms.gle/chyARXHuKTiwV4Yn6', 'http instead of https'],
-    ['https://airtable.com/chyARXHuKTiwV4Yn6', 'a different host entirely'],
-    ['https://evil.com/forms.gle/chyARXHuKTiwV4Yn6', 'the real host moved into the path'],
-    ['https://forms.gle.evil.com/chyARXHuKTiwV4Yn6', 'a look-alike subdomain (forms.gle.evil.com)'],
-    ['https://docs.google.com.evil.com/forms/x', 'a look-alike docs.google.com subdomain'],
-    ['https://forms.gle/../chyARXHuKTiwV4Yn6', 'a path-traversal attempt in the id'],
-    ['https://forms.gle/', 'an empty id'],
-    ['https://forms.gle/abc', 'an id shorter than 4 characters'],
-    ['https://docs.google.com/spreadsheets/d/abc', 'a Google link that is not a form'],
-    ['https://docs.google.com/forms/', 'a docs.google.com form link with nothing after /forms/'],
-    ['https://docs.google.com/forms', 'docs.google.com/forms with no trailing slash at all'],
-    ['https://forms.gle/chyARXHuKTiwV4Yn6/', 'a trailing slash after the id'],
-    ['https://forms.gle/chyARXHuKTiwV4Yn6?usp=sf_link', 'a query string on a forms.gle short link'],
-    ['https://forms.gle/chyARXHuKTiwV4Yn6 https://evil.com', 'a second link smuggled in after a space'],
-    ['https://FORMS.GLE/chyARXHuKTiwV4Yn6', 'an uppercase host'],
-    ['forms.gle/chyARXHuKTiwV4Yn6', 'no scheme at all'],
+    ['http://docs.google.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6/formResponse', 'http instead of https'],
+    ['https://evil.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6/formResponse', 'a different host'],
+    ['https://docs.google.com.evil.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6/formResponse', 'a look-alike host'],
+    ['https://docs.google.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6/viewform', 'the viewform page, not the response address'],
+    ['https://docs.google.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6/formResponse?x=1', 'a query string'],
+    ['https://docs.google.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6/formResponse https://evil.com', 'a second link after a space'],
+    ['https://docs.google.com/forms/d/e/short/formResponse', 'an id that is too short'],
+    ['https://forms.gle/chyARXHuKTiwV4Yn6', 'a short link, which cannot receive a post'],
     ['', 'nothing at all'],
-  ])('refuses %j (%s) by throwing an Error naming it an invalid application form link', (url) => {
-    expect(() => applyFormHref(url)).toThrow(/application form link/i);
-  });
-
-  // Confirmed against the real pattern (17 Sep 2026): a URL cannot change host by adding ".." to a
-  // path, since a browser resolves ".." within the same origin - so this stays on docs.google.com
-  // and is not the "stranger's form" risk the forms.gle branch above blocks outright by excluding
-  // "." and "/" from the id. Pinned here so a future tightening of the pattern is a deliberate,
-  // visible edit rather than a silent behaviour change.
-  it('currently accepts dot-dot path segments on docs.google.com, because they cannot leave that host', () => {
-    expect(applyFormHref('https://docs.google.com/forms/../../etc/passwd')).toBe(
-      'https://docs.google.com/forms/../../etc/passwd',
-    );
+  ])('refuses %j (%s) by throwing an Error naming it an invalid form address', (url) => {
+    expect(() => formResponseHref(url)).toThrow(/form address/i);
   });
 });
 
+describe('formEntryId accepts only Google Form field names', () => {
+  it.each(['entry.1', 'entry.1947302392', 'entry.123456789012'])('accepts %j', (id) => {
+    expect(formEntryId(id)).toBe(id);
+  });
+
+  it.each(['', 'entry.', 'entry.abc', 'name', 'entry.1947302392 ', 'entry.1234567890123', 'ENTRY.1'])(
+    'refuses %j',
+    (id) => {
+      expect(() => formEntryId(id)).toThrow(/field id/i);
+    },
+  );
+});
+
 describe('the links the page uses', () => {
-  // 17 Sep 2026: the conversion became the founder's Google Form. The Instagram link stays built
-  // from the same handle, because the helper line promises a reply from that account, even though
-  // no button on the page opens it any more.
-  it('points ctaHref at the application form in settings, and nowhere near Instagram', () => {
-    expect(ctaHref).toBe(applyFormHref(settings.applyFormUrl));
-    expect(ctaHref).toBe(settings.applyFormUrl);
-    // 1 Oct 2026: the founder swapped in a new form ("New creator onboarding - Riffi").
-    expect(ctaHref).toBe(
-      'https://docs.google.com/forms/d/e/1FAIpQLSeVrXx9tRYtsIjP_T9V7NnVbRJm2C-u5s5QrhlZDT4vVabY0Q/viewform',
-    );
+  // 2 Nov 2026: the buttons no longer leave the page. They scroll to the details form, which posts
+  // to the founder's Google Form. The Instagram link stays built from the same handle, because the
+  // helper line promises a reply from that account, even though no button opens it.
+  it('points ctaHref at the details form on the same page, and nowhere near Instagram', () => {
+    expect(ctaHref).toBe('#join');
     expect(ctaHref).not.toMatch(/ig\.me/);
+  });
+
+  it('sends the details to the founder\'s Google Form, pinned to the address in settings', () => {
+    // Pinned to the literal, so swapping the form in settings is a deliberate, visible edit.
+    expect(formAction).toBe(settings.form.responseUrl);
+    expect(formAction).toBe(
+      'https://docs.google.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6-FCxNST98HVcsn6RGA/formResponse',
+    );
+  });
+
+  it('maps the five questions to the form\'s own entry ids (read from the form on 2 Nov 2026)', () => {
+    expect(formFields).toEqual({
+      name: 'entry.1947302392',
+      phone: 'entry.19523587',
+      email: 'entry.1533783917',
+      handle: 'entry.990724691',
+      username: 'entry.1972389049',
+    });
   });
 
   it('still builds instagramHref from the handle in settings, separately from ctaHref', () => {

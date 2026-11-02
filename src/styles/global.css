@@ -514,6 +514,45 @@
   }
 
 
+  /* The details form: drawn inputs in the same sticker language. 16px type stops phones zooming in. */
+  .field {
+    width: 100%;
+    min-height: 48px;
+    border: var(--edge-width) solid var(--edge);
+    border-radius: var(--corner-take);
+    background-color: var(--paper);
+    box-shadow: var(--lift-sticker-sm);
+    color: var(--ink);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 14px;
+  }
+
+  .field::placeholder {
+    color: var(--ink-soft);
+  }
+
+  .field:focus-visible {
+    outline: 3px solid var(--signal);
+    outline-offset: 2px;
+  }
+
+  /* A trap for bots: out of sight and out of the tab order, but still in the page. */
+  .trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* The coin is softened in the file itself; the CSS only sizes it. No motion: it is a still. */
+  .badge-coin {
+    width: clamp(140px, 40vw, 220px);
+    height: auto;
+  }
+
   /* The one moment of pure typographic scale on the page (PRD Block 6). */
   .seats-number {
     font-size: clamp(96px, 22vw, 200px);

@@ -1,5 +1,5 @@
 // Output check on the production build (PRD 5.4, 5.6, 7): the built page may load only its own files,
-// may link out only to Instagram and WhatsApp, has no form, and points its preview card at a real URL.
+// may link out only to Instagram and WhatsApp, has one form that posts only to a Google Form, and points its preview card at a real URL.
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
@@ -18,11 +18,11 @@ for (const [, tag, url] of html.matchAll(
 )) {
   if (!ownFile(url)) problems.push(`<${tag}> loads ${url} - only the page's own files may load`);
 }
-// The application form joined the allowed list on 17 Sep 2026, when the founder made it the
-// conversion. Still an exact host list: anything else on the page is a problem, not a preference.
+// 2 Nov 2026: the page's own details form replaced the outbound form link, so the buttons now jump
+// within the page ("#join"). Anything else is still a problem, not a preference.
 for (const [, url] of html.matchAll(/<a\b[^>]*?\shref="([^"]*)"/gi)) {
-  if (!/^https:\/\/(?:ig\.me|wa\.me|forms\.gle|docs\.google\.com\/forms)\//.test(url)) {
-    problems.push(`a link goes to ${url} - only the application form, Instagram and WhatsApp are allowed`);
+  if (!/^(?:#join|https:\/\/(?:ig\.me|wa\.me)\/)/.test(url)) {
+    problems.push(`a link goes to ${url} - only the form on this page, Instagram and WhatsApp are allowed`);
   }
 }
 // Stylesheets the build inlines into the page count too, and a minified @import carries no url() at all.
@@ -42,11 +42,20 @@ const ogImage = html.match(/<meta\s+property="og:image"\s+content="([^"]*)"/);
 if (!ogImage || !/^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)+\/og\.png$/i.test(ogImage[1])) {
   problems.push(`og:image is "${ogImage?.[1] ?? 'missing'}" - it must be the site URL followed by /og.png`);
 }
-if (/<form\b/i.test(html)) problems.push('the page contains a <form> - the only conversion is a DM link');
+// Exactly one form, and it may post only to the response address of a Google Form: creators type
+// their email and phone number into it, so a swapped address would send them to a stranger.
+const forms = [...html.matchAll(/<form\b[^>]*>/gi)].map(([tag]) => tag);
+if (forms.length !== 1) problems.push(`the page contains ${forms.length} <form> elements - it must have exactly one`);
+for (const tag of forms) {
+  const action = tag.match(/\saction="([^"]*)"/)?.[1] ?? '';
+  if (!/^https:\/\/docs\.google\.com\/forms\/d\/e\/[A-Za-z0-9_-]{20,}\/formResponse$/.test(action)) {
+    problems.push(`a <form> posts to "${action}" - it may post only to a Google Form's formResponse address`);
+  }
+}
 
 if (problems.length > 0) {
   console.error(`check:dist: ${problems.length} problem(s) in the built page:`);
   for (const problem of problems) console.error(problem);
   process.exit(1);
 }
-console.log('check:dist: the built page loads only its own files and links only to Instagram or WhatsApp');
+console.log('check:dist: the built page loads only its own files, links only within itself, Instagram or WhatsApp, and its one form posts only to a Google Form');

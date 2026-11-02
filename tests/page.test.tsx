@@ -1,13 +1,12 @@
 // @vitest-environment jsdom
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../src/App';
-import { Seats } from '../src/components/blocks/Seats';
 import { content, settings } from '../src/content';
-import { ctaHref } from '../src/lib/cta';
+import { ctaHref, formAction, formFields } from '../src/lib/cta';
 import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, SEAT_COUNT, URGENCY, sentencesOf } from './honesty-rules';
 
 // ---------- helpers ----------
@@ -22,8 +21,10 @@ const SECTION_IDS = [
   'what-riffi-is',
   'why-here',
   'how-you-earn',
+  'badge',
   'long-game',
-  'seats',
+  'launch',
+  'join',
   'faq',
   'close',
 ];
@@ -116,7 +117,9 @@ describe('page structure and semantics (PRD 7)', () => {
       'why-here': content.whyHere.heading,
       'how-you-earn': content.howYouEarn.heading,
       'long-game': content.longGame.heading,
-      seats: content.seats.heading,
+      badge: content.badge.heading,
+      launch: content.launch.heading,
+      join: content.join.heading,
       faq: content.faq.heading,
       close: content.close.heading,
     };
@@ -174,45 +177,46 @@ describe('the call to action (PRD 5.4, design 4)', () => {
     render(<App />);
   });
 
-  it('has exactly three "Claim a seat" links: one in #hero, one in #seats, then one in #close (added to #seats so the ask and the button share a screen on a laptop)', () => {
+  it('has exactly three "Send your details" links: one in #hero, one in #launch, then one in #close', () => {
     const links = screen.getAllByRole('link', { name: content.cta.label });
     expect(links).toHaveLength(3);
     expect(section('hero').contains(links[0] ?? null)).toBe(true);
-    expect(section('seats').contains(links[1] ?? null)).toBe(true);
+    expect(section('launch').contains(links[1] ?? null)).toBe(true);
     expect(section('close').contains(links[2] ?? null)).toBe(true);
   });
 
-  it('makes each one a plain <a> to the Instagram DM, opening in a new tab with noopener noreferrer', () => {
+  it('makes each one a plain in-page <a> that jumps to the form, with no new tab', () => {
     for (const link of screen.getAllByRole('link', { name: content.cta.label })) {
       expect(link.tagName).toBe('A');
+      expect(link.getAttribute('href')).toBe('#join');
       expect(link.getAttribute('href')).toBe(ctaHref);
-      expect(link.getAttribute('target')).toBe('_blank');
-      expect((link.getAttribute('rel') ?? '').split(/\s+/).filter(Boolean).sort()).toEqual(['noopener', 'noreferrer']);
+      expect(link.getAttribute('target')).toBeNull();
     }
+    expect(document.getElementById('join')).not.toBeNull();
     expect(screen.queryAllByRole('button', { name: content.cta.label })).toEqual([]);
   });
 
-  // 17 Sep 2026: the conversion is the founder's form. No Instagram DM link is left on the page,
-  // and every link there is goes to the form in settings - nowhere else, ever.
-  it('has no Instagram DM link anywhere on the page, now that the button opens the form', () => {
+  // 2 Nov 2026: the conversion is the page's own form. No Instagram DM link and no outbound link
+  // is left on the page: every link jumps within it.
+  it('has no Instagram DM link anywhere on the page', () => {
     expect(document.querySelectorAll('a[href*="ig.me"]')).toHaveLength(0);
   });
 
-  it('sends every link on the page to the application form in settings', () => {
+  it('sends every link on the page to the form on the same page, and nowhere else', () => {
     const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]'));
     expect(links.length).toBe(3);
-    for (const link of links) expect(link.getAttribute('href')).toBe(settings.applyFormUrl);
+    for (const link of links) expect(link.getAttribute('href')).toBe('#join');
   });
 
-  it.each(['hero', 'seats', 'close'])(
-    'shows the helper line in #%s, naming the handle that replies and opening the form',
+  it.each(['hero', 'launch', 'close'])(
+    'shows the helper line in #%s, naming the handle that replies and leading to the form',
     (id) => {
       const block = section(id);
       const helper = within(block).getByText(content.cta.helper);
       const link = within(block).getByRole('link', { name: content.cta.label });
       const shownHandle = /@([A-Za-z0-9._]+)$/.exec(normalize(helper.textContent))?.[1];
       expect(shownHandle).toBe(settings.instagramHandle);
-      expect(link.getAttribute('href')).toBe(settings.applyFormUrl);
+      expect(link.getAttribute('href')).toBe('#join');
     },
   );
 
@@ -223,8 +227,12 @@ describe('the call to action (PRD 5.4, design 4)', () => {
     expect(screen.queryByText(content.cta.whatsappLabel)).toBeNull();
   });
 
-  it('never uses a <form>', () => {
-    expect(document.querySelector('form')).toBeNull();
+  it('has exactly one <form>, and it posts only to the founder\'s Google Form', () => {
+    const forms = document.querySelectorAll('form');
+    expect(forms).toHaveLength(1);
+    expect(forms[0]?.getAttribute('action')).toBe(settings.form.responseUrl);
+    expect(forms[0]?.getAttribute('action')).toBe(formAction);
+    expect(forms[0]?.getAttribute('method')?.toLowerCase()).toBe('post');
   });
 });
 
@@ -360,8 +368,11 @@ describe('#video-takes (added 17 Sep 2026, repositioned the same day to lead ahe
     expect(document.querySelectorAll('video, iframe, source, embed, object, picture, audio, track')).toHaveLength(0);
   });
 
-  it('allows images only inside #video-takes, only from this site, sized and lazy', () => {
-    const images = Array.from(document.querySelectorAll<HTMLImageElement>('img'));
+  // 2 Nov 2026: #badge carries the one other image, the softened coin, checked in its own block.
+  it('allows images only inside #video-takes (plus the #badge coin), only from this site, sized and lazy', () => {
+    const images = Array.from(document.querySelectorAll<HTMLImageElement>('#video-takes img'));
+    expect(document.querySelectorAll('img')).toHaveLength(images.length + 1);
+    expect(section('badge').querySelectorAll('img')).toHaveLength(1);
     expect(images.length).toBe(content.videoTakes.items.filter((item) => 'still' in item).length);
     const block = section('video-takes');
     for (const image of images) {
@@ -485,9 +496,9 @@ describe('#how-you-earn (PRD Block 4)', () => {
     expect(within(section('how-you-earn')).getByText(content.howYouEarn.lead)).toBeInTheDocument();
   });
 
-  it('lists the five earn rows as a real list, each with its action and description, and renders no "points" pill (16 Sep 2026: points removed)', () => {
+  it('lists the four next steps as a real list, each with its action and description, and renders no "points" pill (16 Sep 2026: points removed)', () => {
     const items = Array.from(only(section('how-you-earn'), 'ul').children) as HTMLElement[];
-    expect(items.map((item) => item.tagName)).toEqual(['LI', 'LI', 'LI', 'LI', 'LI']);
+    expect(items.map((item) => item.tagName)).toEqual(['LI', 'LI', 'LI', 'LI']);
     content.howYouEarn.rows.forEach((row, index) => {
       const item = within(items[index] as HTMLElement);
       expect(item.getByText(row.action)).toBeInTheDocument();
@@ -539,71 +550,135 @@ describe('#long-game (PRD Block 5)', () => {
   });
 });
 
-// ---------- block 6: 50 seats ----------
+// ---------- the badge teaser ----------
 
-const meterIn = (container: ParentNode): HTMLElement => only(container, '[data-seat-meter]');
-const digitsIn = (text: string): string[] => text.match(/\d+/g) ?? [];
-
-describe('#seats and the seat meter (PRD Block 6, design 5)', () => {
-  it('shows the big 50 as decoration, then the heading, the body and a seat meter', () => {
+describe('#badge: a curiosity, not a reveal', () => {
+  beforeEach(() => {
     render(<App />);
-    const block = section('seats');
-    const bigNumbers = Array.from(block.querySelectorAll('p[aria-hidden="true"]')).filter(
-      (element) => normalize(element.textContent) === String(settings.seats.total),
+  });
+
+  it('shows the heading, the lead, the note and one image from this site', () => {
+    const block = within(section('badge'));
+    expect(block.getByRole('heading', { level: 2, name: content.badge.heading })).toBeInTheDocument();
+    expect(block.getByText(content.badge.lead)).toBeInTheDocument();
+    expect(block.getByText(content.badge.note)).toBeInTheDocument();
+    const image = block.getByRole('img', { name: content.badge.alt });
+    expect(image.getAttribute('src')).toBe(content.badge.image);
+    expect(image.getAttribute('src')).not.toMatch(/^(?:https?:)?\/\//);
+  });
+
+  it('names no perk, number or date in the section', () => {
+    const text = readableText(section('badge'));
+    expect(text).not.toMatch(/\d/);
+    expect(text).not.toMatch(/founding|perk|reward|voucher|points?\b/i);
+  });
+});
+
+// ---------- block 6: when it launches ----------
+
+describe('#launch: an estimate, a worst case and a date still to be announced', () => {
+  beforeEach(() => {
+    render(<App />);
+  });
+
+  it('shows the big word as decoration, then the heading, the body, the three dates and the framing', () => {
+    const block = section('launch');
+    const decoration = Array.from(block.querySelectorAll('p[aria-hidden="true"]')).filter(
+      (element) => normalize(element.textContent) === content.launch.bigWord,
     );
-    expect(bigNumbers).toHaveLength(1);
-    expect(within(block).getByRole('heading', { level: 2, name: content.seats.heading })).toBeInTheDocument();
-    expect(within(block).getByText(content.seats.body)).toBeInTheDocument();
-    expect(meterIn(block)).toBeInTheDocument();
+    expect(decoration).toHaveLength(1);
+    expect(within(block).getByRole('heading', { level: 2, name: content.launch.heading })).toBeInTheDocument();
+    expect(within(block).getByText(content.launch.body)).toBeInTheDocument();
+    expect(within(block).getByText(content.launch.framing)).toBeInTheDocument();
+    const terms = Array.from(block.querySelectorAll('dt')).map((term) => normalize(term.textContent));
+    const values = Array.from(block.querySelectorAll('dd')).map((value) => normalize(value.textContent));
+    expect(terms).toEqual(content.launch.timeline.map((row) => row.label));
+    expect(values).toEqual(content.launch.timeline.map((row) => row.value));
   });
 
-  it('with the default settings, shows only "500 seats in batch one" in the meter and no seat count anywhere', () => {
-    expect(settings.seats).toEqual({ total: 500, taken: null, show: false });
-    render(<App />);
-    const meter = meterIn(section('seats'));
-    expect(normalize(meter.textContent)).toBe(content.seats.meterLabel);
-    const allowedDigits = digitsIn(content.seats.meterLabel);
-    expect(digitsIn(readableText(meter)).filter((digits) => !allowedDigits.includes(digits))).toEqual([]);
+  it('shows no seat count, countdown or exact day anywhere on the page', () => {
     expect(readableText(document.body)).not.toMatch(SEAT_COUNT);
+    expect(readableText(section('launch'))).not.toMatch(/\d/);
+  });
+});
+
+// ---------- the details form ----------
+
+describe('#join: the details form', () => {
+  const fieldKeys = ['name', 'email', 'phone', 'handle', 'username'] as const;
+
+  function fill(value: (key: (typeof fieldKeys)[number]) => string) {
+    for (const key of fieldKeys) {
+      fireEvent.change(screen.getByLabelText(content.join.fields[key].label), { target: { value: value(key) } });
+    }
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
-  it.each([
-    { taken: null, show: false, when: 'taken is null and show is false' },
-    { taken: 37, show: false, when: 'a real count exists but show is false' },
-    { taken: null, show: true, when: 'show is true but taken is null' },
-  ])('shows only the meter label, and no count, when $when', ({ taken, show }) => {
-    render(<Seats seats={{ total: 50, taken, show }} />);
-    const block = section('seats');
-    expect(normalize(meterIn(block).textContent)).toBe(content.seats.meterLabel);
-    const allowedDigits = digitsIn(content.seats.meterLabel);
-    expect(digitsIn(readableText(meterIn(block))).filter((digits) => !allowedDigits.includes(digits))).toEqual([]);
-    expect(readableText(block)).not.toContain('37');
-    expect(readableText(block)).not.toMatch(SEAT_COUNT);
+  it('asks for exactly the five details, each required and wired to its Google Form entry id', () => {
+    render(<App />);
+    const form = within(section('join'));
+    for (const key of fieldKeys) {
+      const input = form.getByLabelText(content.join.fields[key].label) as HTMLInputElement;
+      expect(input.name).toBe(formFields[key]);
+      expect(input.type).toBe(content.join.fields[key].type);
+      expect(input.required).toBe(true);
+    }
+    expect(section('join').querySelectorAll('input:not([aria-hidden] input)')).toHaveLength(5);
+    expect(form.getByText(content.join.privacy)).toBeInTheDocument();
+    expect(form.getByRole('button', { name: content.join.submit })).toBeInTheDocument();
   });
 
-  it.each([37, 0])('shows the real count (%i) once show is true and taken is a number', (taken) => {
-    render(<Seats seats={{ total: 50, taken, show: true }} />);
-    const meterText = normalize(meterIn(section('seats')).textContent);
-    expect(meterText).toContain(normalize(content.seats.takenLabel(taken, 50)));
-    expect(meterText).toContain(String(taken));
+  it('hides a trap field from people and keyboards', () => {
+    render(<App />);
+    const trap = section('join').querySelector<HTMLInputElement>('input[name="website"]');
+    expect(trap).not.toBeNull();
+    expect(trap?.tabIndex).toBe(-1);
+    expect(trap?.closest('[aria-hidden="true"]')).not.toBeNull();
   });
 
-  it.each([
-    { taken: null, show: false, expectTrack: false, when: 'the default settings (no count at all)' },
-    { taken: 37, show: false, expectTrack: false, when: 'a real count exists but show is false' },
-    { taken: null, show: true, expectTrack: false, when: 'show is true but taken is null' },
-    { taken: 37, show: true, expectTrack: true, when: 'show is true and taken is a real, positive count' },
-    { taken: 0, show: true, expectTrack: true, when: 'show is true and taken is the real number 0' },
-  ])(
-    // Regression (17 Sep 2026): the meter used to draw its track unconditionally, so with no real
-    // count the creator saw an empty white box - "no activity to be done there" (founder's words).
-    'draws the meter track only once a real count is shown, and never otherwise, when $when',
-    ({ taken, show, expectTrack }) => {
-      render(<Seats seats={{ total: 50, taken, show }} />);
-      const track = meterIn(section('seats')).querySelector('.poll-track');
-      expect(track === null).toBe(!expectTrack);
-    },
-  );
+  it('posts the details to the Google Form without leaving the page, then says thank you', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null));
+    vi.stubGlobal('fetch', fetchMock);
+    render(<App />);
+    fill((key) => `value-${key}`);
+    fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
+    await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(url).toBe(formAction);
+    expect(init.method).toBe('POST');
+    expect(init.mode).toBe('no-cors');
+    const sent = new URLSearchParams(String(init.body));
+    for (const key of fieldKeys) expect(sent.get(formFields[key])).toBe(`value-${key}`);
+    expect(sent.has('website')).toBe(false);
+    expect(screen.getByText(content.join.sentBody)).toBeInTheDocument();
+  });
+
+  it('says so, keeps what was typed, and lets them try again when the network fails', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('offline')));
+    render(<App />);
+    fill((key) => `value-${key}`);
+    fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(content.join.error));
+    expect(screen.queryByText(content.join.sentHeading)).toBeNull();
+    expect((screen.getByLabelText(content.join.fields.name.label) as HTMLInputElement).value).toBe('value-name');
+    expect(screen.getByRole('button', { name: content.join.submit })).toBeEnabled();
+  });
+
+  it('sends nothing when the hidden trap field is filled, but still looks like it worked', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    render(<App />);
+    fill((key) => `value-${key}`);
+    const trap = section('join').querySelector('input[name="website"]') as HTMLInputElement;
+    fireEvent.change(trap, { target: { value: 'https://spam.example' } });
+    fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
+    await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
 });
 
 // ---------- block 7: FAQ ----------
@@ -791,7 +866,7 @@ describe('honesty on the rendered page (PRD 2.4, design 5)', () => {
 // ---------- before any JavaScript runs ----------
 
 describe('the pre-rendered HTML, before any JavaScript runs (design 2 and 3)', () => {
-  it('already holds the headline, all three CTAs as plain links, the final vote count, the meter label and the first FAQ open', () => {
+  it('already holds the headline, all three CTAs as plain links, the final vote count, the launch dates, the form and the first FAQ open', () => {
     const doc = new DOMParser().parseFromString(renderToString(<App />), 'text/html');
     const h1s = doc.querySelectorAll('h1');
     expect(h1s).toHaveLength(1);
@@ -800,7 +875,8 @@ describe('the pre-rendered HTML, before any JavaScript runs (design 2 and 3)', (
     const ctas = Array.from(doc.querySelectorAll('a')).filter((link) => normalize(link.textContent) === content.cta.label);
     expect(ctas.map((link) => link.getAttribute('href'))).toEqual([ctaHref, ctaHref, ctaHref]);
     expect(byFullText(doc.body, '2,140 votes')).toHaveLength(1);
-    expect(normalize(doc.querySelector('[data-seat-meter]')?.textContent)).toBe(content.seats.meterLabel);
+    expect(normalize(doc.querySelector('#launch dt')?.textContent)).toBe(content.launch.timeline[0]?.label);
+    expect(doc.querySelector('form')?.getAttribute('action')).toBe(formAction);
     expect(Array.from(doc.querySelectorAll('details')).map((details) => details.hasAttribute('open'))).toEqual([
       true,
       false,

@@ -42,6 +42,20 @@ export default defineConfig([
     },
   },
   {
+    // 2 Nov 2026: the details form posts to the founder's Google Form, the page's one network
+    // request. Only `fetch`, only in this one file; every other network API stays banned, and
+    // tests/submit.test.ts fails if `fetch` appears anywhere else under src/.
+    files: ['src/lib/submit.ts'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        { name: 'XMLHttpRequest', message: 'The page makes no network requests.' },
+        { name: 'WebSocket', message: 'The page makes no network requests.' },
+        { name: 'EventSource', message: 'The page makes no network requests.' },
+      ],
+    },
+  },
+  {
     // PRD 5.2, rule 2: every user-facing string lives in src/content.ts. tests/copy-source.test.tsx is
     // the complete check; this rule gives fast feedback while editing. It repeats the two rules above
     // because a later no-restricted-syntax setting replaces an earlier one for the same files.

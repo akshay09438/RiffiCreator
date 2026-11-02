@@ -32,7 +32,7 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, URGENCY, sentencesOf } f
 // whole h2. The money guardrail below is rewritten to match: no currency figure may appear
 // anywhere, and if one is ever reintroduced its sentence must still carry example framing.
 // A later round the same day made three more decisions. The conversion is now the founder's
-// Google Form (settings.applyFormUrl), not an Instagram DM: the button's helper line now reads
+// Google Form (settings.applyFormUrl, since replaced), not an Instagram DM: the button's helper line now reads
 // "A one minute form. We reply from @<handle>" instead of "Opens a DM with @<handle>". The
 // Instagram handle is real (get.riffi) and confirmed, and so - later still - is the deploy
 // domain, once the page went live on Vercel: only the weekly commitment, launch timing, content
@@ -40,6 +40,12 @@ import { EXAMPLE_FRAMING, MONEY, NUMBER_NEXT_TO_POINTS, URGENCY, sentencesOf } f
 // still behind each caption (content.videoTakes.items[n].still, plus a stillNote said out loud
 // under the deck) - a reversal of the earlier "pictures of the format only, no media reference"
 // rule, made because a face on an unlabelled card would otherwise read as a real Riffi creator.
+
+// 2 Nov 2026: the page changed audience. It no longer recruits; it thanks the creators who are
+// already in, gives the launch estimate (mid-November, worst case end of November, exact date to be
+// announced), asks for their details in a form on the page that posts to the founder's Google Form,
+// and teases the founding creator coin without naming it. The seat count and the "Claim a seat"
+// button are gone. Every honesty guardrail below still applies unchanged.
 
 const contentSource = readFileSync(fileURLToPath(new URL('../src/content.ts', import.meta.url)), 'utf8');
 
@@ -70,7 +76,6 @@ function collectStrings(value: unknown, path: string): Found[] {
 const allCopy: Found[] = [
   ...collectStrings(content, 'content'),
   ...collectStrings(settings.whatsapp.message, 'settings.whatsapp.message'),
-  { path: 'content.seats.takenLabel(37, 50)', text: content.seats.takenLabel(37, 50) },
 ];
 
 const offending = (pattern: RegExp): Found[] => allCopy.filter(({ text }) => pattern.test(text));
@@ -154,8 +159,9 @@ describe('settings', () => {
     expect(typeof settings.whatsapp.message).toBe('string');
   });
 
-  it('ships with no invented seat count: total 500, taken null, show false (PRD Block 6)', () => {
-    expect(settings.seats).toEqual({ total: 500, taken: null, show: false });
+  it('ships no seat count at all: the page no longer recruits, so there is nothing to count', () => {
+    expect(settings).not.toHaveProperty('seats');
+    expect(content).not.toHaveProperty('seats');
   });
 
   it('uses one split for every comparison row, with the Instagram side smaller than the Riffi side', () => {
@@ -169,15 +175,13 @@ describe('settings', () => {
 });
 
 describe('the call-to-action copy', () => {
-  it('labels the button "Claim a seat"', () => {
-    expect(content.cta.label).toBe('Claim a seat');
+  it('labels the button "Send your details"', () => {
+    expect(content.cta.label).toBe('Send your details');
   });
 
-  // 17 Sep 2026: the button opens the form, and the helper line names the account that replies.
-  it('builds the helper line from the handle in settings, and promises the form the button opens', () => {
-    expect(content.cta.helper).toBe(
-      `A one minute form. We reply from @${settings.instagramHandle}`,
-    );
+  // 2 Nov 2026: the button scrolls to the form, and the helper line names the account that replies.
+  it('builds the helper line from the handle in settings, and promises the form the button leads to', () => {
+    expect(content.cta.helper).toBe(`About a minute. We reply from @${settings.instagramHandle}`);
     expect(content.cta.helper).toContain(`@${settings.instagramHandle}`);
   });
 
@@ -192,12 +196,9 @@ describe('copy matches the PRD word for word', () => {
   });
 
   it('hero: the two title lines and the subline', () => {
-    expect(content.hero.titleLines).toEqual([
-      "On Instagram you're one of lakhs.",
-      "Here you're one of the first, with almost no competition.",
-    ]);
+    expect(content.hero.titleLines).toEqual(['You came in early.', 'Thank you for trusting us.']);
     expect(content.hero.subline).toBe(
-      "Riffi is India's platform for opinions. We're taking 500 creators in before launch and pointing the feed at them.",
+      'Riffi is taking longer to launch than we planned, because we want it right before you arrive. We now expect mid-November, and the end of November at the very worst.',
     );
   });
 
@@ -258,7 +259,7 @@ describe('copy matches the PRD word for word', () => {
   });
 
   it('video takes: heading, lead, badge, chip, the three items in order, and the footer (rewritten to lead the page, 17 Sep 2026)', () => {
-    expect(content.videoTakes.heading).toBe("You already shoot reels. Here it's just you, talking.");
+    expect(content.videoTakes.heading).toBe('When the doors open, this is the whole job.');
     expect(content.videoTakes.lead).toBe(
       'No hook, no thumbnail, no four hour edit. Point the phone at yourself, say what you actually think, and post it. The room votes on the opinion, not the edit.',
     );
@@ -322,11 +323,11 @@ describe('copy matches the PRD word for word', () => {
   });
 
   it('why here: heading, side labels, the five comparison rows and the closer (1 Oct 2026: a fifth, how you get paid)', () => {
-    expect(content.whyHere.heading).toBe("You're not early on Instagram. You're early here.");
+    expect(content.whyHere.heading).toBe("What you signed up for hasn't changed.");
     expect(content.whyHere.instagramLabel).toBe('Instagram');
     expect(content.whyHere.riffiLabel).toBe('Riffi');
     expect(content.whyHere.rows).toEqual([
-      { label: "Creators you're up against", instagram: 'Lakhs', riffi: '499' },
+      { label: 'Who you share the feed with', instagram: 'Lakhs', riffi: 'A small first group' },
       { label: 'Who decides your reach', instagram: 'A feed tuned for watch time', riffi: "A feed we're still writing" },
       { label: 'What your first post gets', instagram: 'Buried', riffi: 'The front page' },
       { label: "How you'll earn", instagram: 'Brand deals, if one finds you', riffi: "Engagement, once we're big enough" },
@@ -339,20 +340,22 @@ describe('copy matches the PRD word for word', () => {
     expect(content.whyHere.closer).toBe('And a reel costs you four hours. A take costs you forty seconds.');
   });
 
-  it('how you earn: heading, lead, the five rows and the honest no-money-yet note - no pill (17 Sep 2026: a feature list, not an earnings pitch)', () => {
+  it('how you earn: heading, lead, the four next steps and the honest no-money-yet note - no pill (2 Nov 2026: what happens next)', () => {
     expect(content.howYouEarn).not.toHaveProperty('pill');
     expect(Object.keys(content.howYouEarn).sort()).toEqual(['heading', 'lead', 'note', 'rows']);
-    expect(content.howYouEarn.heading).toBe('What creators can do here.');
-    expect(content.howYouEarn.lead).toBe('Five ways to put an opinion out. Pick whichever suits the take.');
+    expect(content.howYouEarn.heading).toBe('What happens next.');
+    expect(content.howYouEarn.lead).toBe('Four steps from here to launch day.');
     expect(content.howYouEarn.rows).toEqual([
-      { action: 'Post a take', description: "One opinion, one line. That's the whole format." },
-      { action: 'Write the long version', description: 'Some takes need a paragraph. Write it out when they do.' },
-      { action: 'Add images', description: 'Screenshots, stills, memes. Whatever makes the point land.' },
-      { action: 'Drop a story', description: 'Short-lived posts, the same as you already do.' },
+      { action: 'Send your details', description: 'Five short fields in the form further down. About a minute.' },
       {
-        action: 'Get the room talking',
-        description: "Votes, replies and reshares. That's how you find out if the room agrees.",
+        action: 'We hold your username',
+        description: 'Once your details are in, your Riffi username is reserved for you.',
       },
+      {
+        action: 'We announce the date',
+        description: "We'll message you the exact launch date as soon as we're sure of it.",
+      },
+      { action: 'You post first', description: 'Your takes are already up when everyone else arrives.' },
     ]);
     expect(content.howYouEarn.note).toBe(
       "Straight answer on money: not on day one. Once Riffi has enough people reading, we start paying creators for the engagement their takes get. That means you don't need a brand deal to earn. Until then, what you get is the part that gets harder to buy later. The feed points at you, your first post lands on the front page, and you help set what this place sounds like.",
@@ -385,57 +388,72 @@ describe('copy matches the PRD word for word', () => {
     );
   });
 
-  it('50 seats: heading and meter label, with the commitment body present as real text', () => {
-    expect(content.seats.heading).toBe("500 seats. Here's what we ask.");
-    expect(content.seats.meterLabel).toBe('500 seats in batch one');
-    expect(content.seats.body.trim()).not.toBe('');
+  it('launch: an estimate, a worst case and a date still to be announced - never a promise', () => {
+    expect(content.launch.heading).toBe('Mid-November is our estimate.');
+    expect(content.launch.timeline).toEqual([
+      { label: 'Our estimate', value: 'Mid-November' },
+      { label: 'Worst case', value: 'End of November' },
+      { label: 'Exact date', value: 'To be announced' },
+    ]);
+    expect(content.launch.framing).toBe(
+      "These are estimates, not promises. We'd rather tell you that than a date we might miss.",
+    );
+    expect(content.launch.body.trim()).not.toBe('');
   });
 
-  it('50 seats: the taken label shows the real count it is given', () => {
-    expect(content.seats.takenLabel(37, 50)).toContain('37');
-    expect(content.seats.takenLabel(12, 50)).toContain('12');
+  it('badge: a teaser that names no perk, number or date, and points at a real image on this site', () => {
+    expect(content.badge.heading).toBe('One more thing.');
+    expect(content.badge.image).toMatch(/^\/media\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/);
+    expect(existsSync(fileURLToPath(new URL(`../public${content.badge.image}`, import.meta.url)))).toBe(true);
+    const teaser = Object.values(content.badge).join(' ');
+    expect(teaser).not.toMatch(/\d/);
+    expect(teaser).not.toMatch(/founding|perk|reward|voucher|points?\b/i);
+  });
+
+  it('join: the five details the founder needs, the privacy line and every state of the form', () => {
+    expect(Object.keys(content.join.fields)).toEqual(['name', 'email', 'phone', 'handle', 'username']);
+    expect(content.join.heading).toBe('Send us your details.');
+    expect(content.join.submit).toBe('Send my details');
+    expect(content.join.privacy).toBe(
+      'We use these details to reserve your username and set up your Riffi account.',
+    );
+    expect(content.join.error).toBe("That didn't go through. Check your connection and try again.");
+    expect(content.join.sentHeading).toBe('Got it. Thank you.');
+    expect(content.join.sentBody).toContain(`@${settings.instagramHandle}`);
   });
 
   it('FAQ: heading and the six questions, in order', () => {
     expect(content.faq.heading).toBe('Before you ask');
     expect(content.faq.items.map((item) => item.question)).toEqual([
-      'Do I have to leave Instagram?',
-      'My following is small. Does that matter?',
-      'Is this paid right now?',
-      'What can I post about?',
       'When does Riffi launch?',
+      'Why has it taken longer?',
+      'What do you need from me?',
+      'Do I have to leave Instagram?',
+      'Is this paid right now?',
       'Who owns what I post?',
     ]);
   });
 
-  it('FAQ: all six answers, including the founder\'s launch and ownership answers (1 Oct 2026)', () => {
-    expect(content.faq.items.slice(4).map((item) => item.answer)).toEqual([
-      "We're aiming for the last week of October. This cohort gets in before that, so your takes are already up when everyone else arrives.",
-      'You do. You keep the rights to your posts and you can take them anywhere.',
-    ]);
-    expect(content.faq.items.slice(0, 4).map((item) => item.answer)).toEqual([
+  it('FAQ: all six answers, including the launch estimate (2 Nov 2026) and the ownership answer (1 Oct 2026)', () => {
+    expect(content.faq.items.map((item) => item.answer)).toEqual([
+      "Our estimate is mid-November, and the worst case is the end of November. We'll announce the exact date as soon as we're sure of it.",
+      "We wanted to get this right before anyone arrives, so launch day isn't the day we find the problems. Thank you for trusting us while we did.",
+      "Five details: your name, your email, your phone number, your current Instagram or X handle, and the username you want on Riffi. That's all we need to set you up.",
       'No. Keep posting exactly where you post now. A take is a sentence, not a shoot, so it sits alongside what you already do.',
-      "No. We're picking for takes, not reach. Most of this cohort is under 20k and that's deliberate.",
       "Not yet, and we won't pretend otherwise. Riffi hasn't launched. Once we have enough users, we start paying creators for the engagement their takes get, so you don't have to wait on brand deals to earn. Batch one is first in line. That's the plan, not a contract.",
-      'Anything you have a real opinion on. Cricket, politics, films, food, campus, money. Opinions, not news reports.',
+      'You do. You keep the rights to your posts and you can take them anywhere.',
     ]);
     for (const item of content.faq.items) expect(item.answer.trim()).not.toBe('');
   });
 
   it('close: heading, body and the footer contact line (PRD input 4, answered 1 Oct 2026)', () => {
-    expect(content.close.heading).toBe('500 seats. Batch one.');
+    expect(content.close.heading).toBe('Thank you for being first.');
     expect(content.close.body).toBe(
-      "If you've got opinions and you're tired of shouting them into a feed that doesn't know you, take one.",
+      "You trusted us before there was anything to see. Send your details and we'll take it from there.",
     );
     expect(content.close.footerLine).toBe('Questions? Message @get.riffi on Instagram.');
     // The footer names the same account the helper line promises a reply from.
     expect(content.close.footerLine).toContain(`@${settings.instagramHandle}`);
-  });
-
-  it('seats: the founder\'s weekly ask - no fixed number, three or more appreciated (PRD input 1, answered 1 Oct 2026)', () => {
-    expect(content.seats.body).toBe(
-      'No fixed number. Post as often as you like. If you can manage three or more takes a week before launch, that helps us a lot. No calls, no contracts, no exclusivity. Keep posting wherever else you post.',
-    );
   });
 });
 
@@ -456,7 +474,7 @@ describe('TODAY: every open input is answered and no [FILL] marker is left (PRD 
   });
 
   it('has real text, not an empty string, behind every answered input', () => {
-    expect(content.seats.body.trim()).not.toBe('');
+    expect(content.launch.body.trim()).not.toBe('');
     expect(content.faq.items.find((item) => item.question === 'When does Riffi launch?')?.answer.trim()).toBeTruthy();
     expect(content.faq.items.find((item) => item.question === 'Who owns what I post?')?.answer.trim()).toBeTruthy();
     expect(content.close.footerLine.trim()).not.toBe('');
@@ -486,9 +504,9 @@ describe('TODAY: every open input is answered and no [FILL] marker is left (PRD 
 describe('the open inputs: all seven settled - three on 17 Sep 2026, four on 1 Oct 2026 (PRD 8)', () => {
   it('has settings.inputsConfirmed with exactly the seven inputs the page depends on', () => {
     expect(Object.keys(settings.inputsConfirmed).sort()).toEqual([
-      'applyFormUrl',
       'contentOwnership',
       'footerLine',
+      'formResponseUrl',
       'instagramHandle',
       'launchTiming',
       'siteUrl',
@@ -503,20 +521,20 @@ describe('the open inputs: all seven settled - three on 17 Sep 2026, four on 1 O
       contentOwnership: true,
       footerLine: true,
       instagramHandle: true,
-      applyFormUrl: true,
+      formResponseUrl: true,
       siteUrl: true,
     });
   });
 
-  it('keeps every confirmed value real: no placeholder domain, no placeholder handle, a live form link', () => {
+  it('keeps every confirmed value real: no placeholder domain, no placeholder handle, a live form address', () => {
     expect(settings.siteUrl).toMatch(/^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)+$/);
     expect(settings.siteUrl).not.toMatch(/\.(?:example|invalid|test|localhost)\b/);
     expect(settings.instagramHandle).not.toBe('riffi');
-    // A forms.gle short link, or (since 1 Oct 2026) a published form's full viewform link - no
-    // query string, and never the example id the link-builder tests use.
-    expect(settings.applyFormUrl).toMatch(
-      /^https:\/\/(?:forms\.gle\/[A-Za-z0-9_-]{4,}|docs\.google\.com\/forms\/d\/e\/[A-Za-z0-9_-]{20,}\/viewform)$/,
+    // The Google Form's own formResponse address (2 Nov 2026), never the example id the
+    // link-builder tests use.
+    expect(settings.form.responseUrl).toMatch(
+      /^https:\/\/docs\.google\.com\/forms\/d\/e\/[A-Za-z0-9_-]{20,}\/formResponse$/,
     );
-    expect(settings.applyFormUrl).not.toMatch(/EXAMPLE/i);
+    expect(settings.form.responseUrl).not.toMatch(/EXAMPLE/i);
   });
 });
