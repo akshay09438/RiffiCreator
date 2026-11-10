@@ -152,10 +152,18 @@ export function Join() {
                 </label>
               );
             })}
-            {/* Permission to show their content on their profile. A required tick box, never pre-ticked. It
-                has no name, so it is not posted to the Google Form; ticking it is what lets Send work. */}
+            {/* Permission to show their content on their profile. A required tick box, never pre-ticked. Its
+                value is the permission sentence itself, so a ticked box posts that exact sentence into the
+                Google Form's "Permission given" column: the Sheet then shows what each creator agreed to. An
+                unticked box posts nothing (and cannot be sent). */}
             <label className="consent flex items-start gap-3 text-body text-ink sm:col-span-2">
-              <input type="checkbox" required className="consent-box" />
+              <input
+                type="checkbox"
+                name={formFields.consent}
+                value={block.consent}
+                required
+                className="consent-box"
+              />
               <span>{block.consent}</span>
             </label>
             {/* The trap field: off-screen, skipped by keyboards and screen readers. */}

@@ -361,12 +361,15 @@ describe('#join: the details form', () => {
     expect(init.mode).toBe('no-cors');
     const sent = new URLSearchParams(String(init.body));
     for (const key of fieldKeys) expect(sent.get(formFields[key])).toBe(valueFor(key));
+    // The permission sentence goes into its own column, so the Sheet shows what was agreed to.
+    expect(sent.get(formFields.consent)).toBe(content.join.consent);
     expect(sent.has(TRAP_FIELD)).toBe(false);
     expect(screen.getByText(content.join.sentBody)).toBeInTheDocument();
   });
 
   // 10 Nov 2026: the permission to show their Instagram content on their Riffi profile. A required tick box,
-  // never pre-ticked, that is not posted anywhere; ticking it is what lets Send work.
+  // never pre-ticked. Its value is the sentence itself, posted into the Google Form's "Permission given"
+  // column when it is ticked, so the Sheet records what each creator agreed to.
   it('shows the permission line beside a required tick box that starts unticked', () => {
     render(<App />);
     const box = consentBox();
@@ -378,12 +381,18 @@ describe('#join: the details form', () => {
     expect(box.closest('label')).toHaveTextContent(content.join.consent);
   });
 
-  it('does not post the tick box anywhere: it has no field name, so it is not in what is sent', () => {
+  it('posts the exact permission sentence into its own Google Form column when ticked, and nothing when not', () => {
     render(<App />);
-    expect(consentBox().getAttribute('name')).toBeNull();
+    const box = consentBox();
+    expect(box.getAttribute('name')).toBe(formFields.consent);
+    expect(box.value).toBe(content.join.consent);
     const form = section('join').querySelector('form') as HTMLFormElement;
-    fill((key) => valueFor(key));
-    expect([...new FormData(form).keys()].sort()).toEqual([...Object.values(formFields), TRAP_FIELD].sort());
+    fill((key) => valueFor(key), { consent: false });
+    expect(new FormData(form).has(formFields.consent)).toBe(false);
+    fireEvent.click(box);
+    const sent = new FormData(form);
+    expect(sent.get(formFields.consent)).toBe(content.join.consent);
+    expect([...sent.keys()].sort()).toEqual([...Object.values(formFields), TRAP_FIELD].sort());
   });
 
   it('will not let the form be sent until the box is ticked, even with every field filled in', async () => {

@@ -15,7 +15,7 @@ export type Settings = {
    */
   form: {
     responseUrl: string;
-    fields: Record<'name' | 'phone' | 'email' | 'handle' | 'username', string>;
+    fields: Record<'name' | 'phone' | 'email' | 'handle' | 'username' | 'consent', string>;
   };
   siteUrl: string;
   whatsapp: { enabled: boolean; number: string; message: string };
@@ -35,7 +35,8 @@ export const settings: Settings = {
   // Riffi's Instagram account, without the @. Confirmed by the founder on 17 Sep 2026.
   instagramHandle: 'get.riffi',
   // The founder's "Riffi Creator Username" Google Form, made on 2 Nov 2026. Entry ids read from the
-  // form's own page: Name, Phone No., Email ID, Instagram/X Handle, Riffi Username.
+  // form's own page: Name, Phone No., Email ID, Instagram/X Handle, Riffi Username, and (10 Nov 2026)
+  // "Permission given (recorded by the page)", a short-answer question that receives the permission sentence.
   form: {
     responseUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6-FCxNST98HVcsn6RGA/formResponse',
@@ -45,6 +46,7 @@ export const settings: Settings = {
       email: 'entry.1533783917',
       handle: 'entry.990724691',
       username: 'entry.1972389049',
+      consent: 'entry.271629296',
     },
   },
   // The live domain: the short address riffi-creators.vercel.app, added in Vercel on 2 Nov 2026 (the old
