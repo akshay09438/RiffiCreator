@@ -40,6 +40,12 @@ export function Join() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
+    // The browser already blocks an empty required field and an unticked permission box; this makes the
+    // same rule hold in the code too, so nothing is ever sent without the creator's tick.
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
     const data = new FormData(form);
     // A person never sees the trap field; a bot fills it. Pretend it worked and send nothing. Its name
     // is deliberately not one a browser's autofill knows (such as "website"), so a real creator's
@@ -146,6 +152,12 @@ export function Join() {
                 </label>
               );
             })}
+            {/* Permission to show their content on their profile. A required tick box, never pre-ticked. It
+                has no name, so it is not posted to the Google Form; ticking it is what lets Send work. */}
+            <label className="consent flex items-start gap-3 text-body text-ink sm:col-span-2">
+              <input type="checkbox" required className="consent-box" />
+              <span>{block.consent}</span>
+            </label>
             {/* The trap field: off-screen, skipped by keyboards and screen readers. */}
             <div aria-hidden="true" className="trap">
               <input type="text" name={TRAP_FIELD} tabIndex={-1} autoComplete="off" />

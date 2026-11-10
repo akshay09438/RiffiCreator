@@ -144,6 +144,11 @@ export const content = {
     submit: 'Send my details',
     sending: 'Sending',
     privacy: 'We use these details to reserve your username and set up your Riffi account.',
+    // The permission line (10 Nov 2026), shown beside a required tick box that is never pre-ticked. It
+    // asks for permission to show their content on their own Riffi profile, not to own it, so it agrees
+    // with the FAQ ("You keep the rights to your posts"). The take-down promise is the founder's to keep.
+    consent:
+      "I agree that Riffi can upload pieces of my own Instagram content (like my reels and posts) to my Riffi profile, for the username I'm reserving here. I keep ownership of my content, and I can ask Riffi to take any of it down.",
     error: "That didn't go through. Check your connection and try again.",
     sentHeading: 'Got it. Thank you.',
     // No address named on purpose (founder, 2 Nov 2026): only that an email will come.
