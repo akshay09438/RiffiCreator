@@ -15,7 +15,7 @@ export type Settings = {
    */
   form: {
     responseUrl: string;
-    fields: Record<'name' | 'phone' | 'email' | 'handle' | 'username', string>;
+    fields: Record<'name' | 'phone' | 'email' | 'handle' | 'username' | 'consent', string>;
   };
   siteUrl: string;
   whatsapp: { enabled: boolean; number: string; message: string };
@@ -35,7 +35,8 @@ export const settings: Settings = {
   // Riffi's Instagram account, without the @. Confirmed by the founder on 17 Sep 2026.
   instagramHandle: 'get.riffi',
   // The founder's "Riffi Creator Username" Google Form, made on 2 Nov 2026. Entry ids read from the
-  // form's own page: Name, Phone No., Email ID, Instagram/X Handle, Riffi Username.
+  // form's own page: Name, Phone No., Email ID, Instagram/X Handle, Riffi Username, and (10 Nov 2026)
+  // "Permission given (recorded by the page)", a short-answer question that receives the permission sentence.
   form: {
     responseUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLSf1NSzQzKJUYV-DX8yS4N153xeTYsb6-FCxNST98HVcsn6RGA/formResponse',
@@ -45,6 +46,7 @@ export const settings: Settings = {
       email: 'entry.1533783917',
       handle: 'entry.990724691',
       username: 'entry.1972389049',
+      consent: 'entry.271629296',
     },
   },
   // The live domain: the short address riffi-creators.vercel.app, added in Vercel on 2 Nov 2026 (the old
@@ -144,6 +146,11 @@ export const content = {
     submit: 'Send my details',
     sending: 'Sending',
     privacy: 'We use these details to reserve your username and set up your Riffi account.',
+    // The permission line (10 Nov 2026), shown beside a required tick box that is never pre-ticked. It
+    // asks for permission to show their content on their own Riffi profile, not to own it, so it agrees
+    // with the FAQ ("You keep the rights to your posts"). The take-down promise is the founder's to keep.
+    consent:
+      "I agree that Riffi can upload pieces of my own Instagram content (like my reels and posts) to my Riffi profile, for the username I'm reserving here. I keep ownership of my content, and I can ask Riffi to take any of it down.",
     error: "That didn't go through. Check your connection and try again.",
     sentHeading: 'Got it. Thank you.',
     // No address named on purpose (founder, 2 Nov 2026): only that an email will come.

@@ -306,10 +306,18 @@ describe('#perks: what is waiting for creators who came in early (2 Nov 2026)', 
 describe('#join: the details form', () => {
   const fieldKeys = ['name', 'email', 'phone', 'handle', 'username'] as const;
 
-  function fill(value: (key: (typeof fieldKeys)[number]) => string) {
+  // A valid value for every field: the form now refuses an invalid email (the browser's own check).
+  const valueFor = (key: (typeof fieldKeys)[number]): string =>
+    key === 'email' ? 'creator@example.com' : `value-${key}`;
+
+  const consentBox = (): HTMLInputElement => screen.getByLabelText(content.join.consent) as HTMLInputElement;
+
+  /** Fills the five fields, and ticks the permission box unless told not to. */
+  function fill(value: (key: (typeof fieldKeys)[number]) => string, options: { consent?: boolean } = {}) {
     for (const key of fieldKeys) {
       fireEvent.change(screen.getByLabelText(content.join.fields[key].label), { target: { value: value(key) } });
     }
+    if (options.consent !== false) fireEvent.click(consentBox());
   }
 
   afterEach(() => {
@@ -325,7 +333,8 @@ describe('#join: the details form', () => {
       expect(input.type).toBe(content.join.fields[key].type);
       expect(input.required).toBe(true);
     }
-    expect(section('join').querySelectorAll('input:not([aria-hidden] input)')).toHaveLength(5);
+    // Five text fields, plus the permission tick box (checked separately below).
+    expect(section('join').querySelectorAll('input:not([type="checkbox"]):not([aria-hidden] input)')).toHaveLength(5);
     expect(form.getByText(content.join.privacy)).toBeInTheDocument();
     expect(form.getByRole('button', { name: content.join.submit })).toBeInTheDocument();
   });
@@ -342,7 +351,7 @@ describe('#join: the details form', () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(null));
     vi.stubGlobal('fetch', fetchMock);
     render(<App />);
-    fill((key) => `value-${key}`);
+    fill((key) => valueFor(key));
     fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
     await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -351,9 +360,57 @@ describe('#join: the details form', () => {
     expect(init.method).toBe('POST');
     expect(init.mode).toBe('no-cors');
     const sent = new URLSearchParams(String(init.body));
-    for (const key of fieldKeys) expect(sent.get(formFields[key])).toBe(`value-${key}`);
+    for (const key of fieldKeys) expect(sent.get(formFields[key])).toBe(valueFor(key));
+    // The permission sentence goes into its own column, so the Sheet shows what was agreed to.
+    expect(sent.get(formFields.consent)).toBe(content.join.consent);
     expect(sent.has(TRAP_FIELD)).toBe(false);
     expect(screen.getByText(content.join.sentBody)).toBeInTheDocument();
+  });
+
+  // 10 Nov 2026: the permission to show their Instagram content on their Riffi profile. A required tick box,
+  // never pre-ticked. Its value is the sentence itself, posted into the Google Form's "Permission given"
+  // column when it is ticked, so the Sheet records what each creator agreed to.
+  it('shows the permission line beside a required tick box that starts unticked', () => {
+    render(<App />);
+    const box = consentBox();
+    expect(box.type).toBe('checkbox');
+    expect(box.required).toBe(true);
+    expect(box.checked).toBe(false);
+    expect(within(section('join')).getByText(content.join.consent)).toBeInTheDocument();
+    // The whole line is one label, so tapping the words ticks the box.
+    expect(box.closest('label')).toHaveTextContent(content.join.consent);
+  });
+
+  it('posts the exact permission sentence into its own Google Form column when ticked, and nothing when not', () => {
+    render(<App />);
+    const box = consentBox();
+    expect(box.getAttribute('name')).toBe(formFields.consent);
+    expect(box.value).toBe(content.join.consent);
+    const form = section('join').querySelector('form') as HTMLFormElement;
+    fill((key) => valueFor(key), { consent: false });
+    expect(new FormData(form).has(formFields.consent)).toBe(false);
+    fireEvent.click(box);
+    const sent = new FormData(form);
+    expect(sent.get(formFields.consent)).toBe(content.join.consent);
+    expect([...sent.keys()].sort()).toEqual([...Object.values(formFields), TRAP_FIELD].sort());
+  });
+
+  it('will not let the form be sent until the box is ticked, even with every field filled in', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null));
+    vi.stubGlobal('fetch', fetchMock);
+    render(<App />);
+    fill((key) => valueFor(key), { consent: false });
+    const form = section('join').querySelector('form') as HTMLFormElement;
+    expect(form.checkValidity()).toBe(false);
+    fireEvent.submit(form);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(screen.queryByText(content.join.sentHeading)).toBeNull();
+    fireEvent.click(consentBox());
+    expect(form.checkValidity()).toBe(true);
+    fireEvent.submit(form);
+    await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it('names its bot trap something browser autofill does not know, so a real creator can never fill it by accident', () => {
@@ -366,7 +423,7 @@ describe('#join: the details form', () => {
     Element.prototype.scrollIntoView = scrollIntoView;
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null)));
     render(<App />);
-    fill((key) => `value-${key}`);
+    fill((key) => valueFor(key));
     fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
     await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
     const panel = only(section('join'), '[role="status"]');
@@ -379,7 +436,7 @@ describe('#join: the details form', () => {
   it('reads their own username back to them in the thank-you, without a doubled @', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null)));
     render(<App />);
-    fill((key) => (key === 'username' ? '  @@riffi_fan  ' : `value-${key}`));
+    fill((key) => (key === 'username' ? '  @@riffi_fan  ' : valueFor(key)));
     fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
     await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
     expect(within(section('join')).getByText(content.join.sentHolding('riffi_fan'))).toBeInTheDocument();
@@ -389,7 +446,7 @@ describe('#join: the details form', () => {
   it('shows a hostile username as plain text only, never as markup', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null)));
     render(<App />);
-    fill((key) => (key === 'username' ? '<img src=x onerror=alert(1)>' : `value-${key}`));
+    fill((key) => (key === 'username' ? '<img src=x onerror=alert(1)>' : valueFor(key)));
     fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
     await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
     const block = section('join');
@@ -400,7 +457,7 @@ describe('#join: the details form', () => {
   it('turns the whole green panel into the thank-you, with the badge swishing in and no form left', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null)));
     render(<App />);
-    fill((key) => `value-${key}`);
+    fill((key) => valueFor(key));
     fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
     await waitFor(() => expect(screen.getByText(content.join.sentHeading)).toBeInTheDocument());
     const block = section('join');
@@ -421,7 +478,7 @@ describe('#join: the details form', () => {
   it('says so, keeps what was typed, and lets them try again when the network fails', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('offline')));
     render(<App />);
-    fill((key) => `value-${key}`);
+    fill((key) => valueFor(key));
     fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(content.join.error));
     expect(screen.queryByText(content.join.sentHeading)).toBeNull();
@@ -433,7 +490,7 @@ describe('#join: the details form', () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     render(<App />);
-    fill((key) => `value-${key}`);
+    fill((key) => valueFor(key));
     const trap = section('join').querySelector(`input[name="${TRAP_FIELD}"]`) as HTMLInputElement;
     fireEvent.change(trap, { target: { value: 'https://spam.example' } });
     fireEvent.submit(section('join').querySelector('form') as HTMLFormElement);

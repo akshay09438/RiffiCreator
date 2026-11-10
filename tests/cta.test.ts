@@ -135,6 +135,7 @@ describe('the links the page uses', () => {
       email: 'entry.1533783917',
       handle: 'entry.990724691',
       username: 'entry.1972389049',
+      consent: 'entry.271629296',
     });
   });
 

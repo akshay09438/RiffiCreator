@@ -248,6 +248,16 @@ describe('copy matches the PRD word for word', () => {
     expect(content.join.privacy).toBe(
       'We use these details to reserve your username and set up your Riffi account.',
     );
+    // 10 Nov 2026: permission to show their Instagram content on their own Riffi profile. It says they
+    // keep ownership (so it agrees with the FAQ answer) and that they can ask for takedown.
+    expect(content.join.consent).toBe(
+      "I agree that Riffi can upload pieces of my own Instagram content (like my reels and posts) to my Riffi profile, for the username I'm reserving here. I keep ownership of my content, and I can ask Riffi to take any of it down.",
+    );
+    expect(content.join.consent).toContain('I keep ownership');
+    expect(content.join.consent).toContain('take any of it down');
+    expect(content.faq.items.find((item) => item.question === 'Who owns what I post?')?.answer).toContain(
+      'You keep the rights',
+    );
     expect(content.join.error).toBe("That didn't go through. Check your connection and try again.");
     expect(content.join.sentHeading).toBe('Got it. Thank you.');
     // 2 Nov 2026: the founder asked for no address to be named - only that an email will come.

@@ -60,6 +60,7 @@ export const formFields = {
   email: formEntryId(settings.form.fields.email),
   handle: formEntryId(settings.form.fields.handle),
   username: formEntryId(settings.form.fields.username),
+  consent: formEntryId(settings.form.fields.consent),
 } as const;
 
 /** The page's one conversion: every button scrolls to the details form (the #join section). */
